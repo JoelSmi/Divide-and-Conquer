@@ -1,8 +1,20 @@
-﻿namespace Pieces {
+﻿using System;
+namespace Pieces {
 	public enum Color {
 		White, Black, Empty
 	}
 	public abstract class Piece {
+		//Minimum rolls for each piece to capture another piece
+		static int[,] attackerTable = {
+		{4, 4, 4, 4, 5, 1},
+		{4, 4, 4, 4, 5, 2},
+		{5, 5, 5, 5, 5, 2},
+		{5, 5, 5, 4, 5, 3},
+		{4, 4, 4, 5, 5, 5},
+		{6, 6, 6, 5, 6, 4} };
+		//Order of the pieces (both left to right and top to bottom) in the AttackerTable
+		static Type[] pieceOrder = new Type[6] { typeof(King), typeof(Queen), typeof(Knight), typeof(Bishop), typeof(Rook), typeof(Pawn) };
+
 		protected Color c;
 		protected int id;
 		//Returns if the piece is controlled by White or Black
@@ -16,6 +28,16 @@
 		//Returns the piece ID
 		public int getID() {
 			return id;
+		}
+		//Returns the minimum roll needed for the attacker piece to defeat the defender piece
+		public static int getMinimumRoll(Piece attacker, Piece defender) {
+			if (attacker.GetType() == typeof(EmptySquare) || defender.GetType() == typeof(EmptySquare)) {
+				return 0;
+			} else {
+				int attackerIndex = Array.IndexOf(pieceOrder, attacker.GetType());
+				int defenderIndex = Array.IndexOf(pieceOrder, defender.GetType());
+				return attackerTable[attackerIndex, defenderIndex];
+			}
 		}
 		//Returns the movement range of the piece
 		public abstract int GetMovement();
