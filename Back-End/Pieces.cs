@@ -15,7 +15,6 @@
 		//Returns the movement range of the piece
 		public abstract int GetMovement();
 		public abstract override string ToString();
-
 	}
 	public class Pawn : Piece {
 		public Pawn(Color c) {
