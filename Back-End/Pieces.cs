@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace Pieces {
 	public enum Color {
 		White, Black, Empty
@@ -14,21 +15,6 @@ namespace Pieces {
 		{6, 6, 6, 5, 6, 4} };
 		//Order of the pieces (both left to right and top to bottom) in the AttackerTable
 		static Type[] pieceOrder = new Type[6] { typeof(King), typeof(Queen), typeof(Knight), typeof(Bishop), typeof(Rook), typeof(Pawn) };
-
-		protected Color c;
-		protected int id;
-		//Returns if the piece is controlled by White or Black
-		public Color GetColor() {
-			return c;
-		}
-		//Returns whether the piece is actually an empty square
-		public bool IsEmpty() {
-			return c == Color.Empty;
-		}
-		//Returns the piece ID
-		public int getID() {
-			return id;
-		}
 		//Returns the minimum roll needed for the attacker piece to defeat the defender piece
 		public static int getMinimumRoll(Piece attacker, Piece defender) {
 			if (attacker.GetType() == typeof(EmptySquare) || defender.GetType() == typeof(EmptySquare)) {
@@ -38,6 +24,36 @@ namespace Pieces {
 				int defenderIndex = Array.IndexOf(pieceOrder, defender.GetType());
 				return attackerTable[attackerIndex, defenderIndex];
 			}
+		}
+		protected Color c;
+		protected int id;
+		protected HashSet<int[]> legalMoves;//Movement only
+		protected HashSet<int[]> legalAttacks;
+		//Returns if the piece is controlled by White or Black
+		public Color GetColor() {
+			return c;
+		}
+		//Returns whether the piece is actually an empty square
+		public bool IsEmpty() {
+			return c == Color.Empty;
+		}
+		//Returns the piece ID
+		public int GetID() {
+			return id;
+		}
+		//Gets the set of legal spaces for this piece to move to by their coordinate pairs
+		public HashSet<int[]> GetLegalMoves() {
+			return legalMoves;
+		}
+		//Gets the set of spaces which contain enemy pieces that this piece is threatening
+		public HashSet<int[]> GetLegalAttacks() {
+			return legalAttacks;
+		}
+		public void SetLegalMoves(HashSet<int[]> legalMoves) {
+			this.legalMoves = legalMoves;
+		}
+		public void SetLegalAttacks(HashSet<int[]> legalAttacks) {
+			this.legalAttacks = legalAttacks;
 		}
 		//Returns the movement range of the piece
 		public abstract int GetMovement();
