@@ -48,9 +48,7 @@ namespace GameBoard
                 this.GameBoard[6, i] = this.WhiteBoard[0, i].getId();
                 this.GameBoard[7, i] = this.WhiteBoard[1, i].getId();
             }
-
-            Console.WriteLine(this.GameBoard.Length);
-
+            
             //Restart match starting with White taking the first turn
             isWhite = true;
         }
