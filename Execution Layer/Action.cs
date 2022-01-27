@@ -7,7 +7,7 @@ using Bishops;
 namespace Actions {
     public class Action
     {
-        public static bool moveAction(Piece currPiece, int pos[], int[] dest)
+        public static bool moveAction(Piece currPiece, int[] pos, int[] dest)
         {
             /*
                 Function to check whether the intended movement action is valid (i.e. if there are no pieces in the path of movement or at the destination)
@@ -17,9 +17,10 @@ namespace Actions {
 
                 ***NOTE: both pos and dest are arrays with two elements, the x (row) and y (column) coordinates of the respectively
             */
+            return false;
         }
 
-        public static bool attackAction(Piece currPiece, int pos[], int[] dest)
+        public static bool attackAction(Piece currPiece, int[] pos, int[] dest)
         {
             /*
                 Function to check whether the intended attack action is valid
@@ -29,7 +30,7 @@ namespace Actions {
 
                 ***NOTE: both pos and dest are arrays with two elements, the x (row) and y (column) coordinates of the respectively
             */
-
+            return false;
         }
     }
 }

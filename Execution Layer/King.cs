@@ -6,6 +6,7 @@ namespace Kings
     {
         private string[] Delegates = new string[16];
         protected bool isCaptured = false;
+        protected int actionCount;
 
         public King(string id)
         {
@@ -15,6 +16,8 @@ namespace Kings
 
             this.attack = 1;
             this.attackType = 'S';
+
+            this.actionCount = 6;
 
             this.id = id;
         }

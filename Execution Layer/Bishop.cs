@@ -6,6 +6,7 @@ namespace Bishops
     {
         private string[] Delegates = new string[6];
         protected bool isCaptured = false;
+        protected int actionCount;
 
         public Bishop(string id)
         {
@@ -16,6 +17,8 @@ namespace Bishops
 
             this.attack = 1;
             this.attackType = 'S';
+
+            this.actionCount = 0;
 
             this.id = id;
         }
