@@ -24,4 +24,9 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+    public void EndTurn()
+    {
+        mPieceManager.SwitchSides(Color.white);
+    }
 }
