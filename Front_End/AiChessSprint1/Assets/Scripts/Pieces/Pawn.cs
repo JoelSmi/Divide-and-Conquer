@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Pawn : BasePiece
 {
+    
     //overrides the base piece Setup to fit the Pawn's role
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
     {
@@ -15,6 +16,7 @@ public class Pawn : BasePiece
 
         // loads image for the Pawn
         GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Pawn");
+        //TagSet(newTeamColor);
     }
 
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
@@ -47,5 +49,18 @@ public class Pawn : BasePiece
         MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Enemy);
 
     }
+
+   /* public override void TagSet(Color teamColor)
+    {
+        string tag;
+        if (teamColor == Color.white)
+        {
+            tag = "p" + mPieceManager.numPieces;
+            mPieceManager.mPiecePrefab.tag = tag;
+            
+        }
+
+    }
+   */
 
 }

@@ -32,7 +32,9 @@ public class BasePiece : EventTrigger
     {
         mPieceManager = newPieceManager;
 
+        
         mColor = newTeamColor;
+        TagSet();
         GetComponent<Image>().color = newSpriteColor;
         mRectTransform = GetComponent<RectTransform>();
     }
@@ -69,6 +71,15 @@ public class BasePiece : EventTrigger
         gameObject.SetActive(false);
     }
 
+    public virtual void TagSet()
+    {
+        if (mColor == Color.white)
+            mPieceManager.mPiecePrefab.tag = "Player";
+
+        else 
+            mPieceManager.mPiecePrefab.tag = "AI";
+
+    }
 
     #region Movement
 
@@ -162,6 +173,8 @@ public class BasePiece : EventTrigger
         // snaps the piece to the target cell thenn returns target cell to null
         transform.position = mCurrentCell.transform.position;
         mTargetCell = null;
+
+        mPieceManager.actionTaken = true;
     }
     #endregion
 

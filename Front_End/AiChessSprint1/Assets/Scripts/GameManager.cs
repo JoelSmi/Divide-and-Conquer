@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     // instantiate Class Board, Class PieceManger objects  
     public Board mBoard;
     public PieceManager mPieceManager;
+    
 
 
     // Start is called before the first frame update
@@ -22,6 +23,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (mPieceManager.actionTaken)
+        {
+
+        }
         
     }
 

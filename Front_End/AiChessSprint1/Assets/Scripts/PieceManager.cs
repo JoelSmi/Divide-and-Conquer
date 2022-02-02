@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
+    
     //checks if both kings are still alive
     public bool mIsKingAlive = true;
-
+    public int numPieces;
     // sets up a game object to be used as the base prefab for the game pieces
     public GameObject mPiecePrefab;
+
+    public bool actionTaken = false;
 
     //instantiates objects to hold the pieces
     private List<BasePiece> mWhitePieces = null;
@@ -36,9 +39,11 @@ public class PieceManager : MonoBehaviour
     public void Setup (Board board)
     {
         // creates the white pieces see CreatePieces below for more info
+        numPieces = 0;
         mWhitePieces = CreatePieces(Color.white, new Color32(80, 124, 159, 255), board);
 
         // creates the black pieces see CreatePieces below for more info
+        numPieces = 0;
         mBlackPieces = CreatePieces(Color.black, new Color32(210, 95, 64, 255), board);
 
         //calls PlacePieces so the pieces are moved to their proper orientation 
@@ -76,6 +81,7 @@ public class PieceManager : MonoBehaviour
 
             //calls to BasePiece class' Setup function
             newPiece.Setup(teamColor, spriteColor, this);
+            numPieces++;
         }
 
         return newPieces;
