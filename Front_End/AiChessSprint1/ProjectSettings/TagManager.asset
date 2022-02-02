@@ -35,6 +35,7 @@ TagManager:
   - n1
   - R0
   - B0
+  - AI
   layers:
   - Default
   - TransparentFX
