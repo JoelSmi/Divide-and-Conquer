@@ -27,35 +27,35 @@ public class PieceManager : MonoBehaviour
     //assigns types to the strings inside previous matrix
     private Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>()
     {
-        {"P", typeof(Pawn)},
-        {"R", typeof(Rook)},
-        {"KN", typeof(Knight)},
-        {"B", typeof(Bishop)},
-        {"K", typeof(King)},
-        {"Q", typeof(Queen)},
+        {"P", typeof(PawnUI)},
+        {"R", typeof(RookUI)},
+        {"KN", typeof(KnightUI)},
+        {"B", typeof(BishopUI)},
+        {"K", typeof(KingUI)},
+        {"Q", typeof(QueenUI)},
     };
 
-    // creates the pieces inside on the board
-    public void Setup (Board board)
+    // creates the pieces inside on the boardUI
+    public void Setup (BoardUI boardUI)
     {
         // creates the white pieces see CreatePieces below for more info
         numPieces = 0;
-        mWhitePieces = CreatePieces(Color.white, new Color32(80, 124, 159, 255), board);
+        mWhitePieces = CreatePieces(Color.white, new Color32(80, 124, 159, 255), boardUI);
 
         // creates the black pieces see CreatePieces below for more info
         numPieces = 0;
-        mBlackPieces = CreatePieces(Color.black, new Color32(210, 95, 64, 255), board);
+        mBlackPieces = CreatePieces(Color.black, new Color32(210, 95, 64, 255), boardUI);
 
         //calls PlacePieces so the pieces are moved to their proper orientation 
-        PlacePieces(1, 0, mWhitePieces, board);
-        PlacePieces(6, 7, mBlackPieces, board);
+        PlacePieces(1, 0, mWhitePieces, boardUI);
+        PlacePieces(6, 7, mBlackPieces, boardUI);
 
         //calls SwitchSides
         SwitchSides(Color.black);
     }
 
     // instantiates the new pieces using a for loop
-    private List<BasePiece> CreatePieces(Color teamColor, Color32 spriteColor, Board board)
+    private List<BasePiece> CreatePieces(Color teamColor, Color32 spriteColor, BoardUI board)
     {
         //creates a list using the basePiece class
         List<BasePiece> newPieces = new List<BasePiece>();
@@ -87,15 +87,15 @@ public class PieceManager : MonoBehaviour
         return newPieces;
     }
 
-    //places the pieces in their designated cells on the board
-    private void PlacePieces(int pawnRow, int royaltyRow, List<BasePiece> pieces, Board board)
+    //places the pieces in their designated cells on the boardUI
+    private void PlacePieces(int pawnRow, int royaltyRow, List<BasePiece> pieces, BoardUI boardUI)
     {
         for (int i = 0; i < 8; i++)
         {
             // see BasePiece for more information on Place
-            pieces[i].Place(board.mAllCells[i, pawnRow]);
+            pieces[i].Place(boardUI.mAllCells[i, pawnRow]);
 
-            pieces[i + 8].Place(board.mAllCells[i, royaltyRow]);
+            pieces[i + 8].Place(boardUI.mAllCells[i, royaltyRow]);
         }
     }
 

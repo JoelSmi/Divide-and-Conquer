@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Rook : BasePiece
+public class QueenUI : BasePiece
 {
-    //sets the Rookss movement variable based on the constraints
+    //sets the queen'ss movement variable based on the constraints
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
     {
         base.Setup(newTeamColor, newSpriteColor, newPieceManager);
 
-        //// changes Rook's movement then loads sprite for the Rook
-        mMovement = new Vector3Int(2, 2, 2);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Rook");
+        // changes Queen's movement then loads sprie for the queen
+        mMovement = new Vector3Int(3, 3, 3);
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Queen");
     }
 
 }

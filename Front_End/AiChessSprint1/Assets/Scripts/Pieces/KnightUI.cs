@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Knight : BasePiece
+public class KnightUI : BasePiece
 {
     //sets the Knight's movement variable based on the constraints
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)

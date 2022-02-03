@@ -13,7 +13,7 @@ namespace Pieces
         /*
             * DefenseProb stores the number of ways to succeed against the current piece (i.e. 2 means that only 5 and 6 
             * are the only numbers that the attacker can roll for success against the Bishop) the array positions for the attacker identity
-            * follows: {Pawn, Rook, Bishop, Knight, Queen, King}
+            * follows: {Pawn, RookUI, Bishop, Knight, Queen, King}
         */
         public short[] defenseProb { get; protected set; } = new short[6];
 

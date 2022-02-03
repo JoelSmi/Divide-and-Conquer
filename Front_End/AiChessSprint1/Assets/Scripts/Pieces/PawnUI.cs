@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Pawn : BasePiece
+public class PawnUI : BasePiece
 {
     
     //overrides the base piece Setup to fit the Pawn's role
@@ -23,11 +23,11 @@ public class Pawn : BasePiece
     private bool MatchesState(int targetX, int targetY, CellState targetState)
     {
         CellState cellState = CellState.None;
-        cellState = mCurrentCell.mBoard.ValidateCell(targetX, targetY, this);
+        cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
 
         if(cellState == targetState)
         {
-            mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[targetX, targetY]);
+            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
             return true;
         }
 

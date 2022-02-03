@@ -100,12 +100,12 @@ public class BasePiece : EventTrigger
             // creates a cellstate for checking possibilities
             //and then checks the state for the currentX, ,andCurrentY
             CellState cellState = CellState.None;
-            cellState = mCurrentCell.mBoard.ValidateCell(currentX, currentY, this);
+            cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
 
             //if a cell contatins an enemy it adds that cell to the mHighlighted Cells list then breaks out of the loop
             if(cellState == CellState.Enemy)
             {
-                mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
                 break;
             }
 
@@ -114,7 +114,7 @@ public class BasePiece : EventTrigger
                 break;
 
 
-            mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
+            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
         }
     }
 

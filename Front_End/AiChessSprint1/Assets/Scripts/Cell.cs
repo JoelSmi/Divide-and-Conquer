@@ -16,7 +16,7 @@ public class Cell : MonoBehaviour
     [HideInInspector]
     public Vector2Int mBoardPosition;
     [HideInInspector]
-    public Board mBoard = null;
+    public BoardUI mBoardUI = null;
     [HideInInspector]
     public RectTransform mRectTransform = null;
 
@@ -25,10 +25,10 @@ public class Cell : MonoBehaviour
     public BasePiece mCurrentPiece = null;
 
     // sets the cells to use information from the board in their setup
-    public void Setup(Vector2Int newBoardPosition, Board newBoard)
+    public void Setup(Vector2Int newBoardPosition, BoardUI newBoard)
     {
         mBoardPosition = newBoardPosition;
-        mBoard = newBoard;
+        mBoardUI = newBoard;
 
         mRectTransform = GetComponent<RectTransform>();
     }

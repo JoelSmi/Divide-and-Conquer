@@ -18,7 +18,7 @@ public enum CellState
     Free,
     OutOfBounds
 }
-public class Board : MonoBehaviour
+public class BoardUI : MonoBehaviour
 {
     //the object which all cells are based of of
     public GameObject mCellPrefab;

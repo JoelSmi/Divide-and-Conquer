@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class King : BasePiece
+public class KingUI : BasePiece
 {
     //sets the kings movement variable based on the constraints
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)

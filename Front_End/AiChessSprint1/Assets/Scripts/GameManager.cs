@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // instantiate Class Board, Class PieceManger objects  
-    public Board mBoard;
+    public BoardUI mBoardUI;
     public PieceManager mPieceManager;
     
 
@@ -14,10 +14,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //initiates and creates the Game board
-        mBoard.Create();
+        mBoardUI.Create();
 
         // sets pieces onto the created
-        mPieceManager.Setup(mBoard);
+        mPieceManager.Setup(mBoardUI);
     }
 
     // Update is called once per frame
