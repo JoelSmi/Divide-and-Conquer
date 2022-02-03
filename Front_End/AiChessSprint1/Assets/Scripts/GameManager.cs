@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
     // instantiate Class Board, Class PieceManger objects  
     public BoardUI mBoardUI;
     public PieceManager mPieceManager;
-    
+
+    protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
+
 
 
     // Start is called before the first frame update
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
     {
         if (mPieceManager.actionTaken)
         {
+            CellRelay();
 
         }
         
@@ -34,4 +37,14 @@ public class GameManager : MonoBehaviour
     {
         mPieceManager.SwitchSides(Color.white);
     }
+
+    public void CellRelay()
+    {
+        uiCurrentCellX = mPieceManager.pmCurrentCellX;
+        uiCurrentCellY = mPieceManager.pmCurrentCellY;
+        uiTargetCellX = mPieceManager.pmTargetCellX;
+        uiTargetCellY = mPieceManager.pmTargetCellY;
+    }
+
+   
 }

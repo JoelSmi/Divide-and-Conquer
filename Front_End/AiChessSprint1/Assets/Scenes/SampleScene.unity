@@ -636,6 +636,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 949815132}
     - target: {fileID: 846789043724003051, guid: 594f1745deb7d3c4a925d97cf586ca67, type: 3}
+      propertyPath: mBoardUI
+      value: 
+      objectReference: {fileID: 949815132}
+    - target: {fileID: 846789043724003051, guid: 594f1745deb7d3c4a925d97cf586ca67, type: 3}
       propertyPath: mPieceManager
       value: 
       objectReference: {fileID: 1920989331}

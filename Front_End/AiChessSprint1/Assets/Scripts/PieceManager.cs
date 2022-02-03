@@ -11,6 +11,7 @@ public class PieceManager : MonoBehaviour
     // sets up a game object to be used as the base prefab for the game pieces
     public GameObject mPiecePrefab;
 
+    public int pmCurrentCellX, pmCurrentCellY, pmTargetCellX, pmTargetCellY;
     public bool actionTaken = false;
 
     //instantiates objects to hold the pieces
@@ -135,5 +136,13 @@ public class PieceManager : MonoBehaviour
         foreach (BasePiece piece in mBlackPieces)
             piece.Reset();
 
+    }
+
+    public void UIRelay(int currentCellX, int currentCellY, int targetCellX, int targetCellY)
+    {
+        pmCurrentCellX = currentCellX;
+        pmCurrentCellY = currentCellY;
+        pmTargetCellX = targetCellX;
+        pmTargetCellY = targetCellY;
     }
 }
