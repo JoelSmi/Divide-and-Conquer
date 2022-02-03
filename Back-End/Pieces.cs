@@ -38,6 +38,11 @@ namespace Pieces {
 		protected HashSet<Direction> omni = new HashSet<Direction>(new Direction[] { Direction.North, Direction.Northwest, Direction.Northeast,
 			Direction.South, Direction.Southwest, Direction.Southeast, Direction.West, Direction.East });
 		protected HashSet<Direction> legalDirections;
+		//This prints details about a piece
+		public void PrintPiece()
+		{
+			Console.WriteLine("This is the " + this.GetColor() + " " + this.GetType().Name + " with the ID of " + this.GetID());
+		}
 		//Returns if the piece is controlled by White or Black
 		public Color GetColor() {
 			return color;
