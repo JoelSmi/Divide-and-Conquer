@@ -22,14 +22,43 @@ public class Board {
 		dim = 8;
 		this.UpdateAllLegalMoves();
 	}
-	/**Moves a piece at the coordinates [PieceX, PieceY] to the space on the board with the coordinates [DestinationX, DestinationY]
-	 * Precondition: Both coordinate pairs are in bounds for this board and the destination space is a legal move */
-	public void Move(int PieceRow, int PieceCol, int DestinationRow, int DestinationCol) {
-		board[DestinationRow, DestinationCol] = board[PieceRow, PieceCol];
-		board[PieceRow, PieceCol] = e;//Target's previous space is now empty
-		Console.WriteLine("Moved piece " + board[DestinationRow, DestinationCol] 
-			+ " to " + GetNotation(DestinationRow, DestinationCol));
+	/**Creates a new chessboard using a given array
+	 * Precondition: board is square */
+	public Board(Piece[,] board) {
+		e = new EmptySquare();
+		this.board = board;
+		dim = (int) Math.Sqrt(board.Length);
 		this.UpdateAllLegalMoves();
+	}
+	/**Moves a piece at the coordinates [pieceRow, pieceCol] to the space on the board with the coordinates [destinationRow, destinationCol]
+	 * Precondition: Both coordinate pairs are in bounds for this board and the destination space is a legal move */
+	public void Move(int pieceRow, int pieceCol, int destinationRow, int destinationCol) {
+		board[destinationRow, destinationCol] = board[pieceRow, pieceCol];
+		board[pieceRow, pieceCol] = e;//Target's previous space is now empty
+		Console.WriteLine("Moved piece " + board[destinationRow, destinationCol] 
+			+ " to " + GetNotation(destinationRow, destinationCol));
+		this.UpdateAllLegalMoves();
+	}
+	/** Attack a piece at the coordinates [defenderRow, defenderCol] with the piece on [attackerRow, attackerCol] with the given roll
+	 * This method is for pieces that will not move before attacking, knights should use the AttackAndMove() method if they are moving before attacking
+	 * Precondition: The attack being made is a legal attack for the attacker */
+	public void Attack(int attackerRow, int attackerCol, int defenderRow, int defenderCol, int roll) {
+		int minRoll = Piece.getMinimumRoll(board[attackerRow, attackerCol], board[defenderRow, defenderCol]);
+		if (roll >= minRoll) {
+			Piece capturedPiece = board[defenderRow, defenderCol];
+			board[defenderRow, defenderCol] = e;
+			Console.WriteLine("Attack succeeded - roll " + roll + " meets the minimum roll " + minRoll + 
+				" and " + board[attackerRow, attackerCol] + " captures " + capturedPiece);
+		} else {
+			Console.WriteLine("Attack failed - roll " + roll + " is lower than the required roll " + minRoll);
+		}
+
+	}
+	/** Special function for the knight to both move and attack with the given roll, which is incremented by 1
+	 * Precondition: Both the move and attack are legal, and the destination square is adjacent to the defender's square*/
+	public void AttackAndMove(int attackerRow, int attackerCol, int destinationRow, int destinationCol, int defenderRow, int defenderCol, int roll) {
+		Move(attackerRow, attackerCol, destinationRow, destinationCol);
+		Attack(destinationRow, destinationCol, defenderRow, defenderCol, roll + 1);
 	}
 	public Piece[,] GetBoard() {
 		return board;
@@ -165,21 +194,21 @@ public class Board {
 		return false;
 	}
 	/** Converts a square coordinate pair to chess notation (e.g. G4)
-	 * Precondition: square is in bounds */
+	 * Precondition: square is in bounds and on a default 8x8 board */
 	public static string GetNotation(int squareRow, int squareCol) {
-		string row = (squareRow + 1).ToString();
+		string row = (8 - squareRow).ToString();
 		char column = (char) (65 + squareCol);
 		return column + row;
 	}
 	//Tester method
 	public static void Main(string[] args) {
-		//csc /out:Chess.exe Board.cs Pieces.cs BoardFunctions.cs
+		//csc /out:Chess.exe Board.cs Pieces.cs
 		Board b = new Board();
 		b.Print();
 		b.PrintLegalSquares(new int[] { 6, 0 });//p0
 
-		b.Move(6, 5, 5, 5);//p5 up 1 to F6
-		b.Move(1, 5, 2, 5);//P5 down 1 to F3
+		b.Move(6, 5, 5, 5);//p5 up 1 to F3
+		b.Move(1, 5, 2, 5);//P5 down 1 to F6
 		b.Print();
 
 		b.PrintLegalSquares(new int[] { 0, 5 });//B1
@@ -188,12 +217,17 @@ public class Board {
 		b.PrintLegalSquares(new int[] { 7, 6 });//n1
 		b.PrintLegalAttacks(new int[] { 7, 6 });//n1
 
-		b.Move(0, 6, 4, 7);//N1 to h5
+		b.Move(0, 6, 4, 7);//N1 to H4
 		b.Print();
 		b.PrintLegalAttacks(new int[] { 7, 7 });//r1
 
 		Console.WriteLine("Minimum roll for Knight to capture Queen:" + Piece.getMinimumRoll(new Knight(Color.White, 0), new Queen(Color.Black)));
 		Console.WriteLine("Minimum roll for King to capture Pawn:" + Piece.getMinimumRoll(new King(Color.White), new Pawn(Color.Black, 0)));
 		Console.WriteLine("Minimum roll for Pawn to capture Pawn:" + Piece.getMinimumRoll(new Pawn(Color.White, 0), new Pawn(Color.Black, 0)));
+
+		b.AttackAndMove(4, 7, 4, 5, 5, 5, 6);//N1 attacks p5 from square F4
+		b.Print();
+
+		Board b2 = new Board(b.GetBoard());
 	}
 }
