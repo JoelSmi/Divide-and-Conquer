@@ -200,6 +200,11 @@ public class Board {
 		char column = (char) (65 + squareCol);
 		return column + row;
 	}
+	//Returns a specific piece from the board
+	public Piece GetPiece(int x, int y)
+	{
+		return board[x, y];
+	}
 	//Tester method
 	public static void Main(string[] args) {
 		//csc /out:Chess.exe Board.cs Pieces.cs
