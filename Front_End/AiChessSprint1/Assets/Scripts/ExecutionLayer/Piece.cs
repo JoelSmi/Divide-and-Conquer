@@ -13,7 +13,7 @@ namespace Pieces
         /*
             * DefenseProb stores the number of ways to succeed against the current piece (i.e. 2 means that only 5 and 6 
             * are the only numbers that the attacker can roll for success against the Bishop) the array positions for the attacker identity
-            * follows: {Pawn, RookUI, Bishop, Knight, Queen, King}
+            * follows: {Pawn, Rook, Bishop, Knight, Queen, King}
         */
         public short[] defenseProb { get; protected set; } = new short[6];
 
@@ -37,6 +37,23 @@ namespace Pieces
         //Storage of the current position of the peice in the format of {x,y}, or {row,column}
         public int[] currPos { get; set; } = new int[2];
     }
+
+    public class Empty : Piece 
+    {
+        public Empty(string id, string Color)
+        {
+            this.movement = 0;
+            this.movementType = '';
+            this.defenseProb = new short[] { 6, 6, 6, 6, 6, 6 };
+
+            this.attack = 0;
+            this.attackType = '';
+
+            this.color = Color;
+            this.id = id;
+        }
+    }
+
 
     public class Pawn : Piece
     {
