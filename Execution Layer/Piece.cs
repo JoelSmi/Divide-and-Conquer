@@ -38,6 +38,23 @@ namespace Pieces
         public int[] currPos { get; set; } = new int[2];
     }
 
+    public class Empty : Piece 
+    {
+        public Empty(string id, string Color)
+        {
+            this.movement = 0;
+            this.movementType = '';
+            this.defenseProb = new short[] { 6, 6, 6, 6, 6, 6 };
+
+            this.attack = 0;
+            this.attackType = '';
+
+            this.color = Color;
+            this.id = id;
+        }
+    }
+
+
     public class Pawn : Piece
     {
         public Pawn(string id, string Color)
