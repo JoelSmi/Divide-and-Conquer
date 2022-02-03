@@ -66,6 +66,12 @@ namespace Pieces {
 		public HashSet<int[]> GetLegalAttacks() {
 			return legalAttacks;
 		}
+		public bool HasLegalMove() {
+			return legalMoves != null && legalMoves.Count > 0;
+		}
+		public bool HasLegalAttack() {
+			return legalAttacks != null && legalAttacks.Count > 0;
+		}
 		//Update the legal moves and attacks for this piece based on the board and its position
 		public void UpdateLegalActions(Board b, int row, int col) {
 			//Update legal moves using recursive helper method
