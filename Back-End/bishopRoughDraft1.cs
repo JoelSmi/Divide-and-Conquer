@@ -16,6 +16,7 @@ namespace BishopAI1
     class bishopRoughDraft1
 	{
         //Returns the X co-ordinate and Y co-ordinate on the board
+	    // Maybe change from foreach to for
         public static int[] GetLocation(Piece p, Board b)
         {
             int x = 0, y = 0, counter = 0;
@@ -44,10 +45,11 @@ namespace BishopAI1
             return square;
         }
 
-        /*This method will be used to check if a single enemy player can attack a single friendly player.
-            The first argument will be the piece who is defending, i.e. the one who may be attacked.
-            The second argument will be the the player that may want to attack.
-            This will return a boolean value, True: if it can attack, False: if it cannot attack.*/
+        /*1 enemy attack 1 friendly
+          Argument 1 - friendly
+	  Argument 2 - enemy
+	  Return 1 - True, enemy can attack
+	  Return 2 - False, enemy cannot attack*/
         public static bool IndividualAttackCheck(Piece defender, Piece attacker, Board b)
         {
             int[] square = GetLocation(defender,b);
@@ -162,28 +164,26 @@ namespace BishopAI1
             return safeSquare;
         }
         
-		static void Main(string[] args)
-		{
+	static void Main(string[] args)
+	{
             //At first we will always use the left bishop.
             
-            //Declaration of variables we will need
-            bool act = false, BishopTurn = true;
+            bool act = false, BishopTurn = true; //Declaration of variables we will need
+
             
             //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
 
             Board b = new Board();
-            
             Console.WriteLine("Board Initialized");
             b.Print();
             
-            //Here we hardcode the commander, and its subordinates
-            Piece currentCommander = b.GetPiece(0,2);
-            
-            //At first the subordinates will be hardcoded
-            Piece[] subordinates = {b.GetPiece(1, 0), b.GetPiece(1, 1), b.GetPiece(1, 2), b.GetPiece(0, 1)};
+	    // Hardcode pieces
+            Piece currentCommander = b.GetPiece(0,2); //commander
+            Piece[] subordinates = {b.GetPiece(1, 0), b.GetPiece(1, 1), b.GetPiece(1, 2), b.GetPiece(0, 1)}; //subordinates
             
             //This segment will be testing code in order to make sure the commander and subordinates are correct, will 
             //normally stay commented out
+	    /*
             Console.WriteLine("Current Commander Piece Details");
             currentCommander.PrintPiece();
             Console.WriteLine("The subordinates for the commander:");
@@ -191,6 +191,7 @@ namespace BishopAI1
             {
                 p.PrintPiece();
             }
+	    */
             //End of Board Initialization testing code
             
             //Here we will hardcode the live enemy players
@@ -201,7 +202,6 @@ namespace BishopAI1
                 b.GetPiece(7, 0), b.GetPiece(7,1), b.GetPiece(7,2), b.GetPiece(7,3),
                 b.GetPiece(7, 4), b.GetPiece(7,5), b.GetPiece(7,6), b.GetPiece(7,7),
             };
-            
             //This will check to make sure all of the live enemy players are correct.
             /*
             Console.WriteLine("All live enemy pieces");
@@ -219,20 +219,17 @@ namespace BishopAI1
             }
             Console.Write(" which is also known as " + Board.GetNotation(commanderSquare[0],commanderSquare[1]));
 
-			while(BishopTurn)
-			{
+	    while(BishopTurn)
+	    {
                 //This will be the bishop immediate threat detection:
                 if (!act)
                 {
                     //This for loop is so that we can check every single enemy to see if it attacking the commander
                     foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
-                    {
-                        //This is the if statement that is actually checking if it is in danger or not
-                        if (IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
-                        //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
-                        //returning true or false
+                    {                        
+                        if (IndividualAttackCheck(currentCommander, currentEnemyPlayer, b)) //check commander(defending) vs enemy (attacking)
                         {
-                            //If it is true, we need to see which subordinate(s) can attack the dangerous enemy piece.
+                            //Enemy can attack, now get a friendly to attack enemy
                             Piece attackingPiece = SubordinateAttackCheck(currentEnemyPlayer, subordinates, b);
                             /*If one is found, SubordinateAttackCheck should have already considered
                             possibilities and accounted for them. SubordinateAttackCheck will find any subordinates who
