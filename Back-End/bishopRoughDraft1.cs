@@ -63,15 +63,15 @@ namespace BishopAI1
             return false;
         }
         
-        /*This method will be used when we want to find a subordinate who can attack a particular enemy. This will be used
-		when we have a commander that is in danger and we want to find a subordinate who can attack the attacking piece.
-		In the event there are multiple subordinates that can attack the defending commander, we will find the one that
-		has the highest probability of capture upon attacking.
-		This function will not just be able to stop at the first subordinate it finds, we want to find the best
-	subordinate we can use (Knight > Pawn).
-		The first argument is the enemy we want to kill.
-		The second argument is the array of pieces that are the subordinates of the commander.
-		This function will return the piece that is recommended to attack with.*/
+	
+        /*1 friendly subordinate attack 1 enemy. 
+	  Use one that has highest chance to capture enemy. Will short when found one.
+	  Argument 1 - enemy
+	  Argument 2 - friendly
+	  Return 1 - Piece that will attack enemy.
+	  Return 2 - No piece found. */
+	// I think this is broken?
+	// Only pawn and knight would be considered to attack?
         private static Piece SubordinateAttackCheck(Piece enemyWeWantToAttack, Piece[] subordinates, Board b)
         {
             int[] square = GetLocation(enemyWeWantToAttack,b);
@@ -100,13 +100,13 @@ namespace BishopAI1
             return empty;
         }
         
-        /*This method will be used when the AI wants to consider the probability a certain piece has of capturing
-            another certain piece.
-            The first argument is the piece that will be attacked, i.e. the defender
-        The second argument is the piece that is attacking, i.e. the attacker
-        This function will return a boolean value, True: if the odds are greater than or equal to 50%, False: if the
-            odds are less than 50%. (We could make it so the AI will automatically know the number the roll will end up
-            being, but this seems a bit unfair)*/
+        /*Attack success probability
+          Argument 1 - defending pieces
+	  Argument 2 - attacking pieces 
+	  Return 1 - True, Success rate is 50% or higher
+	  Return 2 - False, Success rate is 50% or lower
+	  (We could make it so the AI will automatically know the number the roll 
+	  will end up being, but this seems a bit unfair)*/
         static bool OddsCheck(Piece defender, Piece attacker)
         {
             int minimumRoll = Piece.getMinimumRoll(attacker, defender);
@@ -116,9 +116,8 @@ namespace BishopAI1
                 return false;
         }
         
-        /*This method will be used if a commander (or piece) is in danger and the commander cannot take out the threat.
-        If this is the case, we need to find a square the piece can move to where it will be out of danger. This method
-        will have to
+        /*Pieces is in danger, and enemy cannot be neutralized???
+		
         1) If the defending piece is a commander, we need to account for the fact it can move more than one square.
         2) Check which blocks around it are either in danger, or occupied by a friendly. We can do this with hashsets
         The first argument is the piece that is currently in danger, i.e. the defender
