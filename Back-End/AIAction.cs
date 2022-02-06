@@ -13,7 +13,7 @@ namespace BishopAI1
 		private int id = -1;
 		private int originalXCord = -1;
 		private int originalYCord = -1;
-		private int[] originalCords = new int[2];
+		private int[] originalCords = {-1, -1};
 		private int destinationXCord = -1;
 		private int destinationYCord = -1;
 		private int[] destinationCords = {-1, -1};
