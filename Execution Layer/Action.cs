@@ -197,11 +197,11 @@ namespace Actions
                     }
 
                 case 'P':
-                    if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+                    if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
-                    if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+                    if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
-                    if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+                    if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
 
                     if (actionValid == true)
@@ -320,103 +320,103 @@ namespace Actions
         //For archer/rook attack
         public static void checkAttackRook(Piece currPiece, int[] pos, int[] dest)
         {
-            if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-
-            if (((pos[0] - 2 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
-                actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
 
-            if (((pos[0] - 3 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 3 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 2 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 2 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 2 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 2 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 2 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 2 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 2 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+
+            if (((pos[0] - 3 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] + 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] + 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 3 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 3 == dest[0]) && pos[1] - 3 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 2 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] - 2 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] - 1 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] - 1 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 1 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 1 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 2 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 2 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] + 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] + 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] - 2 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                actionValid = true;
+            if (((pos[0] + 3 == dest[0]) && pos[1] - 3 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
         }
         #endregion
@@ -425,21 +425,21 @@ namespace Actions
         //For king/queen/knight/bishop attack
         public static void checkAttackSquare(Piece currPiece, int[] pos, int[] dest)
         {
-            if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
-            if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].color.Equals("Black")))
+            if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                 actionValid = true;
         }
         #endregion
