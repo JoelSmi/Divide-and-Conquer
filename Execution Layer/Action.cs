@@ -3353,7 +3353,99 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] - 4 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1]] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 1] == "e" && GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 1] == "e" && (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] - 4 == dest[0]) && pos[1] == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1]] == "e")
@@ -3464,7 +3556,99 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] - 4 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1]] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 1] == "e" && GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 1] == "e" && (GameBoard[currPiece.pos[0] - 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] - 4 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 1] == "e")
@@ -3743,9 +3927,193 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] - 1 == dest[0]) && pos[1] + 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 2] == "e" && GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 2] == "e" && (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] - 1 == dest[0]) && pos[1] - 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 2] == "e" && GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 2] == "e" && (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] == dest[0]) && pos[1] + 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 1] == "e")
@@ -3965,9 +4333,193 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] + 1 == dest[0]) && pos[1] + 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 2] == "e" && GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] + 2] == "e" && (GameBoard[currPiece.pos[0], currPiece.pos[1] + 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] + 1 == dest[0]) && pos[1] - 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 2] == "e" && GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] - 1, currPiece.pos[1] - 2] == "e" && (GameBoard[currPiece.pos[0], currPiece.pos[1] - 3] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] + 2 == dest[0]) && pos[1] + 4 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 1] == "e")
@@ -4246,7 +4798,99 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] + 4 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1]] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 1] == "e" && GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] + 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 1] == "e" && (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] + 4 == dest[0]) && pos[1] == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1]] == "e")
@@ -4357,7 +5001,99 @@ namespace Actions {
                     }
                 }
                 if (((pos[0] + 4 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
-                    actionValid = true;
+                {
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 2] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1]] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] - 1] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 2] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 1] == "e" && GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                    if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] + 1] == "e")
+                    {
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1]] == "e")
+                        {
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1] - 1] == "e")
+                            {
+                                actionValid = true;
+                            }
+                            if (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                            {
+                                actionValid = true;
+                            }
+                        }
+                        if (GameBoard[currPiece.pos[0] + 2, currPiece.pos[1] + 1] == "e" && (GameBoard[currPiece.pos[0] + 3, currPiece.pos[1]] == "e")
+                        {
+                            actionValid = true;
+                        }
+                    }
+                }
                 if (((pos[0] + 4 == dest[0]) && pos[1] - 2 == dest[1]) && (GameBoard[currPiece.dest[0], currPiece.dest[1]] == "e"))
                 {
                     if (GameBoard[currPiece.pos[0] + 1, currPiece.pos[1] - 1] == "e")
