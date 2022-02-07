@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         // sets pieces onto the created
         mPieceManager.Setup(mBoardUI);
 
-        //Initialize Execution Layer Board Object
+        //Initialize Execution Layer Board Object with the White and Black Matricies
         string teamColor = "White";
         Piece[,] White = new Piece[2, 8]{ { new Pawn("p0",teamColor), new Pawn("p1",teamColor),
                     new Pawn("p2",teamColor), new Pawn("p3",teamColor), new Pawn("p4",teamColor),
@@ -55,15 +55,19 @@ public class GameManager : MonoBehaviour
 
             int[] currPos = { uiCurrentCellX, uiCurrentCellY };
             int[] dest = { uiTargetCellX, uiTargetCellY };
-            //Gianing the character of the action performed
+
+            //Gianing the character of the action performed from the Execution Layer
             char ActionType = ExecutionBoard.checkActionType(currPos, dest);
 
+            //Apply the found action type to the execution layer
+                // 'M' indicates movement; 'A' indicates acttacking
             if (ActionType == 'M' || ActionType == 'A')
             {
                 
                 ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
                 ActionLog.Add("Current Position: " + currPos[0] + ", " + currPos[1]);
             }
+                // 'N' indicates No Action
             else if (ActionType == 'N')
             {
                 ActionLog.Add("No Action Detected");
@@ -76,6 +80,7 @@ public class GameManager : MonoBehaviour
             mPieceManager.actionTaken = false;
         }
 
+        //update to the UI when the Execution Layer has been updated by the AI 
         if (ExecutionBoard.hasActed)
         {
             ExecutionBoard.hasActed = false;

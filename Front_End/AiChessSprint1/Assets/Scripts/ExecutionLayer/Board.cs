@@ -72,6 +72,7 @@ namespace GameBoard
             isWhite = true;
         }
 
+        //Checking to ensure the current Piece is in the correct position on the Board
         public void checkBoardPos(Piece currPiece)
         {
             int[] Position = new int[2];
@@ -91,7 +92,8 @@ namespace GameBoard
                 }
             }
         }
-        
+
+        //Update the GameBoard based upon the current Piece, current position, and the targeted destination
         public void updateBoard(Piece currPiece, int[] currPosition, int[] dest)
         {
             this.GameBoard[currPosition[0], currPosition[1]] = this.Blank;
@@ -99,6 +101,7 @@ namespace GameBoard
             currPiece.currPos = dest;
         }
 
+        //given the current position and the destination, check the current position and destination to determine the type of action then return a char to indicate the action type
         public char checkActionType(int[] currPos, int[] dest)
         {
             if (currPos[0] == dest[0] && currPos[1] == dest[1])
@@ -110,7 +113,8 @@ namespace GameBoard
             else
                 return 'I';
         }
-        
+
+        //Function call is made to the Actionn class to check if the action type is valid or not
         public void takeAction(char ActionType, Piece currPiece, int[] dest)
         {
             this.hasActed = true;
@@ -134,6 +138,7 @@ namespace GameBoard
             } 
         }
 
+        //Control function for switching which color has control of updating the GameBoard
         public void endTurn()
         {
             if (isWhite)
@@ -145,6 +150,8 @@ namespace GameBoard
             this.isWhite = true;
         }
 
+
+        //helper function for printing the current state of the GameBoard
         public void printGameBoard()
         {
             for (int x = 0; x < this.GameBoard.GetLength(0); x++)
