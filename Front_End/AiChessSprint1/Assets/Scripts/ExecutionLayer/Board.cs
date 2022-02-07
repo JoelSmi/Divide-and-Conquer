@@ -27,6 +27,7 @@ namespace GameBoard
         private const int MaxActionCount = 6;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
+        public bool hasActed { get; set; } = false;
 
         public Board(Piece[,] initialWhite, Piece[,] initialBlack)
         { 
@@ -112,7 +113,7 @@ namespace GameBoard
         
         public void takeAction(char ActionType, Piece currPiece, int[] dest)
         {
-
+            this.hasActed = true;
             int temp = 0;
             int ActionCount = 0;
             switch (ActionType) {
@@ -121,7 +122,6 @@ namespace GameBoard
                     if(temp > 0 && ActionCount+temp < MaxActionCount)
                     {
                         updateBoard(currPiece, currPiece.currPos, dest);
-                        endTurn();
                     }
                     break;
                 case 'A':
@@ -129,7 +129,6 @@ namespace GameBoard
                     if (temp > 0 && ActionCount + temp < MaxActionCount)
                     {
                         updateBoard(currPiece, currPiece.currPos, dest);
-                        endTurn();
                     }
                     break;
             } 

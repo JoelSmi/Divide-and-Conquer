@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
 
-    protected StreamWriter ActionLog = new("ActionLog.txt", append: true);
+    protected List<string> ActionLog = new List<String>();
 
     // Start is called before the first frame update
     void Start()
@@ -62,20 +62,24 @@ public class GameManager : MonoBehaviour
             {
                 
                 ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
-                ActionLog.WriteLine("Current Position: " + currPos[0] + ", " + currPos[1]);
+                ActionLog.Add("Current Position: " + currPos[0] + ", " + currPos[1]);
             }
             else if (ActionType == 'N')
             {
-                ActionLog.WriteLine("No Action Detected");
+                ActionLog.Add("No Action Detected");
             }
             else
             {
-                ActionLog.WriteLine("Error: Invalid Action");
+                ActionLog.Add("Error: Invalid Action");
             }
 
             mPieceManager.actionTaken = false;
         }
-        
+
+        if (ExecutionBoard.hasActed)
+        {
+            ExecutionBoard.hasActed = false;
+        }
     }
 
     public void EndTurn()
