@@ -102,12 +102,6 @@ public class BasePiece : EventTrigger
             CellState cellState = CellState.None;
             cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
 
-            //if a cell contatins an enemy it adds that cell to the mHighlighted Cells list then breaks out of the loop
-            if(cellState == CellState.Enemy)
-            {
-                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
-                break;
-            }
 
             // if the cell contatins something other than an enemy or a free state it breaks the loop
             if (cellState != CellState.Free)
