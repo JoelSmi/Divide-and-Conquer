@@ -68,9 +68,9 @@ public class GameManager : MonoBehaviour
             if (ActionType == 'M' || ActionType == 'A')
             {
                 
-                file.Write(ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest ));
+                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
                 file.WriteLine("Current Position: " + currPos[0] + ", " + currPos[1]);
-                file.WriteLine("Current Position: " + dest[0] + ", " + dest[1]);
+                file.WriteLine("Destination: " + dest[0] + ", " + dest[1]);
             }
                 // 'N' indicates No Action
             else if (ActionType == 'N')
