@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-namespace Pieces {
+namespace BishopAI1 {
 	public enum Color {
 		White, Black, Empty
 	}
@@ -39,6 +39,12 @@ namespace Pieces {
 			Direction.South, Direction.Southwest, Direction.Southeast, Direction.West, Direction.East });
 		protected HashSet<Direction> legalDirections;
 		//Returns if the piece is controlled by White or Black
+		//This prints details about a piece
+		public void PrintPiece()
+		{
+			Console.WriteLine("This is the " + this.GetColor() + " " + this.GetType().Name + " with the ID of " + this.GetID());
+		}
+
 		public Color GetColor() {
 			return color;
 		}
@@ -65,6 +71,12 @@ namespace Pieces {
 		//Gets the set of spaces which contain enemy pieces that this piece is threatening
 		public HashSet<int[]> GetLegalAttacks() {
 			return legalAttacks;
+		}
+		public bool HasLegalMove() {
+			return legalMoves != null && legalMoves.Count > 0;
+		}
+		public bool HasLegalAttack() {
+			return legalAttacks != null && legalAttacks.Count > 0;
 		}
 		//Update the legal moves and attacks for this piece based on the board and its position
 		public void UpdateLegalActions(Board b, int row, int col) {

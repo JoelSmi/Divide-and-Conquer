@@ -38,23 +38,25 @@ namespace Pieces
         public int[] currPos { get; set; } = new int[2];
     }
 
-    public class Empty : Piece 
+    #region EmptyPiece
+    public class Empty : Piece
     {
         public Empty(string id, string Color)
         {
             this.movement = 0;
-            this.movementType = '';
+            this.movementType = 'N';
             this.defenseProb = new short[] { 6, 6, 6, 6, 6, 6 };
 
             this.attack = 0;
-            this.attackType = '';
+            this.attackType = 'N';
 
             this.color = Color;
             this.id = id;
         }
     }
+    #endregion
 
-
+    #region Pawn/Rook
     public class Pawn : Piece
     {
         public Pawn(string id, string Color)
@@ -70,6 +72,7 @@ namespace Pieces
             this.id = id;
         }
     }
+    
 
     public class Rook : Piece
     {
@@ -87,7 +90,9 @@ namespace Pieces
             this.id = id;
         }
     }
+    #endregion
 
+    #region Royalty/Commanders
     public class Knight : Piece
     {
         public Knight(string id, string Color)
@@ -104,6 +109,7 @@ namespace Pieces
         }
     }
 
+    #region Commanders
     ///Both the Bishop and King have two addition variables 
     ///called delegates and action count
     public class Bishop : Piece
@@ -129,23 +135,6 @@ namespace Pieces
             this.id = id;
         }
     }
-
-    public class Queen : Piece
-    {
-        public Queen(string id, string Color)
-        {
-            this.movement = 3;
-            this.movementType = 'S';
-            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
-
-            this.attack = 1;
-            this.attackType = 'S';
-
-            this.color = Color;
-            this.id = id;
-        }
-    }
-
     public class King : Piece
     {
         //Stores the ids' of the piece currently under the command of the bishop\
@@ -168,4 +157,24 @@ namespace Pieces
             this.id = id;
         }
     }
+    #endregion
+
+    public class Queen : Piece
+    {
+        public Queen(string id, string Color)
+        {
+            this.movement = 3;
+            this.movementType = 'S';
+            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
+
+            this.attack = 1;
+            this.attackType = 'S';
+
+            this.color = Color;
+            this.id = id;
+        }
+    }
+
+
+    #endregion
 }
