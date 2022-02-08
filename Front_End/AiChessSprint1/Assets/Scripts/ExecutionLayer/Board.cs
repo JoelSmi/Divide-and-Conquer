@@ -24,7 +24,7 @@ namespace GameBoard
         public Piece[,] WhiteBoard { get; private set; } = new Piece[2, 8];
         public Piece[,] BlackBoard { get; private set; } = new Piece[2, 8];
         public Piece Blank = new Empty("e","N");
-        private const int MaxActionCount = 6;
+        private const int MaxActionCount = 2;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
@@ -94,11 +94,12 @@ namespace GameBoard
         }
 
         //Update the GameBoard based upon the current Piece, current position, and the targeted destination
-        public void updateBoard(Piece currPiece, int[] currPosition, int[] dest)
+        public string updateBoard(Piece currPiece, int[] currPos, int[] dest)
         {
-            this.GameBoard[currPosition[0], currPosition[1]] = this.Blank;
             this.GameBoard[dest[0], dest[1]] = currPiece;
+            this.GameBoard[currPos[0], currPos[1]] = this.Blank;
             currPiece.currPos = dest;
+            return "Update Reached";
         }
 
         //given the current position and the destination, check the current position and destination to determine the type of action then return a char to indicate the action type
@@ -114,8 +115,8 @@ namespace GameBoard
                 return 'I';
         }
 
-        //Function call is made to the Actionn class to check if the action type is valid or not
-        public void takeAction(char ActionType, Piece currPiece, int[] dest)
+        //Function call is made to the Action class to check if the action type is valid or not
+        public string takeAction(char ActionType, Piece currPiece, int[] dest)
         {
             this.hasActed = true;
             int temp = 0;
@@ -125,17 +126,30 @@ namespace GameBoard
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
                     if(temp > 0 && ActionCount+temp < MaxActionCount)
                     {
-                        updateBoard(currPiece, currPiece.currPos, dest);
+                        ActionCount += temp;
+                        return updateBoard(currPiece, currPiece.currPos, dest);
+                    }
+                    else
+                    {
+                        endTurn();
+                        return "Ending turn" + temp;
                     }
                     break;
                 case 'A':
                     temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, dest);
                     if (temp > 0 && ActionCount + temp < MaxActionCount)
                     {
-                        updateBoard(currPiece, currPiece.currPos, dest);
+                        ActionCount += temp;
+                        return updateBoard(currPiece, currPiece.currPos, dest);
+                    }
+                    else
+                    {
+                        endTurn();
+                        return "Ending turn" + temp;
                     }
                     break;
-            } 
+            }
+            return "Error in takeAction";
         }
 
         //Control function for switching which color has control of updating the GameBoard
@@ -152,16 +166,19 @@ namespace GameBoard
 
 
         //helper function for printing the current state of the GameBoard
-        public void printGameBoard()
+        public string printGameBoard()
         {
+            string CurrentState = "";
             for (int x = 0; x < this.GameBoard.GetLength(0); x++)
             {
-                Console.WriteLine();
+                CurrentState += "\n";
                 for (int y = 0; y < this.GameBoard.GetLength(0); y++)
                 {
-                    Console.Write(this.GameBoard[x, y].id + "\t");
+                    CurrentState += (this.GameBoard[x, y].id + "\t");
                 }
             }
+
+            return CurrentState;
         }
     }
 }

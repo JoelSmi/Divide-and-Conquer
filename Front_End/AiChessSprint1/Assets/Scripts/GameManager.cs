@@ -15,11 +15,14 @@ public class GameManager : MonoBehaviour
 
     protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
 
-    protected List<string> ActionLog = new List<String>();
+    protected string ActionLog = "ActionLog.txt";
 
     // Start is called before the first frame update
     void Start()
     {
+        StreamWriter file = new (ActionLog, append: false);
+        file.Flush();
+        file.Close();
         //initiates and creates the Game board
         mBoardUI.Create();
 
@@ -51,10 +54,11 @@ public class GameManager : MonoBehaviour
     {
         if (mPieceManager.actionTaken)
         {
+            StreamWriter file = new(ActionLog, append: true);
             CellRelay();
 
-            int[] currPos = { uiCurrentCellX, uiCurrentCellY };
-            int[] dest = { uiTargetCellX, uiTargetCellY };
+            int[] currPos = {7 - uiCurrentCellY, uiCurrentCellX};
+            int[] dest = {7 - uiTargetCellY, uiTargetCellX};
 
             //Gianing the character of the action performed from the Execution Layer
             char ActionType = ExecutionBoard.checkActionType(currPos, dest);
@@ -64,19 +68,23 @@ public class GameManager : MonoBehaviour
             if (ActionType == 'M' || ActionType == 'A')
             {
                 
-                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
-                ActionLog.Add("Current Position: " + currPos[0] + ", " + currPos[1]);
+                file.Write(ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest ));
+                file.WriteLine("Current Position: " + currPos[0] + ", " + currPos[1]);
+                file.WriteLine("Current Position: " + dest[0] + ", " + dest[1]);
             }
                 // 'N' indicates No Action
             else if (ActionType == 'N')
             {
-                ActionLog.Add("No Action Detected");
+                file.WriteLine("No Action Detected");
             }
             else
             {
-                ActionLog.Add("Error: Invalid Action");
+                file.WriteLine("Error: Invalid Action");
             }
 
+            file.WriteLine(ExecutionBoard.printGameBoard());
+
+            file.Close();
             mPieceManager.actionTaken = false;
         }
 

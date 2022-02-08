@@ -5,7 +5,7 @@ namespace Actions
 {
     public class Action
     {
-        static bool actionValid = false;
+        private static bool actionValid = false;
         static Piece[,] GameBoard;
 
         #region MoveCall
@@ -87,9 +87,9 @@ namespace Actions
                 case 'P':
                     if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].id.Equals("e")))
                         actionValid = true;
-                    if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].id.Equals("e")))
+                    if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (GameBoard[dest[0], dest[1]].id.Equals("e")))
                         actionValid = true;
-                    if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (GameBoard[dest[0], dest[1]].id.Equals("e")))
+                    if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (GameBoard[dest[0], dest[1]].id.Equals("e")))
                         actionValid = true;
 
                     if (actionValid == true)
@@ -119,7 +119,7 @@ namespace Actions
                     }
             }
 
-            return 0;
+            return 5;
         }
         #endregion
 
