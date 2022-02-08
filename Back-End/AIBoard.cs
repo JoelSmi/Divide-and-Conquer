@@ -7,6 +7,7 @@ namespace BishopAI1{
 		private Piece[,] board;
 		private int dim;
 		private EmptySquare e;
+		private Piece bishopCommander1;
 		//Default 8x8 chessboard
 		public Board()
 		{
@@ -21,6 +22,7 @@ namespace BishopAI1{
 				new Pawn(Color.White, 4), new Pawn(Color.White, 5), new Pawn(Color.White,6 ), new Pawn(Color.White, 7) },
 				{ new Rook(Color.White, 0), new Knight(Color.White, 0), new Bishop(Color.White, 0), new Queen(Color.White),
 				new King(Color.White), new Bishop(Color.White, 1), new Knight(Color.White, 1), new Rook(Color.White, 1) }};
+			bishopCommander1 = board[0, 2];
 			dim = 8;
 			this.UpdateAllLegalMoves();
 		}
@@ -29,6 +31,13 @@ namespace BishopAI1{
 		public Board(Piece[,] board) {
 			e = new EmptySquare();
 			this.board = board;
+			bishopCommander1 = e;
+			foreach (Piece p in board) {
+				if (p.ToString() == "B0") {
+					bishopCommander1 = p;
+					continue;
+				}
+			}
 			dim = (int) Math.Sqrt(board.Length);
 			this.UpdateAllLegalMoves();
 		}
@@ -65,22 +74,12 @@ namespace BishopAI1{
 		public Piece[,] GetBoard() {
 			return board;
 		}
-		public int width() {
+		public int GetWidth() {
 			return dim;
 		}
 		//TODO: Add rank and file labels
 		public void Print() {
-			/* Visualization of how the default board is arranged:
-			char[,] textBoard = new char[8, 8] {
-				{ 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' },
-				{ 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
-				{ '-', '-', '-', '-', '-', '-', '-', '-' },
-				{ '-', '-', '-', '-', '-', '-', '-', '-' },
-				{ '-', '-', '-', '-', '-', '-', '-', '-' },
-				{ '-', '-', '-', '-', '-', '-', '-', '-' },
-				{ 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
-				{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' } };
-			Uppercase pieces are black, lowercase pieces are white
+			/* Uppercase pieces are black, lowercase pieces are white
 			K = King, Q = Queen, R = Rook, N = Knight, B = Bishop, P = Pawn, - = empty space */
 			int col = 0;
 			foreach (Piece piece in board) {
@@ -106,6 +105,30 @@ namespace BishopAI1{
 					}
 				}
 			}
+		}
+		public Piece GetBishopCommander1() {
+			return bishopCommander1;
+		}
+		public HashSet<Piece> GetSubordinates(Piece commander) {
+			HashSet<Piece> subordinates = new HashSet<Piece>();
+			if (commander.ToString() == "B0") {
+				foreach (Piece p in board) {
+					if (p.ToString() == "P0" || p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0") {
+						subordinates.Add(p);
+					}
+				}
+			}
+			return subordinates;
+		}
+		//Gets the set of enemy (human-controlled) pieces that are still active on the board
+		public HashSet<Piece> GetEnemyPieces() {
+			HashSet<Piece> enemyPieces = new HashSet<Piece>();
+			foreach (Piece p in board) {
+				if (p.GetColor() == Color.White) {
+					enemyPieces.Add(p);
+				}
+			}
+			return enemyPieces;
 		}
 		//Returns whether a coordinate pair maps to an existing space on this board
 		public bool IsInBounds(int row, int col) {
@@ -209,34 +232,46 @@ namespace BishopAI1{
 		}
 
 		//Tester method
-		// public static void Main(string[] args) {
-		// 	//csc /out:Chess.exe Board.cs Pieces.cs
-		// 	Board b = new Board();
-		// 	b.Print();
-		// 	b.PrintLegalSquares(new int[] { 6, 0 });//p0
+		 public static void Main(string[] args) {
+			//csc /out:Chess.exe AIBoard.cs AIPieces.cs
+			Board b = new Board();
+			Piece bc1 = b.GetBishopCommander1();
+			Console.WriteLine("Commander: " + bc1);
+			Console.Write("Commander Subordinates: ");
+			foreach (Piece p in b.GetSubordinates(bc1)) {
+				Console.Write(p + " ");
+			}
+			Console.WriteLine();
+			Console.Write("Enemy pieces: ");
+			foreach (Piece p in b.GetEnemyPieces()) {
+				Console.Write(p + " ");
+			}
+			Console.WriteLine();
+			/*b.Print();
+			b.PrintLegalSquares(new int[] { 6, 0 });//p0
 
-		// 	b.Move(6, 5, 5, 5);//p5 up 1 to F3
-		// 	b.Move(1, 5, 2, 5);//P5 down 1 to F6
-		// 	b.Print();
+			b.Move(6, 5, 5, 5);//p5 up 1 to F3
+			b.Move(1, 5, 2, 5);//P5 down 1 to F6
+			b.Print();
 
-		// 	b.PrintLegalSquares(new int[] { 0, 5 });//B1
-		// 	b.PrintLegalSquares(new int[] { 0, 6 });//N1
-		// 	b.PrintLegalSquares(new int[] { 7, 5 });//b1
-		// 	b.PrintLegalSquares(new int[] { 7, 6 });//n1
-		// 	b.PrintLegalAttacks(new int[] { 7, 6 });//n1
+			b.PrintLegalSquares(new int[] { 0, 5 });//B1
+			b.PrintLegalSquares(new int[] { 0, 6 });//N1
+			b.PrintLegalSquares(new int[] { 7, 5 });//b1
+			b.PrintLegalSquares(new int[] { 7, 6 });//n1
+			b.PrintLegalAttacks(new int[] { 7, 6 });//n1
 
-		// 	b.Move(0, 6, 4, 7);//N1 to H4
-		// 	b.Print();
-		// 	b.PrintLegalAttacks(new int[] { 7, 7 });//r1
+			b.Move(0, 6, 4, 7);//N1 to H4
+			b.Print();
+			b.PrintLegalAttacks(new int[] { 7, 7 });//r1
 
-		// 	Console.WriteLine("Minimum roll for Knight to capture Queen:" + Piece.getMinimumRoll(new Knight(Color.White, 0), new Queen(Color.Black)));
-		// 	Console.WriteLine("Minimum roll for King to capture Pawn:" + Piece.getMinimumRoll(new King(Color.White), new Pawn(Color.Black, 0)));
-		// 	Console.WriteLine("Minimum roll for Pawn to capture Pawn:" + Piece.getMinimumRoll(new Pawn(Color.White, 0), new Pawn(Color.Black, 0)));
+			Console.WriteLine("Minimum roll for Knight to capture Queen:" + Piece.getMinimumRoll(new Knight(Color.White, 0), new Queen(Color.Black)));
+			Console.WriteLine("Minimum roll for King to capture Pawn:" + Piece.getMinimumRoll(new King(Color.White), new Pawn(Color.Black, 0)));
+			Console.WriteLine("Minimum roll for Pawn to capture Pawn:" + Piece.getMinimumRoll(new Pawn(Color.White, 0), new Pawn(Color.Black, 0)));
 
-		// 	b.AttackAndMove(4, 7, 4, 5, 5, 5, 6);//N1 attacks p5 from square F4
-		// 	b.Print();
+			b.AttackAndMove(4, 7, 4, 5, 5, 5, 6);//N1 attacks p5 from square F4
+			b.Print();
 
-		// 	Board b2 = new Board(b.GetBoard());
-		// }
+			Board b2 = new Board(b.GetBoard());*/
+		}
 	}
 }

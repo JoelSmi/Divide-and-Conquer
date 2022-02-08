@@ -38,13 +38,12 @@ namespace BishopAI1 {
 		protected HashSet<Direction> omni = new HashSet<Direction>(new Direction[] { Direction.North, Direction.Northwest, Direction.Northeast,
 			Direction.South, Direction.Southwest, Direction.Southeast, Direction.West, Direction.East });
 		protected HashSet<Direction> legalDirections;
-		//Returns if the piece is controlled by White or Black
 		//This prints details about a piece
 		public void PrintPiece()
 		{
 			Console.WriteLine("This is the " + this.GetColor() + " " + this.GetType().Name + " with the ID of " + this.GetID());
 		}
-
+		//Returns if the piece is controlled by White or Black
 		public Color GetColor() {
 			return color;
 		}
@@ -77,6 +76,9 @@ namespace BishopAI1 {
 		}
 		public bool HasLegalAttack() {
 			return legalAttacks != null && legalAttacks.Count > 0;
+		}
+		public bool IsCommander() {
+			return this.ToString() == "B0" || this.ToString() == "B1";
 		}
 		//Update the legal moves and attacks for this piece based on the board and its position
 		public void UpdateLegalActions(Board b, int row, int col) {
