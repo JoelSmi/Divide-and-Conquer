@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
 
             file.Close();
             mPieceManager.actionTaken = false;
+            mPieceManager.SwitchSides(Color.black);
         }
 
         //update to the UI when the Execution Layer has been updated by the AI 
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour
     public void EndTurn()
     {
         mPieceManager.SwitchSides(Color.white);
+        mPieceManager.actionTaken = true;
     }
 
     public void CellRelay()
