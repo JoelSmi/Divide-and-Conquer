@@ -15,7 +15,8 @@ public class PawnUI : BasePiece
         mMovement =  mColor == Color.white ?  new Vector3Int(0,1,1) : new Vector3Int(0,-1,-1);
 
         // loads image for the Pawn
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Pawn");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("pawn_" + spriteName);
         //TagSet(newTeamColor);
     }
 

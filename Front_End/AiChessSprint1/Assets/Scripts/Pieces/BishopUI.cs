@@ -11,7 +11,8 @@ public class BishopUI : BasePiece
 
         // changes Bishop's movement then loads sprie for the BIshop
         mMovement = new Vector3Int(2, 2, 2);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Bishop");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("bishop_" + spriteName);
     }
 
 }

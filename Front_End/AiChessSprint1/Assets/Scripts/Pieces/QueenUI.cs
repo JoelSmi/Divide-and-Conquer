@@ -12,7 +12,8 @@ public class QueenUI : BasePiece
 
         // changes Queen's movement then loads sprie for the queen
         mMovement = new Vector3Int(3, 3, 3);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Queen");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("queen_" + spriteName);
     }
 
 }

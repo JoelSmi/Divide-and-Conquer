@@ -26,16 +26,17 @@ public class BasePiece : EventTrigger
     protected Vector3Int mMovement = Vector3Int.one;
     protected List<Cell> mHighlightedCells = new List<Cell>();
 
+    //
+    protected SpriteRenderer baseSprite;
+
     
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
     {
         mPieceManager = newPieceManager;
-
-        
         mColor = newTeamColor;
         TagSet();
-        GetComponent<Image>().color = newSpriteColor;
+        //GetComponent<Image>().color = newSpriteColor;
         mRectTransform = GetComponent<RectTransform>();
     }
 

@@ -12,7 +12,8 @@ public class KnightUI : BasePiece
 
         // changes Knight's movement then loads sprite for the Knight
         mMovement = new Vector3Int(4, 4, 4);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Knight");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("knight_" + spriteName);
     }
 
 }

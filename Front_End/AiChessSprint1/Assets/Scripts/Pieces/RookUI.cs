@@ -12,7 +12,8 @@ public class RookUI : BasePiece
 
         //// changes RookUI's movement then loads sprite for the RookUI
         mMovement = new Vector3Int(2, 2, 2);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Rook");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("rook_" + spriteName);
     }
 
 }

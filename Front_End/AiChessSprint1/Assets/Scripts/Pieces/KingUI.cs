@@ -12,7 +12,8 @@ public class KingUI : BasePiece
 
         // changes king movent then loads sprie for the king
         mMovement = new Vector3Int(3, 3, 3);
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("T_King");
+        string spriteName = newTeamColor == Color.white ? "red" : "blue";
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("king_" + spriteName);
     }
 
     //follows base Kill function and then set the mIsKingAlive object to false to reset the game
