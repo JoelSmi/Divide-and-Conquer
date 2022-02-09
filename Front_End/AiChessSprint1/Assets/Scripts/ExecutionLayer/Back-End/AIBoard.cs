@@ -173,29 +173,78 @@ namespace BishopAI1{
 			}
 		}
 		public Piece GetBishopCommander1() {
-			return bishopCommander1;
+			e = new EmptySquare();
+			foreach (Piece p in board) {
+				if (p.ToString() == "B0") {
+					return p;
+				}
+			}
+			return e;
 		}
-		public HashSet<Piece> GetSubordinates(Piece commander) {
-			HashSet<Piece> subordinates = new HashSet<Piece>();
+		// public HashSet<Piece> GetSubordinates(Piece commander) {
+		// 	HashSet<Piece> subordinates = new HashSet<Piece>();
+		// 	if (commander.ToString() == "B0") {
+		// 		foreach (Piece p in board) {
+		// 			if (p.ToString() == "P0" || p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0") {
+		// 				subordinates.Add(p);
+		// 			}
+		// 		}
+		// 	}
+		// 	return subordinates;
+		// }
+
+		public Piece[] GetSubordinates(Piece commander) {
+			//For now it will only say 3 because bishop in sprint 1 only has 3 subordinates
+			Piece[] subordinates = new Piece[4];
+			int counter = 0;
 			if (commander.ToString() == "B0") {
 				foreach (Piece p in board) {
 					if (p.ToString() == "P0" || p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0") {
-						subordinates.Add(p);
+						//Console.WriteLine("We found " + p.ToString());
+						//Console.WriteLine("Counter is at " + counter);
+						subordinates[counter] = p;
+						counter++;
 					}
 				}
 			}
+			if (counter != subordinates.Length-1)
+			{
+				while (counter < subordinates.Length-1)
+				{
+					subordinates[counter] = e;
+				}
+			}
 			return subordinates;
-		}
+		}		
 		//Gets the set of enemy (human-controlled) pieces that are still active on the board
-		public HashSet<Piece> GetEnemyPieces() {
-			HashSet<Piece> enemyPieces = new HashSet<Piece>();
+		// public HashSet<Piece> GetEnemyPieces() {
+		// 	HashSet<Piece> enemyPieces = new HashSet<Piece>();
+		// 	foreach (Piece p in board) {
+		// 		if (p.GetColor() == Color.White) {
+		// 			enemyPieces.Add(p);
+		// 		}
+		// 	}
+		// 	return enemyPieces;
+		// }
+		public Piece[] GetEnemyPieces() {
+			Piece[] enemyPieces = new Piece[16];
+			int counter = 0;
 			foreach (Piece p in board) {
 				if (p.GetColor() == Color.White) {
-					enemyPieces.Add(p);
+					enemyPieces[counter] = p;
+					counter++;
+				}
+			}
+
+			if (counter != enemyPieces.Length)
+			{
+				while (counter < enemyPieces.Length)
+				{
+					enemyPieces[counter] = e;
 				}
 			}
 			return enemyPieces;
-		}
+		}		
 		//Returns whether a coordinate pair maps to an existing space on this board
 		public bool IsInBounds(int row, int col) {
 			return row < dim && row >= 0 && col < dim && col >= 0;
@@ -298,21 +347,21 @@ namespace BishopAI1{
 		}
 
 		//Tester method
-		 public static void Main(string[] args) {
-			//csc /out:Chess.exe AIBoard.cs AIPieces.cs
-			Board b = new Board();
-			Piece bc1 = b.GetBishopCommander1();
-			Console.WriteLine("Commander: " + bc1);
-			Console.Write("Commander Subordinates: ");
-			foreach (Piece p in b.GetSubordinates(bc1)) {
-				Console.Write(p + " ");
-			}
-			Console.WriteLine();
-			Console.Write("Enemy pieces: ");
-			foreach (Piece p in b.GetEnemyPieces()) {
-				Console.Write(p + " ");
-			}
-			Console.WriteLine();
+		//  public static void Main(string[] args) {
+		// 	//csc /out:Chess.exe AIBoard.cs AIPieces.cs
+		// 	Board b = new Board();
+		// 	Piece bc1 = b.GetBishopCommander1();
+		// 	Console.WriteLine("Commander: " + bc1);
+		// 	Console.Write("Commander Subordinates: ");
+		// 	foreach (Piece p in b.GetSubordinates(bc1)) {
+		// 		Console.Write(p + " ");
+		// 	}
+		// 	Console.WriteLine();
+		// 	Console.Write("Enemy pieces: ");
+		// 	foreach (Piece p in b.GetEnemyPieces()) {
+		// 		Console.Write(p + " ");
+		// 	}
+		//	Console.WriteLine();
 			/*b.Print();
 			b.PrintLegalSquares(new int[] { 6, 0 });//p0
 
@@ -338,6 +387,6 @@ namespace BishopAI1{
 			b.Print();
 
 			Board b2 = new Board(b.GetBoard());*/
-		}
+		//}
 	}
 }

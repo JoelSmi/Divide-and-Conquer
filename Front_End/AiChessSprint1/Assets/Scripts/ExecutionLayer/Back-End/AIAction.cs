@@ -19,6 +19,7 @@ namespace BishopAI1
 		private int[] destinationCords = {-1, -1};
 		private bool isAttack = false;
 		private String printedReference;
+		private bool isActing = false;
 
 		public Action(){
 			pieceType = typeof(EmptySquare);
@@ -45,12 +46,23 @@ namespace BishopAI1
 		}
 
 		public void printAction(){
-			Console.WriteLine("The outgoing action returned is:");
-			Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
-			+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
-			+ GetNotation(destinationCords[0], destinationCords[1]));
-			Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
-			+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+			if (isAttack){
+				Console.WriteLine("The outgoing action returned is:");
+				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
+				+ " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+				+ GetNotation(destinationCords[0], destinationCords[1]));
+				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
+				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+				}
+			else{
+				Console.WriteLine("The outgoing action returned is:");
+				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
+				+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+				+ GetNotation(destinationCords[0], destinationCords[1]));
+				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
+				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+			}
+			
 		}
 
 		public void setPieceType(Type piece){
@@ -117,6 +129,12 @@ namespace BishopAI1
 
 		public bool getIsAttack(){
 			return isAttack;
+		}
+		public void setIsAct(bool acting){
+			this.isActing = acting;
+		}
+		public bool getIsActing(){
+			return isActing;
 		}
 	}
 }
