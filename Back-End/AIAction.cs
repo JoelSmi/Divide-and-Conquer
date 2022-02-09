@@ -129,5 +129,11 @@ namespace BishopAI1
 		public bool getIsAttack(){
 			return isAttack;
 		}
+		public void setIsAct(bool acting){
+			this.isActing = acting;
+		}
+		public bool getIsActing(){
+			return isActing;
+		}
 	}
 }
