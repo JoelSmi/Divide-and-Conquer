@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     protected string ActionLog = "ActionLog.txt";
 
+    private object WriteLock = new object();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,9 +54,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        string TempLogBuff = "";
         if (mPieceManager.actionTaken)
         {
-            StreamWriter file = new(ActionLog, append: true);
             CellRelay();
 
             int[] currPos = {7 - uiCurrentCellY, uiCurrentCellX};
@@ -69,22 +71,21 @@ public class GameManager : MonoBehaviour
             {
                 
                 ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
-                file.WriteLine("initial: " + currPos[0] + ", " + currPos[1]);
-                file.WriteLine("Destination: " + dest[0] + ", " + dest[1]);
+                TempLogBuff += ("initial: " + currPos[0] + ", " + currPos[1] + "\n");
+                TempLogBuff += ("Destination: " + dest[0] + ", " + dest[1] + "\n");
             }
                 // 'N' indicates No Action
             else if (ActionType == 'N')
             {
-                file.WriteLine("No Action Detected");
+                TempLogBuff += ("No Action Detected\n");
             }
             else
             {
-                file.WriteLine("Error: Invalid Action");
+                TempLogBuff += ("Error: Invalid Action\n");
             }
 
-            file.WriteLine(ExecutionBoard.printGameBoard());
+            TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
             ExecutionBoard.endTurn();
-            file.Close();
             
 
             mPieceManager.actionTaken = false;
@@ -92,10 +93,31 @@ public class GameManager : MonoBehaviour
         }
 
         //update to the UI when the Execution Layer has been updated by the AI 
+        if (!ExecutionBoard.isWhite)
+        {
+            //StreamWriter file = new(ActionLog, append: true);
+
+            ExecutionBoard.getAIAction();
+
+            TempLogBuff += "AI Action:\n";
+            TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
+        }
+
         if (ExecutionBoard.hasActed)
         {
             ExecutionBoard.hasActed = false;
-            ExecutionBoard.getAIAction();
+            //Update Board based on changes in the Execution Layer
+        }
+
+        if (!TempLogBuff.Equals(""))
+        {
+            lock(this.WriteLock)
+            {
+                StreamWriter file = new(ActionLog, append: true);
+                file.WriteLine(TempLogBuff);
+                file.Close();
+            }
+            
         }
     }
 

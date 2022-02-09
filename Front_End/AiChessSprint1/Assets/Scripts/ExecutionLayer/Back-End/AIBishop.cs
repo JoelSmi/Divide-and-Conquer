@@ -39,12 +39,18 @@ namespace BishopAI1
             This will return a boolean value, True: if it can attack, False: if it cannot attack.*/
         public static bool IndividualAttackCheck(Piece defender, Piece attacker, Board b)
         {
-            int[] square = GetLocation(defender,b);
-            foreach (int[] move in attacker.GetLegalAttacks())
-            {
-                if (square[0] == move[0] && square[1] == move[1])
+            int[] square = GetLocation(defender, b);
+
+            /////// Modified to skip if the attacker is null /////
+            ///Necessary to avoid null pointer exception when running the Game
+            /// **Possibly what is causing the stopp for making the decision
+            if (attacker == null) {
+                foreach (int[] move in attacker.GetLegalAttacks())
                 {
-                    return true;
+                    if (square[0] == move[0] && square[1] == move[1])
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
