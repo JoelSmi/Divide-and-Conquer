@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PawnUI : BasePiece
-{
-    
+{    
     //overrides the base piece Setup to fit the Pawn's role
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
     {
@@ -16,8 +15,10 @@ public class PawnUI : BasePiece
 
         // loads image for the Pawn
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("pawn_" + spriteName);
+        GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
         //TagSet(newTeamColor);
+
+        createChildSprite(spriteName);
     }
 
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
@@ -51,17 +52,32 @@ public class PawnUI : BasePiece
 
     }
 
-   /* public override void TagSet(Color teamColor)
+    //Adds the base to the sprite, determined by team color
+    protected void createChildSprite(string spriteName)
     {
-        string tag;
-        if (teamColor == Color.white)
-        {
-            tag = "p" + mPieceManager.numPieces;
-            mPieceManager.mPiecePrefab.tag = tag;
-            
-        }
+        GameObject childSprite = new GameObject();
+        childSprite.transform.SetParent(transform);
+        childSprite.transform.localScale = new Vector3(1, 1, 1);
+        childSprite.name = "Piece Sprite";
 
+        childSprite.AddComponent<Image>();
+        Image image = childSprite.GetComponent<Image>();
+        image.sprite = Resources.Load<Sprite>("pawn_" + spriteName);
+
+        RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(75, 75);
     }
-   */
 
+    /* public override void TagSet(Color teamColor)
+     {
+         string tag;
+         if (teamColor == Color.white)
+         {
+             tag = "p" + mPieceManager.numPieces;
+             mPieceManager.mPiecePrefab.tag = tag;
+
+         }
+
+     }
+    */
 }

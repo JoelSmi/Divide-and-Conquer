@@ -92,8 +92,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mOutlineImage: {fileID: 5678823507609130908}
   mBoardPosition: {x: 0, y: 0}
-  mBoard: {fileID: 0}
+  mBoardUI: {fileID: 0}
   mRectTransform: {fileID: 0}
+  mCurrentPiece: {fileID: 0}
 --- !u!1 &5571252234974874937
 GameObject:
   m_ObjectHideFlags: 0

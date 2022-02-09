@@ -25,10 +25,6 @@ public class BasePiece : EventTrigger
     //the amount of movement the piece can make and the cells that will be highlighted when moving the piece
     protected Vector3Int mMovement = Vector3Int.one;
     protected List<Cell> mHighlightedCells = new List<Cell>();
-
-    //
-    protected SpriteRenderer baseSprite;
-
     
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)

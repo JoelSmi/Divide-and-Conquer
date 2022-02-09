@@ -51,7 +51,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a531152c5dff4f49858035169a73d74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mIsKingAlive: 1
+  numPieces: 0
   mPiecePrefab: {fileID: 1574190171488166, guid: 927d7bc52016d8e4d9a74a22e33c50c3, type: 3}
+  basePrefab: {fileID: 5219308784140154700, guid: 4cab36aa29d1dd3418821c36599eea1f, type: 3}
+  pmCurrentCellX: 0
+  pmCurrentCellY: 0
+  pmTargetCellX: 0
+  pmTargetCellY: 0
+  actionTaken: 0
 --- !u!223 &5350122143296123092
 Canvas:
   m_ObjectHideFlags: 0

@@ -43,7 +43,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Sprite Base
   - 
   - 
   - 
@@ -72,4 +72,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Sprite Base
+    uniqueID: 653503521
     locked: 0
