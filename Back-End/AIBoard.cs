@@ -26,6 +26,72 @@ namespace BishopAI1{
 			dim = 8;
 			this.UpdateAllLegalMoves();
 		}
+		//Creates a board from an array representation of the board
+		public Board(String[,] boardString){
+			board = new Piece[8,8];
+			e = new EmptySquare();
+			for (int i = 0; i < 8; i++){
+				for (int j = 0; j < 8; j++){
+					String val = boardString[i,j];
+					if (val.Length > 1){
+						String id = val[1].ToString();
+						int ID = Int32.Parse(id);
+						//Black Pawn
+						if (val.StartsWith("P")){
+							board[i,j] = new Pawn(Color.Black, ID);
+						}
+						//White Pawn
+						else if (val.StartsWith("p")){
+							board[i,j] = new Pawn(Color.White, ID);
+						}
+						//Black Rook
+						else if (val.StartsWith("R")){
+							board[i,j] = new Rook(Color.Black, ID);
+						}
+						//White Rook
+						else if (val.StartsWith("r")){
+							board[i,j] = new Rook(Color.White, ID);
+						}
+						//Black Knight
+						else if (val.StartsWith("N")){
+							board[i,j] = new Knight(Color.Black, ID);
+						}
+						//White Knight
+						else if (val.StartsWith("n")){
+							board[i,j] = new Knight(Color.White, ID);
+						}
+						//Black Bishop
+						else if (val.StartsWith("B")){
+							board[i,j] = new Bishop(Color.Black, ID);
+						}
+						//White Bishop
+						else if (val.StartsWith("b")){
+							board[i,j] = new Bishop(Color.White, ID);
+						}
+						//Black Queen
+						else if (val.StartsWith("Q")){
+							board[i,j] = new Queen(Color.Black);
+						}
+						//White Queen
+						else if (val.StartsWith("q")){
+							board[i,j] = new Queen(Color.White);
+						}
+						//Black King
+						else if (val.StartsWith("K")){
+							board[i,j] = new King(Color.Black);
+						}
+						else if (val.StartsWith("k")){
+							board[i,j] = new King(Color.White);
+						}
+					}
+					else{
+						board[i,j] = e;
+					}
+				}
+			}
+			dim = 8;
+			this.UpdateAllLegalMoves();
+		}
 		/**Creates a new chessboard using a given array
 		* Precondition: board is square */
 		public Board(Piece[,] board) {
