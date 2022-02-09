@@ -13,8 +13,20 @@ class AITesting
         //Declaration of variables we will need
         bool act = false, BishopTurn = true;
         
+        String[,] boardArray = new String [8,8] {
+                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
+                               {"P0","P1","P2","P3","P4","P5","P6","P7"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"p0","p1","p2","p3","p4","p5","p6","p7"},
+                               {"r0","n0","b0","q0","k0","b1","n1","r1"}
+        }; 
+
         //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
-        Board b = new Board();
+        //Board b = new Board();
+        Board b = new Board(boardArray);
         
         Console.WriteLine("Board Initialized");
         b.Print();
