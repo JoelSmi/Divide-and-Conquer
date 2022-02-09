@@ -83,8 +83,10 @@ public class GameManager : MonoBehaviour
             }
 
             file.WriteLine(ExecutionBoard.printGameBoard());
-
+            ExecutionBoard.endTurn();
             file.Close();
+            
+
             mPieceManager.actionTaken = false;
             mPieceManager.SwitchSides(Color.black);
         }
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour
         if (ExecutionBoard.hasActed)
         {
             ExecutionBoard.hasActed = false;
+            ExecutionBoard.getAIAction();
         }
     }
 

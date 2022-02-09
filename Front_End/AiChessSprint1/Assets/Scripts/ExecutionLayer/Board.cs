@@ -1,6 +1,7 @@
 using System;
 using Actions;
 using Pieces;
+using BishopAI1;
 
 namespace GameBoard
 {
@@ -20,16 +21,16 @@ namespace GameBoard
          */
 
         //Matricies storing the current game board and the white and black pieces being used
-        public Piece[,] GameBoard { get; private set; } = new Piece[8, 8];
-        public Piece[,] WhiteBoard { get; private set; } = new Piece[2, 8];
-        public Piece[,] BlackBoard { get; private set; } = new Piece[2, 8];
-        public Piece Blank = new Empty("e","N");
+        public Pieces.Piece[,] GameBoard { get; private set; } = new Pieces.Piece[8, 8];
+        public Pieces.Piece[,] WhiteBoard { get; private set; } = new Pieces.Piece[2, 8];
+        public Pieces.Piece[,] BlackBoard { get; private set; } = new Pieces.Piece[2, 8];
+        public Pieces.Piece Blank = new Empty("e", "N");
         private const int MaxActionCount = 2;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
 
-        public Board(Piece[,] initialWhite, Piece[,] initialBlack)
+        public Board(Pieces.Piece[,] initialWhite, Pieces.Piece[,] initialBlack)
         { 
 
             //Passes matrix of the peice order and their individual ids
@@ -42,7 +43,7 @@ namespace GameBoard
         public void resetBoard()
         {
             //initial state of game board before peice setup
-            this.GameBoard = new Piece[,] {
+            this.GameBoard = new Pieces.Piece[,] {
                 {Blank,Blank,Blank,Blank,Blank,Blank,Blank,Blank},
                 {Blank,Blank,Blank,Blank,Blank,Blank,Blank,Blank},
                 {Blank,Blank,Blank,Blank,Blank,Blank,Blank,Blank},
@@ -66,6 +67,7 @@ namespace GameBoard
                 this.WhiteBoard[0, i].currPos = new int[] { 6, i };
                 this.GameBoard[7, i] = this.WhiteBoard[1, i];
                 this.WhiteBoard[1, i].currPos = new int[] { 7, i };
+
             }
 
             //Restart match starting with White taking the first turn
@@ -73,7 +75,7 @@ namespace GameBoard
         }
 
         //Checking to ensure the current Piece is in the correct position on the Board
-        public void checkBoardPos(Piece currPiece)
+        public void checkBoardPos(Pieces.Piece currPiece)
         {
             int[] Position = new int[2];
 
@@ -94,7 +96,7 @@ namespace GameBoard
         }
 
         //Update the GameBoard based upon the current Piece, current position, and the targeted destination
-        public void updateBoard(Piece currPiece, int[] currPos, int[] dest)
+        public void updateBoard(Pieces.Piece currPiece, int[] currPos, int[] dest)
         {
             this.GameBoard[dest[0], dest[1]] = currPiece;
             this.GameBoard[currPos[0], currPos[1]] = this.Blank;
@@ -115,7 +117,7 @@ namespace GameBoard
         }
 
         //Function call is made to the Action class to check if the action type is valid or not
-        public void takeAction(char ActionType, Piece currPiece, int[] dest)
+        public void takeAction(char ActionType, Pieces.Piece currPiece, int[] dest)
         {
             this.hasActed = true;
             int temp = 0;
@@ -123,14 +125,10 @@ namespace GameBoard
             switch (ActionType) {
                 case 'M':
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if(temp > 0 && ActionCount+temp <= MaxActionCount)
+                    if (temp > 0 && ActionCount + temp <= MaxActionCount)
                     {
                         ActionCount += temp;
                         updateBoard(currPiece, currPiece.currPos, dest);
-                    }
-                    else
-                    {
-                        endTurn();
                     }
                     break;
                 case 'A':
@@ -140,12 +138,51 @@ namespace GameBoard
                         ActionCount += temp;
                         updateBoard(currPiece, currPiece.currPos, dest);
                     }
-                    else
-                    {
-                        endTurn();
-                    }
                     break;
             }
+        }
+
+        //Call to create the necessary AI components and take action
+        public void getAIAction()
+        {
+            bool act = false, BishopTurn = true;
+
+            String[,] boardArray = new String[8, 8] {
+                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
+                               {"P0","P1","P2","P3","P4","P5","P6","P7"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"e","e","e","e","e","e","e","e"},
+                               {"p0","p1","p2","p3","p4","p5","p6","p7"},
+                               {"r0","n0","b0","q0","k0","b1","n1","r1"}
+        };
+
+            //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
+            //BishopAI1.Board b = new BishopAI1.Board(ConvertGameBoard());
+            BishopAI1.Board b = new BishopAI1.Board(boardArray);
+
+
+            //Creating object perameters for the BishopAI function call
+            BishopAI1.Piece currentCommander = b.GetPiece(0, 2);
+            BishopAI1.Piece[] subordinates = { b.GetPiece(1, 0), b.GetPiece(1, 1), b.GetPiece(1, 2), b.GetPiece(0, 1) };
+            BishopAI1.Piece[] LiveEnemyPlayers ={
+                b.GetPiece(6, 0), b.GetPiece(6,1), b.GetPiece(6,2), b.GetPiece(6,3),
+                b.GetPiece(6, 4), b.GetPiece(6,5), b.GetPiece(6,6), b.GetPiece(6,7),
+                b.GetPiece(7, 0), b.GetPiece(7,1), b.GetPiece(7,2), b.GetPiece(7,3),
+                b.GetPiece(7, 4), b.GetPiece(7,5), b.GetPiece(7,6), b.GetPiece(7,7),
+                };
+
+            //Creation of AIAction object using the BishopAI function
+            BishopAI1.Action outgoingAction = BishopAI1.AIBishop.BishopAI(b, currentCommander, subordinates, LiveEnemyPlayers);
+            
+            //Performing the move action on the AIBoard
+            b.Move(outgoingAction.getOriginalXCord(), outgoingAction.getOriginalYCord(), outgoingAction.getDestinationXCord(), outgoingAction.getDestinationYCord());
+
+            char ActionType = checkActionType(outgoingAction.getOriginalCords(), outgoingAction.getDestinationCords());
+            takeAction(ActionType, this.GameBoard[outgoingAction.getOriginalXCord(),outgoingAction.getOriginalYCord()], outgoingAction.getDestinationCords());
+
+            endTurn();
         }
 
         //Control function for switching which color has control of updating the GameBoard
@@ -160,6 +197,19 @@ namespace GameBoard
             this.isWhite = true;
         }
 
+        //Helper function to convert Piece[,] array to string[,] array
+        public string[,] ConvertGameBoard()
+        {
+            string[,] StringBoard = new string[8, 8];
+            for (int i = 0; i < this.GameBoard.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.GameBoard.GetLength(0); j++)
+                {
+                    StringBoard[i, j] = this.GameBoard[i, j].id; 
+                }
+            }
+            return StringBoard;
+        }
 
         //helper function for printing the current state of the GameBoard
         public string printGameBoard()

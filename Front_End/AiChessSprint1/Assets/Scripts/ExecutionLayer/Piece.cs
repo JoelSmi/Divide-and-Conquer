@@ -32,7 +32,7 @@ namespace Pieces
         public string color { get; protected set; } = "";
         public string id { get; protected set; } = "";
 
-        //boolean value to determine if a peice has been captured or not
+        //boolean value to determine if a peice has been captured or not 
         public bool isCaptured { get; protected set; } = false;
         //Storage of the current position of the peice in the format of {x,y}, or {row,column}
         public int[] currPos { get; set; } = new int[2];
@@ -114,8 +114,6 @@ namespace Pieces
     ///called delegates and action count
     public class Bishop : Piece
     {
-        //Stores the ids' of the piece currently under the command of the bishop
-        public string[] Delegates { get; protected set; } = new string[6];
         //Stores the maximum numbe of actions this peice can perform or command
         public int actionCount { get; protected set; } = 0;
 
@@ -137,8 +135,6 @@ namespace Pieces
     }
     public class King : Piece
     {
-        //Stores the ids' of the piece currently under the command of the bishop\
-        public string[] Delegates { get; protected set; } = new string[16];
         //Stores the maximum numbe of actions this peice can perform or command
         public int actionCount { get; protected set; } = 0;
 
