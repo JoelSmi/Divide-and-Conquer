@@ -125,7 +125,6 @@ public class PieceManager : MonoBehaviour
 
         //if its blacks turn next sets black to interactive otherwise sets white to be interactive
         SetInteractive(mWhitePieces, !isBlackTurn);
-        SetInteractive(mBlackPieces, isBlackTurn);
     }
 
     //returns all pieces to their original state

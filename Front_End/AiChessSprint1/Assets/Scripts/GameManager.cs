@@ -68,9 +68,9 @@ public class GameManager : MonoBehaviour
             if (ActionType == 'M' || ActionType == 'A')
             {
                 
-                file.Write(ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest ));
-                file.WriteLine("Current Position: " + currPos[0] + ", " + currPos[1]);
-                file.WriteLine("Current Position: " + dest[0] + ", " + dest[1]);
+                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
+                file.WriteLine("initial: " + currPos[0] + ", " + currPos[1]);
+                file.WriteLine("Destination: " + dest[0] + ", " + dest[1]);
             }
                 // 'N' indicates No Action
             else if (ActionType == 'N')
@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
 
             file.Close();
             mPieceManager.actionTaken = false;
+            mPieceManager.SwitchSides(Color.black);
         }
 
         //update to the UI when the Execution Layer has been updated by the AI 
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour
     public void EndTurn()
     {
         mPieceManager.SwitchSides(Color.white);
+        mPieceManager.actionTaken = true;
     }
 
     public void CellRelay()

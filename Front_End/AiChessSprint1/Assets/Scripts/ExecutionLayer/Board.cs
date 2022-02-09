@@ -94,12 +94,11 @@ namespace GameBoard
         }
 
         //Update the GameBoard based upon the current Piece, current position, and the targeted destination
-        public string updateBoard(Piece currPiece, int[] currPos, int[] dest)
+        public void updateBoard(Piece currPiece, int[] currPos, int[] dest)
         {
             this.GameBoard[dest[0], dest[1]] = currPiece;
             this.GameBoard[currPos[0], currPos[1]] = this.Blank;
             currPiece.currPos = dest;
-            return "Update Reached";
         }
 
         //given the current position and the destination, check the current position and destination to determine the type of action then return a char to indicate the action type
@@ -116,7 +115,7 @@ namespace GameBoard
         }
 
         //Function call is made to the Action class to check if the action type is valid or not
-        public string takeAction(char ActionType, Piece currPiece, int[] dest)
+        public void takeAction(char ActionType, Piece currPiece, int[] dest)
         {
             this.hasActed = true;
             int temp = 0;
@@ -124,30 +123,27 @@ namespace GameBoard
             switch (ActionType) {
                 case 'M':
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if(temp > 0 && ActionCount+temp < MaxActionCount)
+                    if(temp > 0 && ActionCount+temp <= MaxActionCount)
                     {
                         ActionCount += temp;
-                        return updateBoard(currPiece, currPiece.currPos, dest);
+                        updateBoard(currPiece, currPiece.currPos, dest);
                     }
                     else
                     {
                         endTurn();
-                        return "Ending turn" + temp;
                     }
                 case 'A':
                     temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if (temp > 0 && ActionCount + temp < MaxActionCount)
+                    if (temp > 0 && ActionCount + temp <= MaxActionCount)
                     {
                         ActionCount += temp;
-                        return updateBoard(currPiece, currPiece.currPos, dest);
+                        updateBoard(currPiece, currPiece.currPos, dest);
                     }
                     else
                     {
                         endTurn();
-                        return "Ending turn" + temp;
                     }
             }
-            return "Error in takeAction";
         }
 
         //Control function for switching which color has control of updating the GameBoard
@@ -169,13 +165,14 @@ namespace GameBoard
             string CurrentState = "";
             for (int x = 0; x < this.GameBoard.GetLength(0); x++)
             {
-                CurrentState += "\n";
+                if(x > 0)
+                    CurrentState += "\n";
                 for (int y = 0; y < this.GameBoard.GetLength(0); y++)
                 {
                     CurrentState += (this.GameBoard[x, y].id + "\t");
                 }
             }
-
+            CurrentState += "\n";
             return CurrentState;
         }
     }

@@ -43,12 +43,12 @@ public class PawnUI : BasePiece
         int currentY = mCurrentCell.mBoardPosition.y;
 
         MatchesState(currentX - mMovement.z, currentY + mMovement.z, CellState.Free);
-        MatchesState(currentX - mMovement.z, currentY + mMovement.z, CellState.Enemy);
+        
 
         MatchesState(currentX, currentY + mMovement.y, CellState.Free);
 
         MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Free);
-        MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Enemy);
+        
 
     }
 
