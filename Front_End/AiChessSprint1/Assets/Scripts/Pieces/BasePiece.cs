@@ -166,7 +166,7 @@ public class BasePiece : EventTrigger
         transform.position = mCurrentCell.transform.position;
         mTargetCell = null;
 
-        mPieceManager.actionTaken = true;
+        
     }
     #endregion
 
@@ -222,6 +222,7 @@ public class BasePiece : EventTrigger
 
         //switch sides based on color
         mPieceManager.SwitchSides(mColor);
+        mPieceManager.actionTaken = true;
     }
     #endregion
 }

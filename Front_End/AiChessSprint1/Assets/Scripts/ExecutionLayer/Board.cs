@@ -132,6 +132,7 @@ namespace GameBoard
                     {
                         endTurn();
                     }
+                    break;
                 case 'A':
                     temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, dest);
                     if (temp > 0 && ActionCount + temp <= MaxActionCount)
@@ -143,6 +144,7 @@ namespace GameBoard
                     {
                         endTurn();
                     }
+                    break;
             }
         }
 
