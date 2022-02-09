@@ -45,12 +45,23 @@ namespace BishopAI1
 		}
 
 		public void printAction(){
-			Console.WriteLine("The outgoing action returned is:");
-			Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
-			+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
-			+ GetNotation(destinationCords[0], destinationCords[1]));
-			Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
-			+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+			if (isAttack){
+				Console.WriteLine("The outgoing action returned is:");
+				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
+				+ " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+				+ GetNotation(destinationCords[0], destinationCords[1]));
+				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
+				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+				}
+			else{
+				Console.WriteLine("The outgoing action returned is:");
+				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
+				+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+				+ GetNotation(destinationCords[0], destinationCords[1]));
+				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
+				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+			}
+			
 		}
 
 		public void setPieceType(Type piece){
