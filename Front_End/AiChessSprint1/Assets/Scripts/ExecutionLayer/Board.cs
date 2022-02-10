@@ -25,6 +25,10 @@ namespace GameBoard
         public Pieces.Piece[,] WhiteBoard { get; private set; } = new Pieces.Piece[2, 8];
         public Pieces.Piece[,] BlackBoard { get; private set; } = new Pieces.Piece[2, 8];
         public Pieces.Piece Blank = new Empty("e", "N");
+
+        public int[] actionInitial { get; set; } = new int[2];
+        public int[] actionDest { get; set; } = new int[2];
+
         private const int MaxActionCount = 2;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
@@ -122,6 +126,10 @@ namespace GameBoard
             this.hasActed = true;
             int temp = 0;
             int ActionCount = 0;
+            
+            this.actionInitial = currPiece.currPos;
+            this.actionDest = dest;
+
             switch (ActionType) {
                 case 'M':
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);

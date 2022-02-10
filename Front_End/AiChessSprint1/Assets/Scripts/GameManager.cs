@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour
         //update to the UI when the Execution Layer has been updated by the AI 
         if (!ExecutionBoard.isWhite)
         {
-            //StreamWriter file = new(ActionLog, append: true);
 
             ExecutionBoard.getAIAction();
 
@@ -106,6 +105,8 @@ public class GameManager : MonoBehaviour
         if (ExecutionBoard.hasActed)
         {
             ExecutionBoard.hasActed = false;
+            //ExecutionBoard.actionInitial
+            //ExecutionBoard.actionDest
             //Update Board based on changes in the Execution Layer
         }
 
