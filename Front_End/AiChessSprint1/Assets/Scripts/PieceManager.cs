@@ -56,7 +56,7 @@ public class PieceManager : MonoBehaviour
     }
 
     // instantiates the new pieces using a for loop
-    private List<BasePiece> CreatePieces(Color teamColor, Color32 spriteColor, BoardUI board)
+    private List<BasePiece> CreatePieces (Color teamColor, Color32 spriteColor, BoardUI board)
     {
         //creates a list using the basePiece class
         List<BasePiece> newPieces = new List<BasePiece>();
@@ -75,6 +75,10 @@ public class PieceManager : MonoBehaviour
             // finds the dictionary key for the piece then finds the type of that piece
             string key = mPieceOrder[i];
             Type pieceType = mPieceLibrary[key];
+
+            //Naming the object for Unity view
+            string colorName = teamColor == Color.white ? "RED" : "BLUE";
+            newPieceObject.name = colorName + " " + pieceType + " " + i;
 
             //creattes a new base piece based on the type of the piece then adds it to the newpiecesvariable
             BasePiece newPiece = (BasePiece)newPieceObject.AddComponent(pieceType);
@@ -135,7 +139,6 @@ public class PieceManager : MonoBehaviour
             piece.Reset();
         foreach (BasePiece piece in mBlackPieces)
             piece.Reset();
-
     }
 
     public void UIRelay(int currentCellX, int currentCellY, int targetCellX, int targetCellY)

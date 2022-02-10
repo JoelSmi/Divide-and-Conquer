@@ -47,7 +47,6 @@ public class BoardUI : MonoBehaviour
                 //setup
                 mAllCells[x, y] = newCell.GetComponent<Cell>();
                 mAllCells[x, y].Setup(new Vector2Int(x, y), this);
-
             }
         }
         #endregion

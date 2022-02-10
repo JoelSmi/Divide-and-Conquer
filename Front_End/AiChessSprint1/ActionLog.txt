@@ -1,12 +1,44 @@
-initial: 7, 4
-Destination: 4, 4
+initial: 6, 1
+Destination: 5, 1
 R0	N0	B0	Q0	K0	B1	N1	R1	
 P0	P1	P2	P3	P4	P5	P6	P7	
 e	e	e	e	e	e	e	e	
 e	e	e	e	e	e	e	e	
-e	e	e	e	k0	e	e	e	
-e	e	e	e	e	p4	e	e	
-p0	p1	p2	p3	e	p5	p6	p7	
-r0	n0	b0	q0	e	b1	n1	r1	
+e	e	e	e	e	e	e	e	
+e	p1	e	e	e	e	e	e	
+p0	e	p2	p3	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+AI Action:
+R0	N0	B0	Q0	K0	B1	N1	R1	
+e	P1	P2	P3	P4	P5	P6	P7	
+P0	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	p1	e	e	e	e	e	e	
+p0	e	p2	p3	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+
+initial: 5, 1
+Destination: 4, 1
+R0	N0	B0	Q0	K0	B1	N1	R1	
+e	P1	P2	P3	P4	P5	P6	P7	
+P0	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	p1	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+p0	e	p2	p3	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+AI Action:
+R0	e	B0	Q0	K0	B1	N1	R1	
+e	P1	P2	P3	P4	P5	P6	P7	
+P0	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	N0	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+p0	e	p2	p3	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
 
 

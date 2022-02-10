@@ -19,12 +19,15 @@ public class BasePiece : EventTrigger
     protected RectTransform mRectTransform = null;
     protected PieceManager mPieceManager;
 
-    //The cell that a piece is attempting to move into
-    protected Cell mTargetCell = null;
+    //The cell that a piece is attempting to move into (public so AI can access)
+    public Cell mTargetCell = null;
 
     //the amount of movement the piece can make and the cells that will be highlighted when moving the piece
     protected Vector3Int mMovement = Vector3Int.one;
     protected List<Cell> mHighlightedCells = new List<Cell>();
+
+    //
+    protected Sprite tempSprite = null;
     
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
@@ -32,7 +35,6 @@ public class BasePiece : EventTrigger
         mPieceManager = newPieceManager;
         mColor = newTeamColor;
         TagSet();
-        //GetComponent<Image>().color = newSpriteColor;
         mRectTransform = GetComponent<RectTransform>();
     }
 
@@ -75,7 +77,6 @@ public class BasePiece : EventTrigger
 
         else 
             mPieceManager.mPiecePrefab.tag = "AI";
-
     }
 
     #region Movement
@@ -160,7 +161,7 @@ public class BasePiece : EventTrigger
     }
 
     // removes the enemy piece on the target cell and moves the piece
-    protected virtual void Move()
+    public virtual void Move()
     {
         //removes Pieece from the board at target cell
         mTargetCell.RemovePiece();
@@ -176,9 +177,9 @@ public class BasePiece : EventTrigger
 
         // snaps the piece to the target cell thenn returns target cell to null
         transform.position = mCurrentCell.transform.position;
-        mTargetCell = null;
-        
+        mTargetCell = null; 
     }
+
     protected virtual void Attack()
     {
         //removes Pieece from the board at target cell
@@ -206,6 +207,10 @@ public class BasePiece : EventTrigger
         CheckPathing();
 
         ShowCells();
+
+        //Change to the selected base sprite
+        tempSprite = base.GetComponent<Image>().sprite;
+        base.GetComponent<Image>().sprite = Resources.Load<Sprite>("base_select");
     }
 
     // while a piece is being held use the base for the OnDrag function then  match the  movement to the mouse
@@ -237,6 +242,9 @@ public class BasePiece : EventTrigger
         //removes the mHighlightedCells 
         ClearCells();
 
+        //Revert to original base sprite
+        base.GetComponent<Image>().sprite = tempSprite;
+
         //if there isnt a target Cell return the piece to its current position
         if (!mTargetCell)
         {
@@ -255,5 +263,25 @@ public class BasePiece : EventTrigger
         mPieceManager.SwitchSides(mColor);
         mPieceManager.actionTaken = true;
     }
+    #endregion
+
+    #region AI movement
+    /*
+     * Movement for the AI pieces
+     * 
+     * currently it is copying all of the player methods
+     * but more AI-specific code may be required in future
+     */
+    public void MoveAIPiece()
+    {
+        if (mTargetCell.mCurrentPiece != null)
+        {
+            Attack();
+            return;
+        }
+        //use the Move function
+        Move();
+    }
+
     #endregion
 }
