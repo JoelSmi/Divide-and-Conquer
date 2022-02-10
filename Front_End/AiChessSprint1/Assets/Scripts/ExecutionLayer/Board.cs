@@ -154,18 +154,6 @@ namespace GameBoard
         public void getAIAction()
         {
             bool act = false, BishopTurn = true;
-
-            /*String[,] boardArray = new String[8, 8] {
-                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
-                               {"P0","P1","P2","P3","P4","P5","P6","P7"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"p0","p1","p2","p3","p4","p5","p6","p7"},
-                               {"r0","n0","b0","q0","k0","b1","n1","r1"}
-            };*/
-
             //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
             //BishopAI1.Board b = new BishopAI1.Board(ConvertGameBoard());
             BishopAI1.Board b = new BishopAI1.Board(ConvertGameBoard());
@@ -183,14 +171,29 @@ namespace GameBoard
 
             //Creation of AIAction object using the BishopAI function
             BishopAI1.Action outgoingAction = BishopAI1.AIBishop.BishopAI(b, currentCommander, subordinates, LiveEnemyPlayers);
-            
-            //Performing the move action on the AIBoard
-            b.Move(outgoingAction.getOriginalXCord(), outgoingAction.getOriginalYCord(), outgoingAction.getDestinationXCord(), outgoingAction.getDestinationYCord());
+            int [] tempPos = outgoingAction.getOriginalCords(), tempDest = outgoingAction.getDestinationCords();
+            if (tempDest[0] != tempPos[0] || tempDest[1] != tempPos[1])
+            {
+                //Performing the move action on the AIBoard
+                b.Move(tempPos[0], tempPos[1], tempDest[0], tempDest[1]);
 
-            char ActionType = checkActionType(outgoingAction.getOriginalCords(), outgoingAction.getDestinationCords());
-            takeAction(ActionType, this.GameBoard[outgoingAction.getOriginalXCord(),outgoingAction.getOriginalYCord()], outgoingAction.getDestinationCords());
+                char ActionType = checkActionType(tempPos, tempDest);
+
+                if (this.GameBoard[tempPos[0], tempPos[1]].id.ToUpper().ToCharArray()[0].Equals("N"))
+                {
+                    if (ActionType == 'A' && Math.Abs(tempDest[0] - tempPos[0]) > 1 && Math.Abs(tempDest[1] - tempPos[1]) > 1)
+                    {
+                        takeAction('M', )
+                    }
+
+                }
+
+                takeAction(ActionType, this.GameBoard[tempPos[0], tempPos[1]], tempDest);
+
+            }
 
             endTurn();
+
         }
 
         //Control function for switching which color has control of updating the GameBoard
