@@ -160,8 +160,9 @@ namespace GameBoard
 
 
             //Creating object perameters for the BishopAI function call
-            BishopAI1.Piece currentCommander = b.GetPiece(0, 2);
-            BishopAI1.Piece[] subordinates = { b.GetPiece(1, 0), b.GetPiece(1, 1), b.GetPiece(1, 2), b.GetPiece(0, 1) };
+            BishopAI1.Piece currentCommander = b.GetBishopCommander1();
+
+            BishopAI1.Piece[] subordinates = b.GetSubordinates(currentCommander);
             BishopAI1.Piece[] LiveEnemyPlayers ={
                 b.GetPiece(6, 0), b.GetPiece(6,1), b.GetPiece(6,2), b.GetPiece(6,3),
                 b.GetPiece(6, 4), b.GetPiece(6,5), b.GetPiece(6,6), b.GetPiece(6,7),

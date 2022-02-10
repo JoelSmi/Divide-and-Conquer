@@ -199,9 +199,9 @@ namespace Actions
                 case 'P':
                     if (((pos[0] - 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
-                    if (((pos[0] == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                    if (((pos[0] - 1 == dest[0]) && pos[1] == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
-                    if (((pos[0] + 1 == dest[0]) && pos[1] - 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
+                    if (((pos[0] - 1 == dest[0]) && pos[1] + 1 == dest[1]) && (currPiece.color != GameBoard[dest[0], dest[1]].color))
                         actionValid = true;
 
                     if (actionValid == true)
