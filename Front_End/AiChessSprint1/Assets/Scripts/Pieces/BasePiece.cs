@@ -81,7 +81,7 @@ public class BasePiece : EventTrigger
     #region Movement
 
     // creates the cell path to use for the highlighted cells
-    private void CreateCellPath(int xDirection, int yDirection, int movement)
+    protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
         //the current x, and y coordinates of the piece based on its current cell
         int currentX = mCurrentCell.mBoardPosition.x;
@@ -98,9 +98,18 @@ public class BasePiece : EventTrigger
             //and then checks the state for the currentX, ,andCurrentY
             CellState cellState = CellState.None;
             cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
-
-
+           
             // if the cell contatins something other than an enemy or a free state it breaks the loop
+            if (cellState == CellState.Enemy)
+            {
+                if (i == 1 )
+                {
+                    mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
+                   
+                }
+                else break;
+            }
+
             if (cellState != CellState.Free)
                 break;
 
@@ -134,7 +143,10 @@ public class BasePiece : EventTrigger
     protected void ShowCells()
     {
         foreach (Cell cell in mHighlightedCells)
+        {
             cell.mOutlineImage.enabled = true;
+            
+        }
 
     }
 
@@ -165,8 +177,22 @@ public class BasePiece : EventTrigger
         // snaps the piece to the target cell thenn returns target cell to null
         transform.position = mCurrentCell.transform.position;
         mTargetCell = null;
-
         
+    }
+    protected virtual void Attack()
+    {
+        //removes Pieece from the board at target cell
+        mTargetCell.RemovePiece();
+
+        //sets the current cell = to the current cell
+        //selects this piece as the current piece at the new current cell
+        mPieceManager.UIRelay(mCurrentCell.mBoardPosition.x, mCurrentCell.mBoardPosition.y, mTargetCell.mBoardPosition.x, mTargetCell.mBoardPosition.y);
+        mCurrentCell.mCurrentPiece = this;
+
+        // snaps the piece to the target cell thenn returns target cell to null
+        transform.position = mCurrentCell.transform.position;
+        mTargetCell = null;
+
     }
     #endregion
 
@@ -215,6 +241,11 @@ public class BasePiece : EventTrigger
         if (!mTargetCell)
         {
             transform.position = mCurrentCell.gameObject.transform.position;
+            return;
+        }
+        if (mTargetCell.mCurrentPiece != null) 
+        {
+            Attack();
             return;
         }
         //use the Move function

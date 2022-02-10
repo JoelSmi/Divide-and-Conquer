@@ -7,7 +7,6 @@ public class Cell : MonoBehaviour
 {
     // the image used to highlight cells that are available to move to
     public Image mOutlineImage;
-
     /*
      * mBoardPosition: where on the board the Cell is associated with
      * mBoard: uses the Board that has been setup
@@ -19,6 +18,8 @@ public class Cell : MonoBehaviour
     public BoardUI mBoardUI = null;
     [HideInInspector]
     public RectTransform mRectTransform = null;
+    [HideInInspector]
+    public bool isEnemy = false;
 
     // the current piece in the cell see BasePiece for more information
     [HideInInspector]

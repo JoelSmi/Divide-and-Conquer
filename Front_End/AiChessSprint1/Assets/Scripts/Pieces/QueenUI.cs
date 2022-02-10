@@ -22,6 +22,7 @@ public class QueenUI : BasePiece
     {
         CellState cellState = CellState.None;
         cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
+          
         if (cellState == targetState)
         {
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
