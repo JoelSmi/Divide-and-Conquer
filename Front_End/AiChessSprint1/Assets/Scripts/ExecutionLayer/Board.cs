@@ -183,7 +183,7 @@ namespace GameBoard
                 {
                     if (ActionType == 'A' && Math.Abs(tempDest[0] - tempPos[0]) > 1 && Math.Abs(tempDest[1] - tempPos[1]) > 1)
                     {
-                        takeAction('M', )
+                        //takeAction('M', )
                     }
 
                 }

@@ -180,6 +180,7 @@ public class BasePiece : EventTrigger
         mTargetCell = null; 
     }
 
+    //Definitely needs to change in the future, otherwise this function is redundant
     protected virtual void Attack()
     {
         //removes Piece from the board at target cell
@@ -251,11 +252,13 @@ public class BasePiece : EventTrigger
             transform.position = mCurrentCell.gameObject.transform.position;
             return;
         }
+        /*//Move seems to just do everything that attacking needs to currently
         if (mTargetCell.mCurrentPiece != null) 
         {
             Attack();
             return;
         }
+        */
         //use the Move function
         Move();
 

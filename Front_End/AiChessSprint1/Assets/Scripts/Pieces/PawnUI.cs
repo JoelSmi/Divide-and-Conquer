@@ -39,6 +39,7 @@ public class PawnUI : BasePiece
     // checks the path using the constraints of the pawns movement
     protected override void CheckPathing()
     {
+        /*//we are ignoring finer details of pawns for now
         int currentX = mCurrentCell.mBoardPosition.x;
         int currentY = mCurrentCell.mBoardPosition.y;
 
@@ -47,6 +48,13 @@ public class PawnUI : BasePiece
         MatchesState(currentX, currentY + mMovement.y, CellState.Free);
 
         MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Free);
+        */
+        //Vertical
+        CreateCellPath(0, 1, mMovement.y);
+
+        //Upper Diagonal
+        CreateCellPath(1, 1, mMovement.z);
+        CreateCellPath(-1, 1, mMovement.z);
     }
 
     //Adds the base to the sprite, determined by team color
