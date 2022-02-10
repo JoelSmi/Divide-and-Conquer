@@ -122,8 +122,6 @@ public class GameManager : MonoBehaviour
             int[] initial = { ExecutionBoard.actionInitial[1], 7 - ExecutionBoard.actionInitial[0] };
             int[] dest = { ExecutionBoard.actionDest[1], 7 - ExecutionBoard.actionDest[0] };
 
-            //Debug.Log("Initial(" + initial[0] + "," + initial[1] + ") Dest(" + dest[0] + ", " + dest[1] + ")");
-
             //Making sure there is indeed a piece to be moved, might be a redundant/useless check
             if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
             {
@@ -131,16 +129,6 @@ public class GameManager : MonoBehaviour
                 tempPiece.mTargetCell = mBoardUI.mAllCells[dest[0], dest[1]];
                 tempPiece.MoveAIPiece();
             }
-            /*
-            //debugging
-            for (int x = 0; x < 8; x++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    //Debug.Log("Position: " + mBoardUI.mAllCells[x, y].mBoardPosition + ", Piece: " + mBoardUI.mAllCells[x, y].mCurrentPiece);
-                }
-            }
-            */
         }
         #endregion
 

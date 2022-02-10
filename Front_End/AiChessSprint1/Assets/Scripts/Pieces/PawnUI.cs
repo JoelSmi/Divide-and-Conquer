@@ -43,13 +43,10 @@ public class PawnUI : BasePiece
         int currentY = mCurrentCell.mBoardPosition.y;
 
         MatchesState(currentX - mMovement.z, currentY + mMovement.z, CellState.Free);
-        
 
         MatchesState(currentX, currentY + mMovement.y, CellState.Free);
 
         MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Free);
-        
-
     }
 
     //Adds the base to the sprite, determined by team color
