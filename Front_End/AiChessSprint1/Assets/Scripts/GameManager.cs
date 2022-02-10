@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
 
     protected string ActionLog = "ActionLog.txt";
-
     private object WriteLock = new object();
 
     // Start is called before the first frame update
@@ -71,7 +70,7 @@ public class GameManager : MonoBehaviour
             {
                 
                 ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
-                TempLogBuff += ("initial: " + currPos[0] + ", " + currPos[1] + "\n");
+                TempLogBuff += ("Initial: " + currPos[0] + ", " + currPos[1] + "\n");
                 TempLogBuff += ("Destination: " + dest[0] + ", " + dest[1] + "\n");
             }
                 // 'N' indicates No Action

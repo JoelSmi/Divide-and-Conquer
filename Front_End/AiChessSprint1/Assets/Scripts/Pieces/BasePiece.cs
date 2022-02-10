@@ -274,11 +274,6 @@ public class BasePiece : EventTrigger
      */
     public void MoveAIPiece()
     {
-        if (mTargetCell.mCurrentPiece != null)
-        {
-            Attack();
-            return;
-        }
         //use the Move function
         Move();
     }

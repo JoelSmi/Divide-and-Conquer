@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace BishopAI1
 {
@@ -7,30 +8,37 @@ namespace BishopAI1
         //Returns the X co-ordinate and Y co-ordinate on the board
         public static int[] GetLocation(Piece p, Board b)
         {
-            int x = 0, y = 0, counter = 0;
-            int[] square = {-1,-1};
+            if (p != null){
+                int x = 0, y = 0, counter = 0;
+                int[] square = {-1,-1};
 
-            foreach (Piece p1 in b.GetBoard()){
-                if(p1.GetType() == p.GetType()){
-                    if(p1.GetColor() == p.GetColor()){
-                        if(p1.GetID() == p.GetID()){
-                            square[0] = y;
-                            square[1] = x;
-                            return square;
+                foreach (Piece p1 in b.GetBoard()){
+                    if(p1.GetType() == p.GetType()){
+                        if(p1.GetColor() == p.GetColor()){
+                            if(p1.GetID() == p.GetID()){
+                                square[0] = y;
+                                square[1] = x;
+                                return square;
+                            }
                         }
                     }
+                    if (x<=6){
+                        x++;
+                        counter++;
+                    }
+                    else if (x == 7){
+                        y++;
+                        x = 0;
+                        counter++;
+                    }
                 }
-                if (x<=6){
-                    x++;
-                    counter++;
-                }
-                else if (x == 7){
-                    y++;
-                    x = 0;
-                    counter++;
-                }
+                return square;
             }
-            return square;
+            else    {
+                int[] nothing = new int[] {-1,-1};
+                return nothing;
+            }
+                
         }
 
         /*This method will be used to check if a single enemy player can attack a single friendly player.
@@ -39,9 +47,14 @@ namespace BishopAI1
             This will return a boolean value, True: if it can attack, False: if it cannot attack.*/
         public static bool IndividualAttackCheck(Piece defender, Piece attacker, Board b)
         {
-            int[] square = GetLocation(defender,b);
-            if (attacker == null)
-            {
+            if (defender != null && attacker != null) {
+                int[] square = GetLocation(defender,b);
+                HashSet<int[]> test = attacker.GetLegalAttacks();
+                if (attacker.GetLegalAttacks() == null)
+                    return false;
+                //if (test == null)
+                  //  return false;
+
                 foreach (int[] move in attacker.GetLegalAttacks())
                 {
                     if (square[0] == move[0] && square[1] == move[1])
@@ -49,8 +62,11 @@ namespace BishopAI1
                         return true;
                     }
                 }
+                return false;
             }
-            return false;
+            else
+                return false;
+            
         }
         
         /*This method will be used when we want to find a subordinate who can attack a particular enemy. This will be used
@@ -64,28 +80,34 @@ namespace BishopAI1
 		This function will return the piece that is recommended to attack with.*/
         private static Piece SubordinateAttackCheck(Piece enemyWeWantToAttack, Piece[] subordinates, Board b)
         {
-            int[] square = GetLocation(enemyWeWantToAttack,b);
-            foreach (Piece p in subordinates)
+            if (enemyWeWantToAttack != null)
             {
-                foreach (int[] move in p.GetLegalAttacks())
+                int[] square = GetLocation(enemyWeWantToAttack,b);
+                foreach (Piece p in subordinates)
                 {
-                    if (square[0] == move[0] && square[1] == move[1])
+                    if (p != null)
                     {
-                        Piece attackingSubordinate;
-                        if (p.GetType() == typeof(Knight))
+                        foreach (int[] move in p.GetLegalAttacks())
                         {
-                            attackingSubordinate = p;
-                            return attackingSubordinate;
-                        }
-                        else if (p.GetType() == typeof(Pawn))
-                        {
-                            attackingSubordinate = p;
-                            return attackingSubordinate;
+                            if (square[0] == move[0] && square[1] == move[1])
+                            {
+                                Piece attackingSubordinate;
+                                if (p.GetType() == typeof(Knight))
+                                {
+                                    attackingSubordinate = p;
+                                    return attackingSubordinate;
+                                }
+                                else if (p.GetType() == typeof(Pawn))
+                                {
+                                    attackingSubordinate = p;
+                                    return attackingSubordinate;
+                                }
+                            }
                         }
                     }
+                    
                 }
             }
-            
             Piece empty = new EmptySquare();
             return empty;
         }
@@ -99,11 +121,14 @@ namespace BishopAI1
             being, but this seems a bit unfair)*/
         static bool OddsCheck(Piece defender, Piece attacker)
         {
-            int minimumRoll = Piece.getMinimumRoll(attacker, defender);
-            if (minimumRoll >= 4)
-                return true;
-            else
-                return false;
+            if (defender != null && attacker != null){
+                int minimumRoll = Piece.getMinimumRoll(attacker, defender);
+                if (minimumRoll >= 4)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
         }
         
         /*This method will be used if a commander (or piece) is in danger and the commander cannot take out the threat.
@@ -115,43 +140,51 @@ namespace BishopAI1
         The second argument is the piece that is attacking, i.e. the attacker
         This function will return an int[] which will be the space to move to.*/
         public static int[] safeSpot(Piece defender, Piece attacker, Piece[] LiveEnemyPlayers){
-            bool spotFound = true;
-            int[] safeSquare = {-1,-1};
-            //First we need to find a square away from the primary attacker
-            //For now we will just use the first square that isn't being attacked by the main attacker
-            foreach(int[] move in defender.GetLegalMoves()){
-                foreach(int[] attackSpot in attacker.GetLegalAttacks()){
-                    if (move == attackSpot)
-                    {
-                        spotFound = false;
-                    }
-                }
-                //If a spot was found we need to make sure it isn't being attacked by anyone else
-                //This if function will go through every single enemy and check all of their legal attacks
-                //**************************
-                //Madison: Legal attacks hash will store all the blocks they can attack right? regardless of if there is an enemy or not?
-                if (spotFound)
-                {
-                    foreach(Piece enemy in LiveEnemyPlayers){
-                        foreach(int[] enemyAttack in enemy.GetLegalAttacks()){
-                            if (enemyAttack == move){
-                                spotFound = false;
-                            }
+            if (defender != null && attacker != null){
+                bool spotFound = true;
+                int[] safeSquare = {-1,-1};
+                //First we need to find a square away from the primary attacker
+                //For now we will just use the first square that isn't being attacked by the main attacker
+                foreach(int[] move in defender.GetLegalMoves()){
+                    foreach(int[] attackSpot in attacker.GetLegalAttacks()){
+                        if (move == attackSpot)
+                        {
+                            spotFound = false;
                         }
                     }
-                    //If spotFound is still true, this is the block we need to move to.
+                    //If a spot was found we need to make sure it isn't being attacked by anyone else
+                    //This if function will go through every single enemy and check all of their legal attacks
+                    //**************************
+                    //Madison: Legal attacks hash will store all the blocks they can attack right? regardless of if there is an enemy or not?
                     if (spotFound)
                     {
-                        safeSquare[0] = move[0];
-                        safeSquare[1] = move[1];
-                        return safeSquare;
+                        foreach(Piece enemy in LiveEnemyPlayers){
+                            if (enemy != null){
+                                foreach(int[] enemyAttack in enemy.GetLegalAttacks()){
+                                    if (enemyAttack == move){
+                                        spotFound = false;
+                                    }
+                                }
+                            }
+                            
+                        }
+                        //If spotFound is still true, this is the block we need to move to.
+                        if (spotFound)
+                        {
+                            safeSquare[0] = move[0];
+                            safeSquare[1] = move[1];
+                            return safeSquare;
+                        }
+                        //If spot found is false now, we need to continue the loop and find another space.
                     }
-                    //If spot found is false now, we need to continue the loop and find another space.
                 }
+                //If we went through all of the defenders viable moves and they're all being threatened
+                //Then we return unmodified safeSquare which is [-1,-1]
+                return safeSquare;
             }
-            //If we went through all of the defenders viable moves and they're all being threatened
-            //Then we return unmodified safeSquare which is [-1,-1]
-            return safeSquare;
+            
+            int[] nothing = new int[] {-1,-1};
+            return nothing;
         }
         
         public static void TestingFunctions1(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers)
