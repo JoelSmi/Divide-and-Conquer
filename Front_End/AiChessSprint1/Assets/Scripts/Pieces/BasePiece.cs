@@ -161,7 +161,7 @@ public class BasePiece : EventTrigger
     }
 
     // removes the enemy piece on the target cell and moves the piece
-    public virtual void Move()
+    protected virtual void Move()
     {
         //removes Pieece from the board at target cell
         mTargetCell.RemovePiece();
@@ -182,7 +182,7 @@ public class BasePiece : EventTrigger
 
     protected virtual void Attack()
     {
-        //removes Pieece from the board at target cell
+        //removes Piece from the board at target cell
         mTargetCell.RemovePiece();
 
         //sets the current cell = to the current cell
@@ -269,16 +269,11 @@ public class BasePiece : EventTrigger
     /*
      * Movement for the AI pieces
      * 
-     * currently it is copying all of the player methods
+     * currently it is copying the player methods
      * but more AI-specific code may be required in future
      */
     public void MoveAIPiece()
     {
-        if (mTargetCell.mCurrentPiece != null)
-        {
-            Attack();
-            return;
-        }
         //use the Move function
         Move();
     }
