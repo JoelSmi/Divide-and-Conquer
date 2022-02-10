@@ -40,11 +40,14 @@ namespace BishopAI1
         public static bool IndividualAttackCheck(Piece defender, Piece attacker, Board b)
         {
             int[] square = GetLocation(defender,b);
-            foreach (int[] move in attacker.GetLegalAttacks())
+            if (attacker == null)
             {
-                if (square[0] == move[0] && square[1] == move[1])
+                foreach (int[] move in attacker.GetLegalAttacks())
                 {
-                    return true;
+                    if (square[0] == move[0] && square[1] == move[1])
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -198,7 +201,7 @@ namespace BishopAI1
                     foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
                     {
                         //This is the if statement that is actually checking if it is in danger or not
-                        if (IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
+                        if (currentEnemyPlayer != null && IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
                         //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
                         //returning true or false
                         {
@@ -237,7 +240,7 @@ namespace BishopAI1
                             }
 
                             //If no attacking piece is found, the bishop will have to be considered.
-                            if (attackingPiece.GetType().Name == "EmptySquare")
+                            if (attackingPiece.GetType().Name == "EmptySquare" & currentEnemyPlayer != null)
                             {
                                 int[] safeSquare = {-1,-1};
                                 bool individualAttackCheckBool = IndividualAttackCheck(currentEnemyPlayer, currentCommander,b);
@@ -346,18 +349,22 @@ namespace BishopAI1
                     {
                         foreach(Piece enemy in LiveEnemyPlayers)
                         {
-                            //Check if the enemy player can attack each of the bishops subordinates
-                            danger = IndividualAttackCheck(p, enemy, b);
-                            if (danger)
+                            if (p != null && enemy != null)
                             {
-                                if (commentsOn){
-                                    Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
+                                //Check if the enemy player can attack each of the bishops subordinates
+                                danger = IndividualAttackCheck(p, enemy, b);
+                                if (danger)
+                                {
+                                    if (commentsOn){
+                                        Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
+                                    }
+                                    //add this subordinate to the list of subordinates in danger
+                                    subordinatesInDanger[counter] = p;
+                                    counter++;
+                                    //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
                                 }
-                                //add this subordinate to the list of subordinates in danger
-                                subordinatesInDanger[counter] = p;
-                                counter++;
-                                //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
                             }
+                            
                         } //This is the end of the loop checking each enemy player
                     }//This is the end of the loop checking for each ally piece
                     if (counter != 0 && subordinatesInDanger[0] != null)
@@ -382,15 +389,18 @@ namespace BishopAI1
                         
                         foreach(Piece currentEnemyPlayer in LiveEnemyPlayers)
                         {
-                            dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer, b);
-                            if (dangerPiece == true){
-                                //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
-                                if(OddsCheck(currentEnemyPlayer,subordinateWeAreDefending)){
-                                    attackingPieces[counter1] = currentEnemyPlayer;
-                                    counter1++;
+                            if (currentEnemyPlayer != null){
+                                dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer, b);
+                                if (dangerPiece == true){
+                                    //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
+                                    if(OddsCheck(currentEnemyPlayer,subordinateWeAreDefending)){
+                                        attackingPieces[counter1] = currentEnemyPlayer;
+                                        counter1++;
+                                    }
+                                    dangerFound = true;
                                 }
-                                dangerFound = true;
                             }
+                            
                         }
                     /*
                         //If there was at least one attacking enemy found but the odds weren't in our favor, this code will eventually pick 
