@@ -5,3 +5,6 @@
 /.vs
 *.dwlt
 Front_End/AiChessSprint1/ActionLog.txt
+/Front_End/AiChessSprint1/ProjectSettings/TimelineSettings.asset
+/Front_End/AiChessSprint1/ProjectSettings/CommonBurstAotSettings.json
+/Front_End/AiChessSprint1/ProjectSettings/BurstAotSettings_StandaloneWindows.json
