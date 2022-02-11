@@ -7,7 +7,7 @@ namespace BishopAI1{
 		private Piece[,] board;
 		private int dim;
 		private EmptySquare e;
-		private Piece bishopCommander1;
+		private Piece bishopCommander;
 		//Default 8x8 chessboard
 		public Board()
 		{
@@ -22,7 +22,7 @@ namespace BishopAI1{
 				new Pawn(Color.White, 4), new Pawn(Color.White, 5), new Pawn(Color.White,6 ), new Pawn(Color.White, 7) },
 				{ new Rook(Color.White, 0), new Knight(Color.White, 0), new Bishop(Color.White, 0), new Queen(Color.White),
 				new King(Color.White), new Bishop(Color.White, 1), new Knight(Color.White, 1), new Rook(Color.White, 1) }};
-			bishopCommander1 = board[0, 2];
+			//bishopCommander1 = board[0, 2];
 			dim = 8;
 			this.UpdateAllLegalMoves();
 		}
@@ -89,6 +89,7 @@ namespace BishopAI1{
 					}
 				}
 			}
+			bishopCommander = GetBishopCommander();
 			dim = 8;
 			this.UpdateAllLegalMoves();
 		}
@@ -97,10 +98,10 @@ namespace BishopAI1{
 		public Board(Piece[,] board) {
 			e = new EmptySquare();
 			this.board = board;
-			bishopCommander1 = e;
+			bishopCommander = e;
 			foreach (Piece p in board) {
 				if (p.ToString() == "B0") {
-					bishopCommander1 = p;
+					bishopCommander = p;
 					continue;
 				}
 			}
@@ -172,14 +173,21 @@ namespace BishopAI1{
 				}
 			}
 		}
-		public Piece GetBishopCommander1() {
+		public Piece GetBishopCommander() {
 			e = new EmptySquare();
+			Piece Commander = e;
 			foreach (Piece p in board) {
 				if (p.ToString() == "B0") {
-					return p;
+					Commander = p;
+					break;
+				}
+				if (p.ToString() == "B1")
+				{
+					Commander = p;
+					break;
 				}
 			}
-			return e;
+			return Commander;
 		}
 		// public HashSet<Piece> GetSubordinates(Piece commander) {
 		// 	HashSet<Piece> subordinates = new HashSet<Piece>();
@@ -200,6 +208,19 @@ namespace BishopAI1{
 			if (commander.ToString() == "B0") {
 				foreach (Piece p in board) {
 					if (p.ToString() == "P0" || p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0") {
+						//Console.WriteLine("We found " + p.ToString());
+						//Console.WriteLine("Counter is at " + counter);
+						subordinates[counter] = p;
+						counter++;
+					}
+				}
+			}
+			else if (commander.ToString() == "B1")
+			{
+				foreach (Piece p in board)
+				{
+					if (p.ToString() == "P5" || p.ToString() == "P6" || p.ToString() == "P7" || p.ToString() == "N1")
+					{
 						//Console.WriteLine("We found " + p.ToString());
 						//Console.WriteLine("Counter is at " + counter);
 						subordinates[counter] = p;
@@ -236,11 +257,12 @@ namespace BishopAI1{
 				}
 			}
 
-			if (counter != enemyPieces.Length)
+			if (counter != enemyPieces.Length-1)
 			{
 				while (counter < enemyPieces.Length)
 				{
 					enemyPieces[counter] = e;
+					counter++;
 				}
 			}
 			return enemyPieces;

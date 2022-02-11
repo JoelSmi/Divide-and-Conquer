@@ -33,7 +33,7 @@ namespace Pieces
         public string id { get; protected set; } = "";
 
         //boolean value to determine if a peice has been captured or not 
-        public bool isCaptured { get; protected set; } = false;
+        public bool isCaptured { get; set; } = false;
         //Storage of the current position of the peice in the format of {x,y}, or {row,column}
         public int[] currPos { get; set; } = new int[2];
     }

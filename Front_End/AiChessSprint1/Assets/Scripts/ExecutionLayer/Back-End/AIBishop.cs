@@ -516,7 +516,7 @@ namespace BishopAI1
                     int[] moveToSquares = {-1, -1};
                     //First we will check if any subordinates can attack an enemy.
                     foreach (Piece sub in subordinates){
-                        if(sub.HasLegalAttack())
+                        if(sub != null && sub.HasLegalAttack())
                         {
                             foreach (int[] move in sub.GetLegalAttacks())
                             {
@@ -558,7 +558,7 @@ namespace BishopAI1
                     //First we need to check if even one subordinate can move. If even one can move, that's fine.
                     //If there's even one subordinate that can move, we will pick a random number per subordinate, if they can't move, we roll again.
                     foreach (Piece p in subordinates){
-                        if (p.HasLegalMove())
+                        if (p != null && p.HasLegalMove())
                         {
                             pieceFound = true;
                             prob = randomNum.Next(0,2);
@@ -584,7 +584,7 @@ namespace BishopAI1
                     //If there were some pieces that could move, but didn't then we'll just make the first move availible.
                     if (pieceFound && !act){
                         foreach (Piece p in subordinates){
-                        if (p.HasLegalMove())
+                        if (p != null && p.HasLegalMove())
                         {
                             pieceFound = true;
                             if (act != true){

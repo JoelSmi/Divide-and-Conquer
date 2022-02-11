@@ -11,10 +11,30 @@ public class GameManager : MonoBehaviour
     // instantiate Class Board, Class PieceManger objects  
     public BoardUI mBoardUI;
     public PieceManager mPieceManager;
+
+    //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
+    #region Piece Initialization
+    private static string whitecol = "White";
+    private static Pieces.Piece[,] WhitePieces = new Pieces.Piece[2, 8]{ { new Pawn("p0",whitecol), new Pawn("p1",whitecol),
+                    new Pawn("p2",whitecol), new Pawn("p3",whitecol), new Pawn("p4",whitecol),
+                    new Pawn("p5",whitecol), new Pawn("p6",whitecol), new Pawn("p7",whitecol)},
+                    {new Rook("r0",whitecol), new Knight("n0",whitecol), new Bishop("b0",whitecol),
+                    new Queen("q0",whitecol), new King("k0",whitecol), new Bishop("b1",whitecol),
+                    new Knight("n1",whitecol),new Rook("r1",whitecol)} };
+
+    private static string blackcol = "Black";
+    private static Pieces.Piece[,] BlackPieces = new Pieces.Piece[2, 8] { { new Pawn("P0",blackcol), new Pawn("P1",blackcol),
+                    new Pawn("P2",blackcol), new Pawn("P3",blackcol), new Pawn("P4",blackcol),
+                    new Pawn("P5",blackcol) , new Pawn("P6",blackcol), new Pawn("P7",blackcol)},
+                    {new Rook("R0",blackcol), new Knight("N0",blackcol), new Bishop("B0",blackcol),
+                    new Queen("Q0",blackcol), new King("K0",blackcol), new Bishop("B1",blackcol),
+                    new Knight("N1",blackcol),new Rook("R1",blackcol)} };
+    #endregion
 
     protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
 
+    //Action Log
     protected string ActionLog = "ActionLog.txt";
     private object WriteLock = new object();
 
@@ -29,32 +49,18 @@ public class GameManager : MonoBehaviour
 
         // sets pieces onto the created
         mPieceManager.Setup(mBoardUI);
-
-        //Initialize Execution Layer Board Object with the White and Black Matricies
-        string teamColor = "White";
-        Piece[,] White = new Piece[2, 8]{ { new Pawn("p0",teamColor), new Pawn("p1",teamColor),
-                    new Pawn("p2",teamColor), new Pawn("p3",teamColor), new Pawn("p4",teamColor),
-                    new Pawn("p5",teamColor), new Pawn("p6",teamColor), new Pawn("p7",teamColor)},
-                    {new Rook("r0",teamColor), new Knight("n0",teamColor), new Bishop("b0",teamColor),
-                    new Queen("q0",teamColor), new King("k0",teamColor), new Bishop("b1",teamColor),
-                    new Knight("n1",teamColor),new Rook("r1",teamColor)} };
-
-        teamColor = "Black";
-        Piece[,] Black = new Piece[2, 8] { { new Pawn("P0",teamColor), new Pawn("P1",teamColor),
-                    new Pawn("P2",teamColor), new Pawn("P3",teamColor), new Pawn("P4",teamColor),
-                    new Pawn("P5",teamColor) , new Pawn("P6",teamColor), new Pawn("P7",teamColor)},
-                    {new Rook("R0",teamColor), new Knight("N0",teamColor), new Bishop("B0",teamColor),
-                    new Queen("Q0",teamColor), new King("K0",teamColor), new Bishop("B1",teamColor),
-                    new Knight("N1",teamColor),new Rook("R1",teamColor)} };
         
-        ExecutionBoard = new Board(White,Black);
+        ExecutionBoard = new Board(WhitePieces, BlackPieces);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
+        #region UI > EL Update
         string TempLogBuff = "";
-        if (mPieceManager.actionTaken)
+        if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
             CellRelay();
 
@@ -86,20 +92,26 @@ public class GameManager : MonoBehaviour
             TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
             ExecutionBoard.endTurn();
             
-
+            EndTurn();
+            
             mPieceManager.actionTaken = false;
-            mPieceManager.SwitchSides(Color.black);
+            mPieceManager.SwitchSides(Color.black);            
         }
+        #endregion
 
+        #region EL > AI Call
         //update to the UI when the Execution Layer has been updated by the AI 
-        if (!ExecutionBoard.isWhite)
+        if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
         {
 
             ExecutionBoard.getAIAction();
 
             TempLogBuff += "AI Action:\n";
             TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
+            
+            EndTurn();
         }
+        #endregion
 
         #region Execution Layer > UI
         if (ExecutionBoard.hasActed)
@@ -132,6 +144,7 @@ public class GameManager : MonoBehaviour
         }
         #endregion
 
+        #region ActionLog
         if (!TempLogBuff.Equals(""))
         {
             lock(this.WriteLock)
@@ -142,12 +155,20 @@ public class GameManager : MonoBehaviour
             }
             
         }
+        #endregion
+
+        if (!mPieceManager.mIsKingAlive)
+        {
+            ExecutionBoard = new Board(WhitePieces, BlackPieces);
+        }
     }
 
     public void EndTurn()
     {
-        mPieceManager.SwitchSides(Color.white);
-        mPieceManager.actionTaken = true;
+        if (ExecutionBoard.BlackKing.isCaptured == true || ExecutionBoard.WhiteKing.isCaptured == true)
+        {
+            mPieceManager.mIsKingAlive = false;
+        }
     }
 
     public void CellRelay()
