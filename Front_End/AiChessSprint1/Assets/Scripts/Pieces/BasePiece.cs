@@ -180,7 +180,7 @@ public class BasePiece : EventTrigger
         mTargetCell = null; 
     }
 
-    //Definitely needs to change in the future, otherwise this function is redundant
+    //Unused for sprint 1 demo
     protected virtual void Attack()
     {
         //removes Piece from the board at target cell

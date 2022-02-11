@@ -233,6 +233,7 @@ namespace BishopAI1{
 				while (counter < subordinates.Length-1)
 				{
 					subordinates[counter] = e;
+					counter++;
 				}
 			}
 			return subordinates;
