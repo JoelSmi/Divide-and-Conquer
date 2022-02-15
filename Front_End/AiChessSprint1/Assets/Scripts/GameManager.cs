@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using GameBoard;
 using Pieces;
 
@@ -11,6 +13,7 @@ public class GameManager : MonoBehaviour
     // instantiate Class Board, Class PieceManger objects  
     public BoardUI mBoardUI;
     public PieceManager mPieceManager;
+    public TextMeshProUGUI txt;
 
     //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
@@ -163,13 +166,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EndTurn()
-    {
-        if (ExecutionBoard.BlackKing.isCaptured == true || ExecutionBoard.WhiteKing.isCaptured == true)
-        {
-            mPieceManager.mIsKingAlive = false;
-        }
-    }
 
     public void CellRelay()
     {
@@ -178,6 +174,27 @@ public class GameManager : MonoBehaviour
         uiTargetCellX = mPieceManager.pmTargetCellX;
         uiTargetCellY = mPieceManager.pmTargetCellY;
     }
+    
+    public void EndTurn()
+    {
+        if (ExecutionBoard.BlackKing.isCaptured == true || ExecutionBoard.WhiteKing.isCaptured == true)
+        {
+            mPieceManager.mIsKingAlive = false;
+        }
+    }
 
-   
+    public void moveOrAttackBttn()
+    {
+        if (mPieceManager.attacking)
+        {
+            txt.text = "Moving";
+            mPieceManager.attacking = false;
+        }
+        else
+        {
+            txt.text = "Attacking";
+            mPieceManager.attacking = true;
+        }
+    }
+
 }

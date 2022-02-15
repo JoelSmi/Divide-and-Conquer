@@ -99,20 +99,26 @@ public class BasePiece : EventTrigger
             //and then checks the state for the currentX, ,andCurrentY
             CellState cellState = CellState.None;
             cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
-           
-            // if the cell contatins something other than an enemy or a free state it breaks the loop
-            if (cellState == CellState.Enemy)
-            {
-                if (i == 1 )
-                {
-                    mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
-                   
-                }
-                else break;
-            }
 
-            if (cellState != CellState.Free)
+            // if the cell contatins something other than an enemy or a free state it breaks the loop
+            if (mPieceManager.attacking)
+            {
+                if (cellState == CellState.Enemy)
+                {
+                    if (i == 1)
+                    {
+                        mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
+
+                    }
+                    else break;
+                }
                 break;
+            }
+            if (!mPieceManager.attacking)
+            {
+                if (cellState != CellState.Free)
+                    break;
+            }
 
 
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
