@@ -34,4 +34,44 @@ public class RookUI : BasePiece
         rectTransform.sizeDelta = new Vector2(75, 75);
     }
 
+    private bool MatchesState(int targetX, int targetY, CellState targetState)
+    {
+        CellState cellState = CellState.None;
+        cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
+        if (cellState == targetState)
+        {
+            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
+            return true;
+        }
+
+        return false;
+    }
+
+    protected override void CheckPathing()
+    {
+        base.CheckPathing();
+        if (mPieceManager.attacking)
+        {
+            int currentX = mCurrentCell.mBoardPosition.x;
+            int currentY = mCurrentCell.mBoardPosition.y;
+            
+            for (int i = 0; i<4; i++)
+            {
+                for (int j = 0; j<4; j++)
+                {
+                    MatchesState(currentX - i, currentY - j, CellState.Enemy);
+                    MatchesState(currentX - i, currentY + j, CellState.Enemy);
+
+                    MatchesState(currentX + i, currentY - j, CellState.Enemy);
+                    MatchesState(currentX + i, currentY + j, CellState.Enemy);
+                }
+            }
+            
+            
+            
+
+            
+        }
+    }
+
 }
