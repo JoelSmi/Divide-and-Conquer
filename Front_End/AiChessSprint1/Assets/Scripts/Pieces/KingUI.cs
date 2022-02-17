@@ -33,23 +33,28 @@ public class KingUI : BasePiece
     protected override void CheckPathing()
     {
         base.CheckPathing();
-        int currentX = mCurrentCell.mBoardPosition.x;
-        int currentY = mCurrentCell.mBoardPosition.y;
-        if (MatchesState(currentX, currentY + 1, CellState.Free) || MatchesState(currentX, currentY + 1, CellState.Free))
+        if (!mPieceManager.attacking)
         {
-            MatchesState(currentX - 1, currentY + 2, CellState.Free);
-            MatchesState(currentX + 1, currentY + 2, CellState.Free);
-            MatchesState(currentX - 1, currentY - 2, CellState.Free);
-            MatchesState(currentX + 1, currentY - 2, CellState.Free);
+            int currentX = mCurrentCell.mBoardPosition.x;
+            int currentY = mCurrentCell.mBoardPosition.y;
+            if (MatchesState(currentX, currentY + 1, CellState.Free) || MatchesState(currentX, currentY + 1, CellState.Free))
+            {
+                MatchesState(currentX - 1, currentY + 2, CellState.Free);
+                MatchesState(currentX + 1, currentY + 2, CellState.Free);
+
+
+                MatchesState(currentX - 1, currentY - 2, CellState.Free);
+                MatchesState(currentX + 1, currentY - 2, CellState.Free);
+            }
+            if (MatchesState(currentX - 1, currentY, CellState.Free) || MatchesState(currentX + 1, currentY, CellState.Free))
+            {
+                MatchesState(currentX - 2, currentY + 1, CellState.Free);
+                MatchesState(currentX - 2, currentY - 1, CellState.Free);
+                MatchesState(currentX + 2, currentY + 1, CellState.Free);
+                MatchesState(currentX + 2, currentY - 1, CellState.Free);
+            }
         }
-        if (MatchesState(currentX - 1, currentY, CellState.Free) || MatchesState(currentX + 1, currentY, CellState.Free))
-        {
-            MatchesState(currentX - 2, currentY + 1, CellState.Free);
-            MatchesState(currentX - 2, currentY - 1, CellState.Free);
-            MatchesState(currentX + 2, currentY + 1, CellState.Free);
-            MatchesState(currentX + 2, currentY - 1, CellState.Free);
-        }
-        
+
     }
 
     //follows base Kill function and then set the mIsKingAlive object to false to reset the game

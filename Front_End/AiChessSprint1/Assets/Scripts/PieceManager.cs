@@ -13,6 +13,7 @@ public class PieceManager : MonoBehaviour
 
     public int pmCurrentCellX, pmCurrentCellY, pmTargetCellX, pmTargetCellY;
     public bool actionTaken = false;
+    public bool attacking = false;
 
     //instantiates objects to hold the pieces
     private List<BasePiece> mWhitePieces = null;

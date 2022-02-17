@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace BishopAI1
 {
@@ -48,6 +49,12 @@ namespace BishopAI1
         {
             if (defender != null && attacker != null) {
                 int[] square = GetLocation(defender,b);
+                HashSet<int[]> test = attacker.GetLegalAttacks();
+                if (attacker.GetLegalAttacks() == null)
+                    return false;
+                //if (test == null)
+                  //  return false;
+
                 foreach (int[] move in attacker.GetLegalAttacks())
                 {
                     if (square[0] == move[0] && square[1] == move[1])
@@ -78,7 +85,7 @@ namespace BishopAI1
                 int[] square = GetLocation(enemyWeWantToAttack,b);
                 foreach (Piece p in subordinates)
                 {
-                    if (p != null)
+                    if (p != null && p.GetType() != typeof(EmptySquare))
                     {
                         foreach (int[] move in p.GetLegalAttacks())
                         {
@@ -143,7 +150,7 @@ namespace BishopAI1
                         if (move == attackSpot)
                         {
                             spotFound = false;
-                        }
+                        }   
                     }
                     //If a spot was found we need to make sure it isn't being attacked by anyone else
                     //This if function will go through every single enemy and check all of their legal attacks
@@ -152,7 +159,7 @@ namespace BishopAI1
                     if (spotFound)
                     {
                         foreach(Piece enemy in LiveEnemyPlayers){
-                            if (enemy != null){
+                            if (enemy != null && enemy.GetType() != typeof(EmptySquare)){
                                 foreach(int[] enemyAttack in enemy.GetLegalAttacks()){
                                     if (enemyAttack == move){
                                         spotFound = false;
@@ -227,7 +234,7 @@ namespace BishopAI1
                     foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
                     {
                         //This is the if statement that is actually checking if it is in danger or not
-                        if (currentEnemyPlayer != null && IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
+                        if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare) && IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
                         //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
                         //returning true or false
                         {
@@ -266,7 +273,7 @@ namespace BishopAI1
                             }
 
                             //If no attacking piece is found, the bishop will have to be considered.
-                            if (attackingPiece.GetType().Name == "EmptySquare" & currentEnemyPlayer != null)
+                            if (attackingPiece.GetType() == typeof(EmptySquare) && currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare))
                             {
                                 int[] safeSquare = {-1,-1};
                                 bool individualAttackCheckBool = IndividualAttackCheck(currentEnemyPlayer, currentCommander,b);
@@ -377,23 +384,26 @@ namespace BishopAI1
                         {
                             if (p != null && enemy != null)
                             {
-                                //Check if the enemy player can attack each of the bishops subordinates
-                                danger = IndividualAttackCheck(p, enemy, b);
-                                if (danger)
+                                if (p.GetType() != typeof(EmptySquare) && enemy.GetType() != typeof(EmptySquare))
                                 {
-                                    if (commentsOn){
-                                        Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
+                                    //Check if the enemy player can attack each of the bishops subordinates
+                                    danger = IndividualAttackCheck(p, enemy, b);
+                                    if (danger)
+                                    {
+                                        if (commentsOn){
+                                            Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
+                                        }
+                                        //add this subordinate to the list of subordinates in danger
+                                        subordinatesInDanger[counter] = p;
+                                        counter++;
+                                        //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
                                     }
-                                    //add this subordinate to the list of subordinates in danger
-                                    subordinatesInDanger[counter] = p;
-                                    counter++;
-                                    //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
                                 }
                             }
                             
                         } //This is the end of the loop checking each enemy player
                     }//This is the end of the loop checking for each ally piece
-                    if (counter != 0 && subordinatesInDanger[0] != null)
+                    if (counter != 0 && subordinatesInDanger[0] != null && subordinatesInDanger[0].GetType() != typeof(EmptySquare))
                     {
                         bool dangerPiece = false, dangerFound = false, canAttack = false, dangerPicked = false;
                         //This code was to prioritize knight protection, but this will be implemented later and we will just defend the first piece found
@@ -415,7 +425,7 @@ namespace BishopAI1
                         
                         foreach(Piece currentEnemyPlayer in LiveEnemyPlayers)
                         {
-                            if (currentEnemyPlayer != null){
+                            if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare)){
                                 dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer, b);
                                 if (dangerPiece == true){
                                     //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
@@ -444,7 +454,7 @@ namespace BishopAI1
 
                         //Now that we have an array of attacking pieces, for now we will just pick the first piece that we can attack back.
                         foreach(Piece attacker in attackingPieces){
-                            if (attacker != null)
+                            if (attacker != null && attacker.GetType() != typeof(EmptySquare))
                             {
                                 int[] location = GetLocation(attacker,b);
                                 foreach(int[] move in subordinateWeAreDefending.GetLegalAttacks()){
@@ -456,7 +466,7 @@ namespace BishopAI1
                         }
 
 
-                        if (dangerFound && attackingPiece != null)
+                        if (dangerFound && attackingPiece != null && attackingPiece.GetType() != typeof(EmptySquare))
                         {
                             //Now that we know which piece is attacking our subordinate, we use subordinate attack check to see who can attack it
                             Piece attackingSubordinate = SubordinateAttackCheck(attackingPiece, subordinates, b);
@@ -509,7 +519,7 @@ namespace BishopAI1
                     int[] moveToSquares = {-1, -1};
                     //First we will check if any subordinates can attack an enemy.
                     foreach (Piece sub in subordinates){
-                        if(sub.HasLegalAttack())
+                        if(sub != null && sub.GetType() != typeof(EmptySquare) && sub.HasLegalAttack())
                         {
                             foreach (int[] move in sub.GetLegalAttacks())
                             {
@@ -551,7 +561,7 @@ namespace BishopAI1
                     //First we need to check if even one subordinate can move. If even one can move, that's fine.
                     //If there's even one subordinate that can move, we will pick a random number per subordinate, if they can't move, we roll again.
                     foreach (Piece p in subordinates){
-                        if (p.HasLegalMove())
+                        if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
                         {
                             pieceFound = true;
                             prob = randomNum.Next(0,2);
@@ -577,7 +587,7 @@ namespace BishopAI1
                     //If there were some pieces that could move, but didn't then we'll just make the first move availible.
                     if (pieceFound && !act){
                         foreach (Piece p in subordinates){
-                        if (p.HasLegalMove())
+                        if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
                         {
                             pieceFound = true;
                             if (act != true){
@@ -609,4 +619,3 @@ namespace BishopAI1
         }//End of Main
     }//End of class
 }//End of namespace
-
