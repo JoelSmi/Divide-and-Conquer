@@ -1,4 +1,5 @@
 using Pieces;
+using System;
 
 
 namespace Actions
@@ -7,6 +8,13 @@ namespace Actions
     {
         private static bool actionValid = false;
         static Piece[,] GameBoard;
+        
+        public static int rollAttack()
+        {
+            Random roll = new Random();
+            return roll.Next(1,7);
+
+        }
 
         #region MoveCall
         public static int moveAction(Piece[,] GB,Piece currPiece, int[] pos, int[] dest)

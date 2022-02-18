@@ -2,6 +2,7 @@ using System;
 using Actions;
 using Pieces;
 using BishopAI1;
+using System.Collections.Generic;
 
 namespace GameBoard
 {
@@ -25,13 +26,19 @@ namespace GameBoard
         public Pieces.Piece[,] WhiteBoard { get; private set; } = new Pieces.Piece[2, 8];
         public Pieces.Piece[,] BlackBoard { get; private set; } = new Pieces.Piece[2, 8];
         public Pieces.Piece Blank = new Empty("e", "N");
-        public Pieces.Piece WhiteKing { get; set; }
-        public Pieces.Piece BlackKing { get; set; }
+
+        //Commander instantiation
+        public Pieces.King WhiteKing { get; set; }
+        public Pieces.Bishop[] WhiteBishops { get; set; }
+
+        public Pieces.King BlackKing { get; set; }
+        public Pieces.Bishop[] BlackBishops { get; set; }
 
         public int[] actionInitial { get; set; } = new int[2];
         public int[] actionDest { get; set; } = new int[2];
+        public int[,] actionPositions { get; set; } = new int[5,2];
 
-        private const int MaxActionCount = 2;
+        private const int MaxTeamActionCount = 6;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
@@ -48,6 +55,10 @@ namespace GameBoard
 
         public void resetBoard()
         {
+            Pieces.Bishop WB1 = new Pieces.Bishop("b0", "White"), WB2 = new Pieces.Bishop("b1", "White");
+            Pieces.Bishop BB1 = new Pieces.Bishop("B0", "Black"), BB2 = new Pieces.Bishop("B1", "Black");
+            string[,] KingDelegations = new string[2, 5];
+            string[,] BishopDelegations = new string[4, 4];
             //initial state of game board before peice setup
             this.GameBoard = new Pieces.Piece[,] {
                 {Blank,Blank,Blank,Blank,Blank,Blank,Blank,Blank},
@@ -69,7 +80,11 @@ namespace GameBoard
                 this.BlackBoard[0, i].currPos = new int[]{ 1,i};
 
                 if (this.BlackBoard[1, i].id.Equals("K0"))
-                    this.BlackKing = this.BlackBoard[1, i];
+                    this.BlackKing =(Pieces.King) this.BlackBoard[1, i];
+                else if (this.BlackBoard[1, i].id.Equals("B0"))
+                    BB1 = (Pieces.Bishop) this.BlackBoard[1, i];
+                else if (this.BlackBoard[1, i].id.Equals("B1"))
+                    BB2 = (Pieces.Bishop) this.BlackBoard[1, i];
 
 
                 //White piece initialization for game board order for chess
@@ -79,9 +94,65 @@ namespace GameBoard
                 this.WhiteBoard[1, i].currPos = new int[] { 7, i };
                 
                 if (this.WhiteBoard[1, i].id.Equals("k0"))
-                    this.WhiteKing = this.WhiteBoard[1, i];
+                    this.WhiteKing =(Pieces.King) this.WhiteBoard[1, i];
+                else if (this.BlackBoard[1, i].id.Equals("b0"))
+                    WB1 = (Pieces.Bishop) this.WhiteBoard[1, i];
+                else if (this.BlackBoard[1, i].id.Equals("b1"))
+                    WB2 =(Pieces.Bishop) this.WhiteBoard[1, i];
 
+
+                if (i < 3)
+                {
+                    if(i == 1)
+                    {
+                        BishopDelegations[0, 3] = this.WhiteBoard[1, i].id;
+                        BishopDelegations[2, 3] = this.BlackBoard[1, i].id;
+                    }
+                    BishopDelegations[0, i] = this.WhiteBoard[0, i].id;
+                    BishopDelegations[2, i] = this.BlackBoard[0, i].id;
+                }
+                else if (i > 4)
+                {
+                    if(i == 6)
+                    {
+                        BishopDelegations[1, 3] = this.WhiteBoard[1, i].id;
+                        BishopDelegations[3, 3] = this.BlackBoard[1, i].id;
+                    }
+                    BishopDelegations[1, i-5] = this.WhiteBoard[0, i].id;
+                    BishopDelegations[3, i-5] = this.BlackBoard[0, i].id;
+                }
+                else
+                {
+                    KingDelegations[0, i-3] = this.WhiteBoard[0, i].id;
+                    KingDelegations[1, i-3] = this.BlackBoard[0, i].id;
+                }
+
+                if(i == 3)
+                {
+                    KingDelegations[0, i-1] = this.WhiteBoard[1, i].id;
+                    KingDelegations[1, i-1] = this.BlackBoard[1, i].id;
+                    KingDelegations[0, i] = this.WhiteBoard[1, i-3].id;
+                    KingDelegations[1, i] = this.BlackBoard[1, i-3].id;
+                    KingDelegations[0, i+1] = this.WhiteBoard[1, i+4].id;
+                    KingDelegations[1, i+1] = this.BlackBoard[1, i+4].id;
+                }
             }
+
+            //Creating the Piece delegations in the peice class for the Kings
+            this.WhiteKing.getDelegates(this.WhiteBoard, GetRow(KingDelegations, 0));
+            this.BlackKing.getDelegates(this.BlackBoard, GetRow(KingDelegations, 1));
+            //Creating the Piece delegations in the peice class for the Bishops
+            WB1.getDelegates(this.WhiteBoard, GetRow(BishopDelegations, 0));
+            WB2.getDelegates(this.WhiteBoard, GetRow(BishopDelegations, 1));
+            BB1.getDelegates(this.BlackBoard, GetRow(BishopDelegations, 2));
+            BB2.getDelegates(this.BlackBoard, GetRow(BishopDelegations, 3));
+            
+            this.WhiteBishops =new Pieces.Bishop[]{WB1, WB2};
+            
+            //this.WhiteBishops[1].getDelegates(this.WhiteBoard, GetRow(BishopDelegations, 1));
+            
+            this.BlackBishops = new Pieces.Bishop[] {BB1, BB2};
+            //this.BlackBishops[1].getDelegates(this.BlackBoard, GetRow(BishopDelegations, 3));
 
             //Restart match starting with White taking the first turn
             isWhite = true;
@@ -152,7 +223,7 @@ namespace GameBoard
             switch (ActionType) {
                 case 'M':
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if (temp > 0 && ActionCount + temp <= MaxActionCount)
+                    if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
                     {
                         ActionCount += temp;
                         updateBoard(currPiece, currPiece.currPos, dest);
@@ -160,7 +231,7 @@ namespace GameBoard
                     break;
                 case 'A':
                     temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if (temp > 0 && ActionCount + temp <= MaxActionCount)
+                    if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
                     {
                         ActionCount += temp;
                         updateBoard(currPiece, currPiece.currPos, dest);
@@ -258,6 +329,15 @@ namespace GameBoard
             }
             CurrentState += "\n";
             return CurrentState;
+        }
+        public string[] GetRow(string[,] Matrix, int row)
+        {
+            string[] tempRow = new string[Matrix.GetLength(0)];
+            for(int i = 0; i < Matrix.GetLength(0); i++)
+            {
+                tempRow[i] = Matrix[row, i];
+            }
+            return tempRow;
         }
     }
     #endregion

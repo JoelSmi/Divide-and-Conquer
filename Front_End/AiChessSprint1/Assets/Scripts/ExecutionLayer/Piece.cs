@@ -36,6 +36,8 @@ namespace Pieces
         public bool isCaptured { get; set; } = false;
         //Storage of the current position of the peice in the format of {x,y}, or {row,column}
         public int[] currPos { get; set; } = new int[2];
+
+        public abstract void  getDelegates(Piece[,] TeamBoard, string[] DelIds);
     }
 
     #region EmptyPiece
@@ -52,6 +54,11 @@ namespace Pieces
 
             this.color = Color;
             this.id = id;
+        }
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+
         }
     }
     #endregion
@@ -71,6 +78,12 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
+
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+
+        }
     }
     
 
@@ -88,6 +101,12 @@ namespace Pieces
 
             this.color = Color;
             this.id = id;
+        }
+
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+
         }
     }
     #endregion
@@ -107,53 +126,13 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
-    }
 
-    #region Commanders
-    ///Both the Bishop and King have two addition variables 
-    ///called delegates and action count
-    public class Bishop : Piece
-    {
-        //Stores the maximum numbe of actions this peice can perform or command
-        public int actionCount { get; protected set; } = 0;
-
-        public Bishop(string id, string Color)
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
         {
-            this.movement = 2;
-            this.movementType = 'L';
 
-            this.defenseProb = new short[] { 2, 2, 3, 2, 2, 3 };
-
-            this.attack = 1;
-            this.attackType = 'S';
-
-            this.actionCount = 0;
-
-            this.color = Color;
-            this.id = id;
         }
     }
-    public class King : Piece
-    {
-        //Stores the maximum numbe of actions this peice can perform or command
-        public int actionCount { get; protected set; } = 0;
-
-        public King(string id, string Color)
-        {
-            this.movement = 4;
-            this.movementType = 'S';
-            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
-
-            this.attack = 1;
-            this.attackType = 'S';
-
-            this.actionCount = 6;
-
-            this.color = Color;
-            this.id = id;
-        }
-    }
-    #endregion
 
     public class Queen : Piece
     {
@@ -169,8 +148,108 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
-    }
 
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+
+        }
+    }
+    
+    #region Commanders
+    ///Both the Bishop and King have two addition variables 
+    ///called delegates and action count
+    public class Bishop : Piece
+    {
+        Delegations BishopDelegates;
+        //Stores the maximum numbe of actions this peice can perform or command
+        public int actionCount { get; protected set; } = 0;
+
+        public Bishop(string id, string Color)
+        {
+            this.movement = 2;
+            this.movementType = 'L';
+
+            this.defenseProb = new short[] { 2, 2, 3, 2, 2, 3 };
+
+            this.attack = 1;
+            this.attackType = 'S';
+
+            this.actionCount = 2;
+
+            this.color = Color;
+            this.id = id;
+        }
+
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+            this.BishopDelegates = new Delegations(this.id, TeamBoard, DelIds);
+        }
+    }
+    public class King : Piece
+    {
+        Delegations KingDelegates;
+        //Stores the maximum numbe of actions this peice can perform or command
+        public int actionCount { get; protected set; } = 0;
+
+        public King(string id, string Color)
+        {
+            this.movement = 4;
+            this.movementType = 'S';
+            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
+
+            this.attack = 1;
+            this.attackType = 'S';
+
+            this.actionCount = 2;
+
+            this.color = Color;
+            this.id = id;
+        }
+
+        override
+        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
+        {
+            this.KingDelegates = new Delegations(this.id, TeamBoard, DelIds);
+        }
+    }
+    #endregion
 
     #endregion
+
+    #region Commander Delegation Class
+    public class Delegations 
+    {
+        Piece[] delegates;
+        public Delegations(string CommandId, Piece[,] TeamBoard, string[] DelIds)
+        {
+            if (CommandId.Equals("K0") || CommandId.Equals("k0"))
+                delegates = new Piece[15];
+            else
+                delegates = new Piece[6];
+            int index = 0;
+            for(int i = 0; i < TeamBoard.GetLength(0); i++)
+            {
+                for(int j = 0; j < TeamBoard.GetLength(1); j++)
+                {
+                    foreach(string id in DelIds)
+                    {
+                        if (id.Equals(TeamBoard[i, j].id)){
+                            delegates[index] = TeamBoard[i, j];
+                            index++;
+                        }
+                    }
+                }
+            }
+
+            if(index < delegates.Length)
+            {
+                delegates[index] =new  Empty ("e","N");
+                index++;
+            }
+        }
+    }
+    #endregion
+
 }
