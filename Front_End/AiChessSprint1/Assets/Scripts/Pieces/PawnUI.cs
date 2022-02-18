@@ -18,7 +18,8 @@ public class PawnUI : BasePiece
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
         //TagSet(newTeamColor);
 
-        createChildSprite(spriteName);
+        createChildSprite("pawn_" + spriteName);
+        createChildSprite("corp_" + spriteName + "_" + corp);
     }
 
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
@@ -63,11 +64,11 @@ public class PawnUI : BasePiece
         GameObject childSprite = new GameObject();
         childSprite.transform.SetParent(transform);
         childSprite.transform.localScale = new Vector3(1, 1, 1);
-        childSprite.name = "Piece Sprite";
+        childSprite.name = spriteName;
 
         childSprite.AddComponent<Image>();
         Image image = childSprite.GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>("pawn_" + spriteName);
+        image.sprite = Resources.Load<Sprite>(spriteName);
 
         RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(75, 75);

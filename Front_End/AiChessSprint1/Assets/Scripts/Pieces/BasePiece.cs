@@ -28,7 +28,10 @@ public class BasePiece : EventTrigger
 
     //
     protected Sprite tempSprite = null;
-    
+
+    //What corp the piece belongs to (1, 2, or 3)
+    public int corp = 0;
+
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
     {
@@ -36,6 +39,7 @@ public class BasePiece : EventTrigger
         mColor = newTeamColor;
         TagSet();
         mRectTransform = GetComponent<RectTransform>();
+        corp = corpSet();
     }
 
     //Places the piece on the board using newCell that it recieved from PieceManager
@@ -58,9 +62,9 @@ public class BasePiece : EventTrigger
         Kill();
 
         Place(mOriginalCell);
-        
+
     }
-    
+
     // disables the piece so it cannot be interacted with and is not visible
     public virtual void Kill()
     {
@@ -75,8 +79,38 @@ public class BasePiece : EventTrigger
         if (mColor == Color.white)
             mPieceManager.mPiecePrefab.tag = "Player";
 
-        else 
+        else
             mPieceManager.mPiecePrefab.tag = "AI";
+    }
+
+    //Determines what corp a piece belongs to, based on their name
+    public int corpSet()
+    {
+        string[] tempName = this.name.Split(' ');
+        switch(tempName[2])
+        {
+            case "0"://Pawn
+            case "1"://Pawn
+            case "2"://Pawn
+            case "9"://Knight
+            case "10"://Bishop
+                return 2;
+            case "5"://Pawn
+            case "6"://Pawn
+            case "7"://Pawn
+            case "13"://Bishop
+            case "14"://Knight
+                return 3;
+            case "3"://Pawn
+            case "4"://Pawn
+            case "8"://Rook
+            case "11"://King
+            case "12"://Queen
+            case "15"://Rook
+                return 1;
+            default://Error
+                return 0;
+        }
     }
 
     #region Movement

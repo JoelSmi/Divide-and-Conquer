@@ -15,7 +15,8 @@ public class QueenUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        createChildSprite(spriteName);
+        createChildSprite("queen_" + spriteName);
+        createChildSprite("corp_" + spriteName + "_" + corp);
     }
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
     private bool MatchesState(int targetX, int targetY, CellState targetState)
@@ -65,11 +66,11 @@ public class QueenUI : BasePiece
         GameObject childSprite = new GameObject();
         childSprite.transform.SetParent(transform);
         childSprite.transform.localScale = new Vector3(1, 1, 1);
-        childSprite.name = "Piece Sprite";
+        childSprite.name = spriteName;
 
         childSprite.AddComponent<Image>();
         Image image = childSprite.GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>("queen_" + spriteName);
+        image.sprite = Resources.Load<Sprite>(spriteName);
 
         RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(75, 75);
