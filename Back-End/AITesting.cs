@@ -28,7 +28,7 @@ class AITesting
 //---------------------------------------------------------------------------- 
 // Ignoring Knight and archer atm
 // Assuming this is lowercase turn
-// Is it possible to switch the simple upper case to "[digit][letter]" instead?
+// Attack inferior, parity, and superior?
 //----------------------------------------------------------------------------
         //----------------------------------------------------------------
         //1 non commander in danger
@@ -104,6 +104,19 @@ class AITesting
                                {"p0","d.","e.","p3","e.","e.","p6","p7"},
                                {"r0","n0","e.","q0","e.","b1","n1","r1"}
         }; 
+        //----------------------------------------------------------------
+        //1 non commander piece threaten 
+        //
+        String[,] boardArray4a = new String [8,8] {
+                               {"R0","N0","B0","e.","K0","B1","N1","R1"},
+                               {"P0","P1","P2","e.","P4","P5","P6","P7"},
+                               {"e.","e.","P3","e.","e.","e.","e.","e."},
+                               {"e.","e.","e.","Q0","e.","e.","e.","e."},
+                               {"e.","e.","k0","b0","e.","e.","e.","e."},
+                               {"p1","p2","e.","e.","e.","p4","e.","e."},
+                               {"p0","e.","e.","p3","e.","p5","p6","p7"},
+                               {"r0","n0","e.","q0","e.","b1","n1","r1"}
+        
 
         //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
         //Board b = new Board();
