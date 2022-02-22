@@ -12,6 +12,8 @@ class AITesting
         bool act = false, BishopTurn = true;
         
         //I change "e" to "e." so it is visually easier to looa at the code
+        //maybe we can change into "ee", or "--", or "..", or something else
+        
         //default board
         String[,] boardArray00 = new String [8,8] {
                                {"R0","N0","B0","Q0","K0","B1","N1","R1"},
@@ -25,6 +27,8 @@ class AITesting
         }; 
 //---------------------------------------------------------------------------- 
 // Ignoring Knight and archer atm
+// Assuming this is lowercase turn
+// Is it possible to switch the simple upper case to "[digit][letter]" instead?
 //----------------------------------------------------------------------------
         //----------------------------------------------------------------
         //1 non commander in danger
@@ -76,27 +80,29 @@ class AITesting
                                {"r0","n0","e.","q0","k0","b1","n1","r1"}
         }; 
         //----------------------------------------------------------------
-        
-        String[,] boardArray4 = new String [8,8] {
-                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
-                               {"e.","e.","e.","P3","P4","P5","P6","P7"},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"e.","e.","e.","e.","e.","e.","P2","e."},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"P0","e.","P1","e.","e.","e.","e.","e."},
-                               {"p0","p1","p2","p3","p4","p5","p6","p7"},
-                               {"r0","n0","b0","q0","k0","b1","n1","r1"}
+        //1 bishop, king in danger
+        //threaten by same piece
+        String[,] boardArray3a = new String [8,8] {
+                               {"R0","N0","B0","e.","K0","B1","N1","R1"},
+                               {"P0","P1","P2","e.","P4","P5","P6","P7"},
+                               {"e.","e.","P3","e.","e.","e.","e.","e."},
+                               {"e.","e.","e.","Q0","e.","e.","e.","e."},
+                               {"e.","e.","k0","b0","e.","e.","e.","e."},
+                               {"p1","p2","e.","e.","e.","p4","e.","e."},
+                               {"p0","e.","e.","p3","e.","p5","p6","p7"},
+                               {"r0","n0","e.","q0","e.","b1","n1","r1"}
         }; 
-
-        String[,] boardArray5 = new String [8,8] {
-                               {"R0","e.","B0","K0","Q0","B1","N1","R1"},
-                               {"e.","p2","e.","P3","P4","P5","P6","P7"},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"e.","e.","e.","e.","e.","e.","e.","e."},
-                               {"e.","e.","e.","k0","q0","e.","p6","p7"},
-                               {"e.","N0","e.","e.","e".,"e.","n1","r1"}
+        //1 bishop, king in danger
+        //threaten by different piece
+        String[,] boardArray3b = new String [8,8] {
+                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
+                               {"P0","P1","P2","P3","e.","P5","P6","P7"},
+                               {"e.","e.","b0","e.","e.","e.","e.","e."},
+                               {"e.","e.","e.","e.","P4","e.","e.","e."},
+                               {"e.","e.","e.","e.","k0","e.","e.","e."},
+                               {"p1","p2","e.","e.","e.","p4","p5","e."},
+                               {"p0","d.","e.","p3","e.","e.","p6","p7"},
+                               {"r0","n0","e.","q0","e.","b1","n1","r1"}
         }; 
 
         //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
