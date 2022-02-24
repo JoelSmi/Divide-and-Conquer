@@ -15,6 +15,403 @@ namespace Actions
             return roll.Next(1,7);
 
         }
+        
+                public static int moveAction2(moveSet[,] GB, Piece currPiece)
+        {
+            //Counter is used to check whether to place the value from the 2d array into x or y,
+            //as well as checking to see if the position on the gameboard is empty
+            int counter = 0;
+            //firstCheck is used to check for the first position in the set of positions
+            firstCheck = 0;
+            static bool actionValid = true;
+            int x, y;
+            GameBoard = GB;
+            char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
+
+            //Iterates through the first dimension of the array
+            for (int i = 0; i < moveSet.GetLength(0); i++)
+            {
+                if (actionValid == true)
+                {
+                    //Iterates through the second dimension of the array
+                    for (int j = 0; j < moveSet.GetLength(1); j++)
+                    {
+                        //Checks for the x position in the 2d array and sets x to that value
+                        if (counter == 0)
+                        {
+                            x = moveSet[i, j];
+                            counter = 1;
+                        }
+                        //Checks for the y position in the 2d array and sets y to that value
+                        else
+                        {
+                            y = moveSet[i, j];
+                            counter = 0;
+
+                            //Checks if it is the first value in the array. If it is, then it does not need to
+                            //check if the space is empty, as the original piece is in that spot
+                            if (firstCheck = 0)
+                            {
+                                firstCheck = 1;
+                            }
+                            else //If the loop gets to this portion after firstCheck is changed off of 0, then it is no longer the first move
+                            {
+                                //Checks to see if the position is empty
+                                if (GameBoard[x, y].id == 'e')
+                                {
+                                    actionValid = 1;
+                                }
+                                else
+                                {
+                                    actionValid = 0;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            switch (pieceType)
+            {
+                case 'K':
+                    if (actionValid == true)
+                    {
+                        return 2;
+                    }
+                    else
+                        return 0;
+
+                case 'Q':
+                    if (actionValid == true)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'N':
+                    if (actionValid == true)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'B':
+                    if (actionValid == true)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'P':
+                    if (actionValid == true)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'R':
+                    if (actionValid == true)
+                    {
+                        return 2;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+            }
+        }
+
+        public static int attackAction2(moveSet[,] GB, Piece currPiece, int[] dest)
+        {
+            //Counter is used to check whether to place the value from the 2d array into x or y,
+            //as well as checking to see if the position on the gameboard is empty
+            int counter = 0;
+            //firstCheck is used to check for the first position in the set of positions
+            firstCheck = 0;
+            static bool actionValid = true;
+            int x, y;
+            GameBoard = GB;
+            char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
+            char enemyType = char.ToUpper(GameBoard[dest[0], dest[1]].id.ToCharArray()[0]);
+            chanceAttack = rollAttack() - 1;
+            //We use a here to set the for loop to search before the last position
+            int a = moveSet.GetLength(0) - 1;
+
+            //Iterates through the first dimension of the array
+            for (int i = 0; i < a; i++)
+            {
+                if (actionValid == true)
+                {
+                    //Iterates through the second dimension of the array
+                    for (int j = 0; j < moveSet.GetLength(1); j++)
+                    {
+                        //Checks for the x position in the 2d array and sets x to that value
+                        if (counter == 0)
+                        {
+                            x = moveSet[i, j];
+                            counter = 1;
+                        }
+                        //Checks for the y position in the 2d array and sets y to that value
+                        else
+                        {
+                            y = moveSet[i, j];
+                            counter = 0;
+
+                            //Checks if it is the first value in the array. If it is, then it does not need to
+                            //check if the space is empty, as the original piece is in that spot
+                            if (firstCheck = 0)
+                            {
+                                firstCheck = 1;
+                            }
+                            else //If the loop gets to this portion after firstCheck is changed off of 0, then it is no longer the first move
+                            {
+                                //Checks to see if the position is empty
+                                if (GameBoard[x, y].id == 'e')
+                                {
+                                    actionValid = 1;
+                                }
+                                else
+                                {
+                                    actionValid = 0;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (currPiece.color != GameBoard[dest[0], dest[1]].color)
+            {
+                actionValid = true;
+            }
+            else
+            {
+                actionValid = false;
+            }
+
+            switch (pieceType)
+            {
+                case 'K':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'P')
+                        {
+                            return 2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'Q':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'P' && chanceAttack < 5)
+                        {
+                            return 2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'N':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 2)
+                        {
+                            return 1;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 2)
+                        {
+                            return 1;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 2)
+                        {
+                            return 1;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 2)
+                        {
+                            return 1;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 2)
+                        {
+                            return 1;
+                        }
+                        if (enemyType == 'P' && chanceAttack < 5)
+                        {
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'B':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'P' && chanceAttack < 4)
+                        {
+                            return 2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'R':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'P' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                case 'P':
+                    if (actionValid == true)
+                    {
+                        if (enemyType == 'K' && chanceAttack < 1)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'Q' && chanceAttack < 1)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'N' && chanceAttack < 1)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'B' && chanceAttack < 2)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'R' && chanceAttack < 1)
+                        {
+                            return 2;
+                        }
+                        if (enemyType == 'P' && chanceAttack < 3)
+                        {
+                            return 2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+            }
+        }
 
         #region MoveCall
         public static int moveAction(Piece[,] GB,Piece currPiece, int[] pos, int[] dest)
