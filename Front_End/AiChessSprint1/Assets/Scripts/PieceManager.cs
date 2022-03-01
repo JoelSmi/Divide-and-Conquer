@@ -15,7 +15,7 @@ public class PieceManager : MonoBehaviour
     public bool actionTaken = false;
     public bool attacking = false;
     
-    private int turncount = 1;
+    public int turncount = 1;
 
 
     //instantiates objects to hold the pieces

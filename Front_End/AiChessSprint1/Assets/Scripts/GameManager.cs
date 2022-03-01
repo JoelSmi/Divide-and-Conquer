@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public BoardUI mBoardUI;
     public PieceManager mPieceManager;
     public TextMeshProUGUI txt;
+    public Button nxtTrnBtn;
     //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
     #region Piece Initialization
@@ -182,6 +183,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //switches between moving and attacking using the button on screen
     public void moveOrAttackBttn()
     {
         if (mPieceManager.attacking)
@@ -196,15 +198,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // function attached to the NextTurnButton in scene manually progresses the phase
+    // function attached to the NextTurnButton in scene. manually progresses the phase
    /* public void NextTurnButton()
     {
         mPieceManager.IncreaseTurnCnt();
-        if(mPieceManager.GetTurnCount() > 3)
+        if(mPieceManager.GetTurnCount() >= 4)
         {
             mPieceManager.ResetTurnCount();
             mPieceManager.SwitchSides(Color.white);
             mPieceManager.actionTaken = true;
+        }
+
+        if (mPieceManager.GetTurnCount()==1)
+        {
+            nxtTrnBtn.GetComponent<Image>().color= new Color(217, 52, 52);
+        }
+        else if (mPieceManager.GetTurnCount() == 2)
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(250, 236, 0);
+        }
+        else if (mPieceManager.GetTurnCount() == 3)
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(255, 149, 0);
         }
     }*/
 

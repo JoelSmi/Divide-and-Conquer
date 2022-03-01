@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 65665158}
   - component: {fileID: 65665157}
   m_Layer: 0
-  m_Name: EndTurnButtn
+  m_Name: nextTurnButtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1585273303}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: EndTurn
+        m_MethodName: NextTurnButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8509804, g: 0.20392157, b: 0.20392157, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -913,6 +913,10 @@ PrefabInstance:
       propertyPath: mBoardUI
       value: 
       objectReference: {fileID: 949815132}
+    - target: {fileID: 846789043724003051, guid: 594f1745deb7d3c4a925d97cf586ca67, type: 3}
+      propertyPath: nxtTrnBtn
+      value: 
+      objectReference: {fileID: 65665157}
     - target: {fileID: 846789043724003051, guid: 594f1745deb7d3c4a925d97cf586ca67, type: 3}
       propertyPath: mPieceManager
       value: 
