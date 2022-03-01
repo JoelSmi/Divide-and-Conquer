@@ -50,12 +50,14 @@ public class PawnUI : BasePiece
 
         MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Free);
         */
-        //Vertical
-        CreateCellPath(0, 1, mMovement.y);
+        
+            //Vertical
+            CreateCellPath(0, 1, mMovement.y);
 
-        //Upper Diagonal
-        CreateCellPath(1, 1, mMovement.z);
-        CreateCellPath(-1, 1, mMovement.z);
+            //Upper Diagonal
+            CreateCellPath(1, 1, mMovement.z);
+            CreateCellPath(-1, 1, mMovement.z);
+        
     }
 
     //Adds the base to the sprite, determined by team color

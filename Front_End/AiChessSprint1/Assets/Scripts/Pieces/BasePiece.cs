@@ -18,7 +18,6 @@ public class BasePiece : EventTrigger
 
     protected RectTransform mRectTransform = null;
     protected PieceManager mPieceManager;
-
     //The cell that a piece is attempting to move into (public so AI can access)
     public Cell mTargetCell = null;
 
@@ -217,7 +216,7 @@ public class BasePiece : EventTrigger
 
         // snaps the piece to the target cell thenn returns target cell to null
         transform.position = mCurrentCell.transform.position;
-        mTargetCell = null; 
+        mTargetCell = null;
     }
 
     //Unused for sprint 1 demo
@@ -244,14 +243,16 @@ public class BasePiece : EventTrigger
     public override void OnBeginDrag(PointerEventData eventData)
     {
         base.OnBeginDrag(eventData);
+        if (mPieceManager.GetTurnCount() == corp )
+        {
+            CheckPathing();
+        }
+            ShowCells();
 
-        CheckPathing();
-
-        ShowCells();
-
-        //Change to the selected base sprite
-        tempSprite = base.GetComponent<Image>().sprite;
-        base.GetComponent<Image>().sprite = Resources.Load<Sprite>("base_select");
+            //Change to the selected base sprite
+            tempSprite = base.GetComponent<Image>().sprite;
+            base.GetComponent<Image>().sprite = Resources.Load<Sprite>("base_select");
+        
     }
 
     // while a piece is being held use the base for the OnDrag function then  match the  movement to the mouse
@@ -300,11 +301,14 @@ public class BasePiece : EventTrigger
         }
         */
         //use the Move function
+        mPieceManager.IncreaseTurnCnt();
         Move();
-
         //switch sides based on color
-        mPieceManager.SwitchSides(mColor);
-        mPieceManager.actionTaken = true;
+        if(mPieceManager.GetTurnCount() == 4) {
+            mPieceManager.ResetTurnCount();
+            mPieceManager.SwitchSides(mColor);
+            mPieceManager.actionTaken = true;
+        }
     }
     #endregion
 

@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public BoardUI mBoardUI;
     public PieceManager mPieceManager;
     public TextMeshProUGUI txt;
-
     //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
     #region Piece Initialization
@@ -196,5 +195,17 @@ public class GameManager : MonoBehaviour
             mPieceManager.attacking = true;
         }
     }
+
+    // function attached to the NextTurnButton in scene manually progresses the phase
+   /* public void NextTurnButton()
+    {
+        mPieceManager.IncreaseTurnCnt();
+        if(mPieceManager.GetTurnCount() > 3)
+        {
+            mPieceManager.ResetTurnCount();
+            mPieceManager.SwitchSides(Color.white);
+            mPieceManager.actionTaken = true;
+        }
+    }*/
 
 }
