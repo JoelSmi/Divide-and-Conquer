@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public PieceManager mPieceManager;
     public TextMeshProUGUI txt;
     public Button nxtTrnBtn;
+    
     //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
     #region Piece Initialization
@@ -59,9 +60,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
 
         #region UI > EL Update
+        if (mPieceManager.GetTurnCount() == 4)
+        {
+            mPieceManager.ResetTurnCount();
+            mPieceManager.actionTaken = true;
+        }
         string TempLogBuff = "";
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
@@ -164,6 +170,9 @@ public class GameManager : MonoBehaviour
         {
             ExecutionBoard = new Board(WhitePieces, BlackPieces);
         }
+
+        #region UI Checks
+        #endregion
     }
 
 
@@ -199,28 +208,25 @@ public class GameManager : MonoBehaviour
     }
 
     // function attached to the NextTurnButton in scene. manually progresses the phase
-   /* public void NextTurnButton()
+    public void NextTurnButton()
     {
         mPieceManager.IncreaseTurnCnt();
-        if(mPieceManager.GetTurnCount() >= 4)
+        if (mPieceManager.GetTurnCount() == 1)
         {
-            mPieceManager.ResetTurnCount();
-            mPieceManager.SwitchSides(Color.white);
-            mPieceManager.actionTaken = true;
-        }
-
-        if (mPieceManager.GetTurnCount()==1)
-        {
-            nxtTrnBtn.GetComponent<Image>().color= new Color(217, 52, 52);
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
         }
         else if (mPieceManager.GetTurnCount() == 2)
         {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(250, 236, 0);
+            nxtTrnBtn.GetComponent<Image>().color = new Color(1f, 0.9f, 0f);
         }
         else if (mPieceManager.GetTurnCount() == 3)
         {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(255, 149, 0);
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.9f, 0.5f, 0f);
         }
-    }*/
+        else
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+        }
+     }
 
 }
