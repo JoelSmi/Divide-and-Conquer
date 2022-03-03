@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pieces
 {
     public abstract class Piece
@@ -36,9 +38,17 @@ namespace Pieces
         public bool isCaptured { get; set; } = false;
         //Storage of the current position of the peice in the format of {x,y}, or {row,column}
         public int[] currPos { get; set; } = new int[2];
-
-        public abstract void  getDelegates(Piece[,] TeamBoard, string[] DelIds);
     }
+
+    //Subclass of Piece to store the commander information
+    public abstract class Commander : Piece 
+    {
+        public Delegations Delegation;
+        //Stores the maximum numbe of actions this peice can perform or command
+        public int actionCount { get; protected set; } = 0;
+        public abstract void getDelegates(Piece[,] TeamBoard, string[] DelIds);
+    }
+
 
     #region EmptyPiece
     public class Empty : Piece
@@ -54,11 +64,6 @@ namespace Pieces
 
             this.color = Color;
             this.id = id;
-        }
-        override
-        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
-        {
-
         }
     }
     #endregion
@@ -78,12 +83,6 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
-
-        override
-        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
-        {
-
-        }
     }
     
 
@@ -101,12 +100,6 @@ namespace Pieces
 
             this.color = Color;
             this.id = id;
-        }
-
-        override
-        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
-        {
-
         }
     }
     #endregion
@@ -126,12 +119,6 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
-
-        override
-        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
-        {
-
-        }
     }
 
     public class Queen : Piece
@@ -148,25 +135,17 @@ namespace Pieces
             this.color = Color;
             this.id = id;
         }
-
-        override
-        public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
-        {
-
-        }
     }
-    
+    #endregion
+
     #region Commanders
     ///Both the Bishop and King have two addition variables 
     ///called delegates and action count
-    public class Bishop : Piece
+    public class Bishop : Commander
     {
-        Delegations BishopDelegates;
-        //Stores the maximum numbe of actions this peice can perform or command
-        public int actionCount { get; protected set; } = 0;
-
         public Bishop(string id, string Color)
-        {
+        {   
+            this.actionCount = 2;
             this.movement = 2;
             this.movementType = 'L';
 
@@ -184,17 +163,14 @@ namespace Pieces
         override
         public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
         {
-            this.BishopDelegates = new Delegations(this.id, TeamBoard, DelIds);
+            this.Delegation = new Delegations(this.id, TeamBoard, DelIds);
         }
     }
-    public class King : Piece
+    public class King : Commander
     {
-        Delegations KingDelegates;
-        //Stores the maximum numbe of actions this peice can perform or command
-        public int actionCount { get; protected set; } = 0;
-
         public King(string id, string Color)
         {
+            this.actionCount = 2;
             this.movement = 4;
             this.movementType = 'S';
             this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
@@ -211,24 +187,26 @@ namespace Pieces
         override
         public void getDelegates(Piece[,] TeamBoard, string[] DelIds)
         {
-            this.KingDelegates = new Delegations(this.id, TeamBoard, DelIds);
+            this.Delegation = new Delegations(this.id, TeamBoard, DelIds);
         }
     }
-    #endregion
-
     #endregion
 
     #region Commander Delegation Class
     public class Delegations 
     {
-        Piece[] delegates;
+        public List<Piece> delegates { get; private set; }
         public Delegations(string CommandId, Piece[,] TeamBoard, string[] DelIds)
         {
-            if (CommandId.Equals("K0") || CommandId.Equals("k0"))
-                delegates = new Piece[15];
-            else
-                delegates = new Piece[6];
-            int index = 0;
+            if (CommandId.Equals("K0") || CommandId.Equals("k0")) {
+                delegates = new List<Piece>();
+                delegates.Capacity = 15;
+            }
+            else {
+                delegates= new List<Piece>();
+                delegates.Capacity = 6;
+            }
+
             for(int i = 0; i < TeamBoard.GetLength(0); i++)
             {
                 for(int j = 0; j < TeamBoard.GetLength(1); j++)
@@ -236,18 +214,37 @@ namespace Pieces
                     foreach(string id in DelIds)
                     {
                         if (id.Equals(TeamBoard[i, j].id)){
-                            delegates[index] = TeamBoard[i, j];
-                            index++;
+                            delegates.Add(TeamBoard[i, j]);
                         }
                     }
                 }
             }
+        }
 
-            if(index < delegates.Length)
+        
+        public int update(Piece CurrPiece, char updateType)
+        {
+            switch (updateType)
             {
-                delegates[index] =new  Empty ("e","N");
-                index++;
+                case 'A':
+                    if (delegates.Count == delegates.Capacity)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        delegates.Add(CurrPiece);
+                        return 2;
+                    }
+                    break;
+                case 'R':
+                    delegates.Remove(CurrPiece);
+                    return 0;
+                    break;
+                default:
+                    return -1;
             }
+            return -1;
         }
     }
     #endregion

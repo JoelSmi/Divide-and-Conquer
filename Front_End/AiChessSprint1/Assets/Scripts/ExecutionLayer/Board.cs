@@ -206,12 +206,15 @@ namespace GameBoard
                 return 'M';
             else if (!this.GameBoard[currPos[0], currPos[1]].color.Equals(this.GameBoard[dest[0], dest[1]].color))
                 return 'A';
+            //Include delegation condition
+            else if (true)
+                return 'D';
             else
                 return 'I';
         }
 
         //Function call is made to the Action class to check if the action type is valid or not
-        public void takeAction(char ActionType, Pieces.Piece currPiece, int[] dest)
+        public int takeAction(char ActionType, Pieces.Piece currPiece, int[] dest)
         {
             this.hasActed = true;
             int temp = 0;
@@ -220,6 +223,7 @@ namespace GameBoard
             this.actionInitial = currPiece.currPos;
             this.actionDest = dest;
 
+            //Update for three command authority Actions
             switch (ActionType) {
                 case 'M':
                     temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
@@ -237,7 +241,49 @@ namespace GameBoard
                         updateBoard(currPiece, currPiece.currPos, dest);
                     }
                     break;
+                    
             }
+            return ActionCount;
+        }
+
+        //overloaded meothod to perform the delegate action
+        public int takeAction(char ActionType, int TurnActions, Pieces.Piece currPiece, string Curr, string Next)
+        {
+            int temp = 0, ActionCount = TurnActions;
+            Commander CurrCommander = null;
+            Commander NextCommander = null;
+
+            char type = Curr[0];
+            switch (type)
+            {
+                case 'K':
+                    CurrCommander = BlackKing;
+                    if (Next.Equals("B0"))
+                        NextCommander = this.BlackBishops[0];
+                    else if (Next.Equals("B1"))
+                        NextCommander = this.BlackBishops[1];
+                    break;
+                case 'k':
+                    CurrCommander = this.WhiteKing;
+                    if (Next.Equals("b0"))
+                        NextCommander = this.WhiteBishops[0];
+                    else if (Next.Equals("b1"))
+                        NextCommander = this.WhiteBishops[1];
+                    break;
+            }
+
+            //Update for three command authority Actions
+            switch (ActionType) { 
+                case 'D':
+                    
+                    temp = Actions.Action.Delegate(currPiece, CurrCommander, NextCommander);
+                    if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                    {
+                        ActionCount += temp;
+                    }
+                    break;
+            }
+            return ActionCount;
         }
         #endregion
 

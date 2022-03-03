@@ -1,5 +1,6 @@
 using Pieces;
 using System;
+using System.Collections.Generic;
 
 
 namespace Actions
@@ -8,23 +9,25 @@ namespace Actions
     {
         private static bool actionValid = false;
         static Piece[,] GameBoard;
-        
+
         public static int rollAttack()
         {
             Random roll = new Random();
-            return roll.Next(1,7);
+            int output = roll.Next(1, 7);
+            return output;
 
         }
-        
-                public static int moveAction2(moveSet[,] GB, Piece currPiece)
+
+        #region Move
+        public static int moveAction2(int[,] moveSet, Piece[,] GB, Piece currPiece)
         {
             //Counter is used to check whether to place the value from the 2d array into x or y,
             //as well as checking to see if the position on the gameboard is empty
             int counter = 0;
             //firstCheck is used to check for the first position in the set of positions
-            firstCheck = 0;
-            static bool actionValid = true;
-            int x, y;
+            int firstCheck = 0;
+            bool actionValid = true;
+            int x = -1, y = -1;
             GameBoard = GB;
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
 
@@ -50,20 +53,20 @@ namespace Actions
 
                             //Checks if it is the first value in the array. If it is, then it does not need to
                             //check if the space is empty, as the original piece is in that spot
-                            if (firstCheck = 0)
+                            if (firstCheck == 0)
                             {
                                 firstCheck = 1;
                             }
                             else //If the loop gets to this portion after firstCheck is changed off of 0, then it is no longer the first move
                             {
                                 //Checks to see if the position is empty
-                                if (GameBoard[x, y].id == 'e')
+                                if (GameBoard[x, y].id.Equals("e"))
                                 {
-                                    actionValid = 1;
+                                    actionValid = true;
                                 }
                                 else
                                 {
-                                    actionValid = 0;
+                                    actionValid = false;
                                     break;
                                 }
                             }
@@ -136,21 +139,24 @@ namespace Actions
                         return 0;
                     }
             }
+            return -1;
         }
+        #endregion
 
-        public static int attackAction2(moveSet[,] GB, Piece currPiece, int[] dest)
+        #region Attack
+        public static int attackAction2(int[,] moveSet, Piece[,] GB, Piece currPiece, int[] dest)
         {
             //Counter is used to check whether to place the value from the 2d array into x or y,
             //as well as checking to see if the position on the gameboard is empty
             int counter = 0;
             //firstCheck is used to check for the first position in the set of positions
-            firstCheck = 0;
-            static bool actionValid = true;
-            int x, y;
+            int firstCheck = 0;
+            bool actionValid = true;
+            int x = -1, y = -1;
             GameBoard = GB;
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
             char enemyType = char.ToUpper(GameBoard[dest[0], dest[1]].id.ToCharArray()[0]);
-            chanceAttack = rollAttack() - 1;
+            int chanceAttack = rollAttack();
             //We use a here to set the for loop to search before the last position
             int a = moveSet.GetLength(0) - 1;
 
@@ -176,20 +182,20 @@ namespace Actions
 
                             //Checks if it is the first value in the array. If it is, then it does not need to
                             //check if the space is empty, as the original piece is in that spot
-                            if (firstCheck = 0)
+                            if (firstCheck == 0)
                             {
                                 firstCheck = 1;
                             }
                             else //If the loop gets to this portion after firstCheck is changed off of 0, then it is no longer the first move
                             {
                                 //Checks to see if the position is empty
-                                if (GameBoard[x, y].id == 'e')
+                                if (GameBoard[x, y].id.Equals("e"))
                                 {
-                                    actionValid = 1;
+                                    actionValid = true;
                                 }
                                 else
                                 {
-                                    actionValid = 0;
+                                    actionValid = false;
                                     break;
                                 }
                             }
@@ -245,6 +251,7 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
 
                 case 'Q':
                     if (actionValid == true)
@@ -278,6 +285,7 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
 
                 case 'N':
                     if (actionValid == true)
@@ -311,6 +319,7 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
 
                 case 'B':
                     if (actionValid == true)
@@ -344,6 +353,7 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
 
                 case 'R':
                     if (actionValid == true)
@@ -377,6 +387,7 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
 
                 case 'P':
                     if (actionValid == true)
@@ -410,8 +421,32 @@ namespace Actions
                     {
                         return 0;
                     }
+                    break;
             }
+            return -1;
         }
+        #endregion
+
+        #region Delegate
+        public static int Delegate(Piece CurrPiece, Commander CurrCommander, Commander NextCommander)
+        {
+            //check to ensure the NextDelegation has room for the peice
+            if (NextCommander.Delegation.delegates.Count == NextCommander.Delegation.delegates.Capacity)
+                return -1;
+
+            //Check to ensure the current peice is apart of the delegation
+            if (CurrCommander.Delegation.delegates.IndexOf(CurrPiece) !> 0)
+                return -1;
+
+            if ((NextCommander.Delegation.update(CurrPiece, 'A')) == 2)
+            {
+                CurrCommander.Delegation.update(CurrPiece, 'R');
+                return 2;
+            }
+
+            return -1;
+        }
+        #endregion
 
         #region MoveCall
         public static int moveAction(Piece[,] GB,Piece currPiece, int[] pos, int[] dest)
