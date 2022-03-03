@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public PieceManager mPieceManager;
     public TextMeshProUGUI txt;
     public Button nxtTrnBtn;
+    public Button attckButton;
     
     //Execution Layer initialization 
     private GameBoard.Board ExecutionBoard;
@@ -172,6 +173,31 @@ public class GameManager : MonoBehaviour
         }
 
         #region UI Checks
+        if (mPieceManager.GetTurnCount() == 1)
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+        }
+        else if (mPieceManager.GetTurnCount() == 2)
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(1f, 0.9f, 0f);
+        }
+        else if (mPieceManager.GetTurnCount() == 3)
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.9f, 0.5f, 0f);
+        }
+        else
+        {
+            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+        }
+
+        if (mPieceManager.attacking)
+        {
+            attckButton.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+        }
+        else
+        {
+            attckButton.GetComponent<Image>().color = new Color(1f, 1f, 1.0f);
+        }
         #endregion
     }
 
@@ -211,22 +237,7 @@ public class GameManager : MonoBehaviour
     public void NextTurnButton()
     {
         mPieceManager.IncreaseTurnCnt();
-        if (mPieceManager.GetTurnCount() == 1)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
-        }
-        else if (mPieceManager.GetTurnCount() == 2)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(1f, 0.9f, 0f);
-        }
-        else if (mPieceManager.GetTurnCount() == 3)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.9f, 0.5f, 0f);
-        }
-        else
-        {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
-        }
+        
      }
 
 }

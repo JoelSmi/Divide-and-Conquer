@@ -185,6 +185,8 @@ public class BasePiece : EventTrigger
         foreach (Cell cell in mHighlightedCells)
         {
             cell.mOutlineImage.enabled = true;
+            if(mPieceManager.attacking)
+                cell.mOutlineImage.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
             
         }
 
