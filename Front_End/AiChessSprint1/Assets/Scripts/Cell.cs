@@ -39,7 +39,7 @@ public class Cell : MonoBehaviour
     {
         if(mCurrentPiece != null)
         {
-            mCurrentPiece.Kill();
+            mCurrentPiece.Kill(mBoardUI);
         }
     }
 }

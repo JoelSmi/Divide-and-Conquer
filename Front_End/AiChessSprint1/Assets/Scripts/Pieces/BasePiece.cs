@@ -28,8 +28,11 @@ public class BasePiece : EventTrigger
     //
     protected Sprite tempSprite = null;
 
-    //What corp the piece belongs to (1, 2, or 3)
+    // What corp the piece belongs to (1, 2, or 3)
     public int corp = 0;
+
+    //
+    protected bool isPlayable = true;
 
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
@@ -56,21 +59,52 @@ public class BasePiece : EventTrigger
     }
 
     // kills the piece and placees it back in its original cell
-    public void Reset()
+    public void Reset(BoardUI boardUI)
     {
-        Kill();
+        Kill(boardUI);
+
+        // Reset from graveyard's scale
+        mRectTransform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         Place(mOriginalCell);
-
     }
 
     // disables the piece so it cannot be interacted with and is not visible
-    public virtual void Kill()
+    public virtual void Kill(BoardUI boardUI)
     {
         // sets that there is no longer a piece in the cell it was in
         mCurrentCell.mCurrentPiece = null;
 
-        gameObject.SetActive(false);
+        // Scale to the size of the graveyard cells
+        mRectTransform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+
+        // Disable interaction
+        isPlayable = false;
+
+        // Move to a graveyard
+        for (int y = 11; y >= 8; y--)
+        {
+            for (int x = 7; x >= 0; x--)
+            {
+                if (mColor == Color.black && (y == 9 || y == 11))
+                {
+                    if (boardUI.mAllCells[x, y].mCurrentPiece == null)
+                    {
+                        mTargetCell = boardUI.mAllCells[x, y];
+                        Move();
+                    }
+                }
+                else if (mColor == Color.white && (y == 8 || y == 10))
+                {
+                    if (boardUI.mAllCells[x, y].mCurrentPiece == null)
+                    {
+                        mTargetCell = boardUI.mAllCells[x, y];
+                        Move();
+                    }
+                }
+            }
+        }
+        //gameObject.SetActive(false); // disable the gameobject when not using the graveyard
     }
 
     public virtual void TagSet()
@@ -244,72 +278,81 @@ public class BasePiece : EventTrigger
     // when a piece is is picked up use the base on drag function then check for possible paths and then show available cells
     public override void OnBeginDrag(PointerEventData eventData)
     {
-        base.OnBeginDrag(eventData);
-        if (mPieceManager.GetTurnCount() == corp )
+        if (isPlayable)
         {
-            CheckPathing();
-        }
+            base.OnBeginDrag(eventData);
+            if (mPieceManager.GetTurnCount() == corp)
+            {
+                CheckPathing();
+            }
             ShowCells();
 
             //Change to the selected base sprite
             tempSprite = base.GetComponent<Image>().sprite;
             base.GetComponent<Image>().sprite = Resources.Load<Sprite>("base_select");
-        
+        }
     }
 
     // while a piece is being held use the base for the OnDrag function then  match the  movement to the mouse
     public override void OnDrag(PointerEventData eventData)
     {
-        base.OnDrag(eventData);
-
-        //matches mouse movement
-        transform.position += (Vector3)eventData.delta;
-        // the cell the mouse is hovering over inside the list of mHighlightedCells is set to the target cell 
-        foreach(Cell cell in mHighlightedCells)
+        if (isPlayable)
         {
-            if(RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition))
-            {
-                mTargetCell = cell;
-                break;
-            }
+            base.OnDrag(eventData);
 
-            //if outside the highligted set target to null
-            mTargetCell = null;
+            //matches mouse movement
+            transform.position += (Vector3)eventData.delta;
+            // the cell the mouse is hovering over inside the list of mHighlightedCells is set to the target cell 
+            foreach (Cell cell in mHighlightedCells)
+            {
+                if (RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition))
+                {
+                    mTargetCell = cell;
+                    break;
+                }
+
+                //if outside the highligted set target to null
+                mTargetCell = null;
+            }
         }
     }
 
     // when the user release the drag follows the base OnEndDrag function
     public override void OnEndDrag(PointerEventData eventData)
     {
-        base.OnEndDrag(eventData);
-
-        //removes the mHighlightedCells 
-        ClearCells();
-
-        //Revert to original base sprite
-        base.GetComponent<Image>().sprite = tempSprite;
-
-        //if there isnt a target Cell return the piece to its current position
-        if (!mTargetCell)
+        if (isPlayable)
         {
-            transform.position = mCurrentCell.gameObject.transform.position;
-            return;
-        }
-        /*//Move seems to just do everything that attacking needs to currently
-        if (mTargetCell.mCurrentPiece != null) 
-        {
-            Attack();
-            return;
-        }
-        */
-        //use the Move function
-        mPieceManager.IncreaseTurnCnt();
-        Move();
-        //switch sides based on color
-        if(mPieceManager.GetTurnCount() == 4) {
-            mPieceManager.ResetTurnCount();
-            mPieceManager.SwitchSides(mColor);
-            mPieceManager.actionTaken = true;
+            base.OnEndDrag(eventData);
+
+            //removes the mHighlightedCells 
+            ClearCells();
+
+            //Revert to original base sprite
+            base.GetComponent<Image>().sprite = tempSprite;
+
+            //if there isnt a target Cell return the piece to its current position
+            if (!mTargetCell)
+            {
+                transform.position = mCurrentCell.gameObject.transform.position;
+                return;
+            }
+            /*//Move seems to just do everything that attacking needs to currently
+            if (mTargetCell.mCurrentPiece != null) 
+            {
+                Attack();
+                return;
+            }
+            */
+            //use the Move function
+            mPieceManager.IncreaseTurnCnt();
+            Move();
+            //switch sides based on color
+            if (mPieceManager.GetTurnCount() == 4)
+            {
+                mPieceManager.ResetTurnCount();
+                mPieceManager.SwitchSides(mColor);
+                mPieceManager.actionTaken = true;
+            }
         }
     }
     #endregion

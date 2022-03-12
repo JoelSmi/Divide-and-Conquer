@@ -17,7 +17,6 @@ public class PieceManager : MonoBehaviour
     
     private int turncount = 1;
 
-
     //instantiates objects to hold the pieces
     private List<BasePiece> mWhitePieces = null;
     private List<BasePiece> mBlackPieces = null;
@@ -28,6 +27,9 @@ public class PieceManager : MonoBehaviour
         "P", "P", "P", "P", "P", "P", "P", "P",
         "R", "KN", "B", "K", "Q", "B", "KN", "R"
     };
+
+    // for access to the entire board, used for moving to graveyards
+    private BoardUI boardUI = null;
 
     //assigns types to the strings inside previous matrix
     private Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>()
@@ -41,8 +43,9 @@ public class PieceManager : MonoBehaviour
     };
 
     // creates the pieces inside on the boardUI
-    public void Setup (BoardUI boardUI)
+    public void Setup (BoardUI newBoard)
     {
+        boardUI = newBoard;
         // creates the white pieces see CreatePieces below for more info
         numPieces = 0;
         mWhitePieces = CreatePieces(Color.white, new Color32(80, 124, 159, 255), boardUI);
@@ -80,7 +83,7 @@ public class PieceManager : MonoBehaviour
             string key = mPieceOrder[i];
             Type pieceType = mPieceLibrary[key];
 
-            //Naming the object for Unity view
+            // Naming the object for Unity view
             string colorName = teamColor == Color.white ? "RED" : "BLUE";
             newPieceObject.name = colorName + " " + pieceType + " " + i;
 
@@ -140,9 +143,9 @@ public class PieceManager : MonoBehaviour
     private void ResetPieces()
     {
         foreach (BasePiece piece in mWhitePieces)
-            piece.Reset();
+            piece.Reset(boardUI);
         foreach (BasePiece piece in mBlackPieces)
-            piece.Reset();
+            piece.Reset(boardUI);
     }
 
     public void UIRelay(int currentCellX, int currentCellY, int targetCellX, int targetCellY)

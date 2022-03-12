@@ -59,9 +59,9 @@ public class KingUI : BasePiece
     }
 
     //follows base Kill function and then set the mIsKingAlive object to false to reset the game
-    public override void Kill()
+    public override void Kill(BoardUI boardUI)
     {
-        base.Kill();
+        base.Kill(boardUI);
 
         mPieceManager.mIsKingAlive = false;
     }
