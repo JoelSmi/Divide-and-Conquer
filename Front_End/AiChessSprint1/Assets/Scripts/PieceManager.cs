@@ -112,6 +112,7 @@ public class PieceManager : MonoBehaviour
     }
 
     // sets the pieces on whether or not they can be interacted with
+    // RYAN: Might remove this function entirely because this interferes with sprite movement
     private void SetInteractive(List<BasePiece> allPieces, bool value)
     {
         // sets whether or not all the pieces are available on team to be used
@@ -136,7 +137,7 @@ public class PieceManager : MonoBehaviour
 
         //if its blacks turn next sets black to interactive otherwise sets white to be interactive
         SetInteractive(mWhitePieces, !isBlackTurn);
-        SetInteractive(mBlackPieces, false);
+        SetInteractive(mBlackPieces, true);
     }
 
     //returns all pieces to their original state

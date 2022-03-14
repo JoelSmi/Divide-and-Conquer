@@ -40,7 +40,7 @@ public class PawnUI : BasePiece
     // checks the path using the constraints of the pawns movement
     protected override void CheckPathing()
     {
-        /*//we are ignoring finer details of pawns for now
+        /*// we are ignoring finer details of pawns for now
         int currentX = mCurrentCell.mBoardPosition.x;
         int currentY = mCurrentCell.mBoardPosition.y;
 
@@ -60,7 +60,7 @@ public class PawnUI : BasePiece
         
     }
 
-    //Adds the base to the sprite, determined by team color
+    // Adds the base to the sprite, determined by team color
     protected void createChildSprite(string spriteName)
     {
         GameObject childSprite = new GameObject();

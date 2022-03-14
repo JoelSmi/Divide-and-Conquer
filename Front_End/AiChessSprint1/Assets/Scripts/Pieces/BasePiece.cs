@@ -31,8 +31,25 @@ public class BasePiece : EventTrigger
     // What corp the piece belongs to (1, 2, or 3)
     public int corp = 0;
 
-    //
+    // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
+
+    // Piece movement
+    Vector3 destination, start;
+    protected bool isMoving = false;
+    protected float speed = 0.25f, t = 0;
+
+    // Only for movement, at the moment, will separate if needed
+    void Update()
+    {
+        if (isMoving)
+        {
+            t += Time.deltaTime / speed;
+            transform.position = Vector3.Lerp(start, destination, t);
+            if (t >= 1)
+                isMoving = false;
+        }
+    }
 
     // sets up the pieces team, sprite color, and connection to the PieceManager script
     public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
@@ -82,24 +99,24 @@ public class BasePiece : EventTrigger
         isPlayable = false;
 
         // Move to a graveyard
-        for (int y = 11; y >= 8; y--)
+        for (int y = 11; y >= 8; y--) // Decrement because of how the board is set up
         {
             for (int x = 7; x >= 0; x--)
             {
-                if (mColor == Color.black && (y == 9 || y == 11))
+                if (mColor == Color.black && (y == 9 || y == 11)) // Blue graveyard
                 {
                     if (boardUI.mAllCells[x, y].mCurrentPiece == null)
                     {
                         mTargetCell = boardUI.mAllCells[x, y];
-                        Move();
+                        Move(true);
                     }
                 }
-                else if (mColor == Color.white && (y == 8 || y == 10))
+                else if (mColor == Color.white && (y == 8 || y == 10)) // Red graveyard
                 {
                     if (boardUI.mAllCells[x, y].mCurrentPiece == null)
                     {
                         mTargetCell = boardUI.mAllCells[x, y];
-                        Move();
+                        Move(true);
                     }
                 }
             }
@@ -120,7 +137,7 @@ public class BasePiece : EventTrigger
     public int corpSet()
     {
         string[] tempName = this.name.Split(' ');
-        switch(tempName[2])
+        switch (tempName[2])
         {
             case "0"://Pawn
             case "1"://Pawn
@@ -236,8 +253,13 @@ public class BasePiece : EventTrigger
     }
 
     // removes the enemy piece on the target cell and moves the piece
-    protected virtual void Move()
+    protected virtual void Move(bool beingKilled)
     {
+        // Initialize movement variables
+        start = mCurrentCell.transform.position;
+        destination = mTargetCell.transform.position;
+        t = 0;
+
         //removes Pieece from the board at target cell
         mTargetCell.RemovePiece();
 
@@ -251,7 +273,15 @@ public class BasePiece : EventTrigger
         mCurrentCell.mCurrentPiece = this;
 
         // snaps the piece to the target cell thenn returns target cell to null
-        transform.position = mCurrentCell.transform.position;
+        //transform.position = mCurrentCell.transform.position;
+
+        // 
+        transform.position = start;
+        if (!beingKilled)
+            isMoving = true;
+        else
+            transform.position = mCurrentCell.transform.position;
+
         mTargetCell = null;
     }
 
@@ -278,7 +308,7 @@ public class BasePiece : EventTrigger
     // when a piece is is picked up use the base on drag function then check for possible paths and then show available cells
     public override void OnBeginDrag(PointerEventData eventData)
     {
-        if (isPlayable)
+        if (isPlayable && mColor == Color.white)
         {
             base.OnBeginDrag(eventData);
             if (mPieceManager.GetTurnCount() == corp)
@@ -296,7 +326,7 @@ public class BasePiece : EventTrigger
     // while a piece is being held use the base for the OnDrag function then  match the  movement to the mouse
     public override void OnDrag(PointerEventData eventData)
     {
-        if (isPlayable)
+        if (isPlayable && mColor == Color.white)
         {
             base.OnDrag(eventData);
 
@@ -320,7 +350,7 @@ public class BasePiece : EventTrigger
     // when the user release the drag follows the base OnEndDrag function
     public override void OnEndDrag(PointerEventData eventData)
     {
-        if (isPlayable)
+        if (isPlayable && mColor == Color.white)
         {
             base.OnEndDrag(eventData);
 
@@ -345,7 +375,7 @@ public class BasePiece : EventTrigger
             */
             //use the Move function
             mPieceManager.IncreaseTurnCnt();
-            Move();
+            Move(false);
             //switch sides based on color
             if (mPieceManager.GetTurnCount() == 4)
             {
@@ -366,8 +396,27 @@ public class BasePiece : EventTrigger
      */
     public void MoveAIPiece()
     {
-        //use the Move function
-        Move();
+        // Initialize movement variables
+        start = mCurrentCell.transform.position;
+        destination = mTargetCell.transform.position;
+        t = 0;
+
+        //removes Pieece from the board at target cell
+        mTargetCell.RemovePiece();
+
+        // removes this piece from its current cell
+        mCurrentCell.mCurrentPiece = null;
+
+        //sets the current cell = to the target cell
+        //selects this piece as the current piece at the new current cell
+        mPieceManager.UIRelay(mCurrentCell.mBoardPosition.x, mCurrentCell.mBoardPosition.y, mTargetCell.mBoardPosition.x, mTargetCell.mBoardPosition.y);
+        mCurrentCell = mTargetCell;
+        mCurrentCell.mCurrentPiece = this;
+
+        // 
+        isMoving = true;
+
+        mTargetCell = null;
     }
 
     #endregion
