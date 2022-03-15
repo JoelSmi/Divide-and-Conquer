@@ -5,20 +5,25 @@
 //using AIBishop;
 using System;
 
-namespace BishopAI1
+namespace KingAI1
 {
 	public class Action {
 		
+		//May want to add a variable to show which piece commanded this action. Our goal is to show an array of actions.
 		private Type pieceType;
 		private int id = -1;
 		private int originalXCord = -1;
 		private int originalYCord = -1;
-		private int[] originalCords = {-1, -1};
+		private int[] originalCords = new int[2];
 		private int destinationXCord = -1;
 		private int destinationYCord = -1;
 		private int[] destinationCords = {-1, -1};
 		private bool isAttack = false;
 		private String printedReference;
+		private bool isActing = false;
+		private Piece commandingPiece;
+		private bool completed = false;
+		private List<int[]> path;
 
 		public Action(){
 			pieceType = typeof(EmptySquare);
@@ -52,7 +57,12 @@ namespace BishopAI1
 				+ GetNotation(destinationCords[0], destinationCords[1]));
 				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
 				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+				Console.Write("Path taken:");
+				foreach(int[] square in path){
+					Console.Write("[" + square[0] + "," + square[1] + "]");
 				}
+				Console.Write("\n");
+			}
 			else{
 				Console.WriteLine("The outgoing action returned is:");
 				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
@@ -60,6 +70,11 @@ namespace BishopAI1
 				+ GetNotation(destinationCords[0], destinationCords[1]));
 				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
 				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
+				Console.Write("Path taken:");
+				foreach(int[] square in path){
+					Console.Write("[" + square[0] + "," + square[1] + "]");
+				}
+				Console.Write("\n");
 			}
 			
 		}
@@ -132,8 +147,31 @@ namespace BishopAI1
 		public void setIsAct(bool acting){
 			this.isActing = acting;
 		}
+
 		public bool getIsActing(){
 			return isActing;
+		}
+
+		public void setCommandingPiece(Piece commandingPiece){
+			this.commandingPiece = commandingPiece;
+		}
+
+		public Piece getCommandingPiece(){
+			return this.commandingPiece;
+		}
+		public void setCompleted(bool done){
+			this.completed = done;
+		}
+
+		public bool getCompleted(){
+			return this.completed;
+
+		}
+		public void setPath(List<int[]> path){
+			this.path = path;
+		}
+		public List<int[]> getPath(){
+			return this.path;
 		}
 	}
 }
