@@ -18,8 +18,8 @@ public class PawnUI : BasePiece
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
         //TagSet(newTeamColor);
 
-        createChildSprite("pawn_" + spriteName);
-        createChildSprite("corp_" + spriteName + "_" + corp);
+        CreateChildSprite("pawn_" + spriteName, false);
+        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
     }
 
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
@@ -58,22 +58,6 @@ public class PawnUI : BasePiece
             CreateCellPath(1, 1, mMovement.z);
             CreateCellPath(-1, 1, mMovement.z);
         
-    }
-
-    // Adds the base to the sprite, determined by team color
-    protected void createChildSprite(string spriteName)
-    {
-        GameObject childSprite = new GameObject();
-        childSprite.transform.SetParent(transform);
-        childSprite.transform.localScale = new Vector3(1, 1, 1);
-        childSprite.name = spriteName;
-
-        childSprite.AddComponent<Image>();
-        Image image = childSprite.GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>(spriteName);
-
-        RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(75, 75);
     }
 
     /* public override void TagSet(Color teamColor)

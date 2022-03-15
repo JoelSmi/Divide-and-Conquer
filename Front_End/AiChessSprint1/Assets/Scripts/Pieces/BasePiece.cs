@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 public class BasePiece : EventTrigger
 {
+    #region Variables
+
     // the color will be used to distinguish the teams from each other
     [HideInInspector]
     public Color mColor = Color.clear;
@@ -29,7 +31,7 @@ public class BasePiece : EventTrigger
     protected Sprite tempSprite = null;
 
     // What corp the piece belongs to (1, 2, or 3)
-    public int corp = 0;
+    public int corps = 0;
 
     // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
@@ -38,6 +40,8 @@ public class BasePiece : EventTrigger
     Vector3 destination, start;
     protected bool isMoving = false;
     protected float speed = 0.25f, t = 0;
+
+    #endregion
 
     // Only for movement, at the moment, will separate if needed
     void Update()
@@ -49,41 +53,6 @@ public class BasePiece : EventTrigger
             if (t >= 1)
                 isMoving = false;
         }
-    }
-
-    // sets up the pieces team, sprite color, and connection to the PieceManager script
-    public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
-    {
-        mPieceManager = newPieceManager;
-        mColor = newTeamColor;
-        TagSet();
-        mRectTransform = GetComponent<RectTransform>();
-        corp = corpSet();
-    }
-
-    //Places the piece on the board using newCell that it recieved from PieceManager
-    public void Place(Cell newCell)
-    {
-        //sets the  current and original cells to this cell location, and sets this piece as the current piece of this Cell
-        mCurrentCell = newCell;
-        mOriginalCell = newCell;
-        mCurrentCell.mCurrentPiece = this;
-
-        //sets the position of this piece to the position of the cell it is connected to
-        //sets that the piece is active meaning it is visible and interactible.
-        transform.position = newCell.transform.position;
-        gameObject.SetActive(true);
-    }
-
-    // kills the piece and placees it back in its original cell
-    public void Reset(BoardUI boardUI)
-    {
-        Kill(boardUI);
-
-        // Reset from graveyard's scale
-        mRectTransform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-
-        Place(mOriginalCell);
     }
 
     // disables the piece so it cannot be interacted with and is not visible
@@ -124,6 +93,43 @@ public class BasePiece : EventTrigger
         //gameObject.SetActive(false); // disable the gameobject when not using the graveyard
     }
 
+    #region Initialize
+
+    // sets up the pieces team, sprite color, and connection to the PieceManager script
+    public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    {
+        mPieceManager = newPieceManager;
+        mColor = newTeamColor;
+        TagSet();
+        mRectTransform = GetComponent<RectTransform>();
+        corps = CorpsSet();
+    }
+
+    //Places the piece on the board using newCell that it recieved from PieceManager
+    public void Place(Cell newCell)
+    {
+        //sets the  current and original cells to this cell location, and sets this piece as the current piece of this Cell
+        mCurrentCell = newCell;
+        mOriginalCell = newCell;
+        mCurrentCell.mCurrentPiece = this;
+
+        //sets the position of this piece to the position of the cell it is connected to
+        //sets that the piece is active meaning it is visible and interactible.
+        transform.position = newCell.transform.position;
+        gameObject.SetActive(true);
+    }
+
+    // kills the piece and placees it back in its original cell
+    public void Reset(BoardUI boardUI)
+    {
+        Kill(boardUI);
+
+        // Reset from graveyard's scale
+        mRectTransform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
+        Place(mOriginalCell);
+    }
+
     public virtual void TagSet()
     {
         if (mColor == Color.white)
@@ -134,7 +140,7 @@ public class BasePiece : EventTrigger
     }
 
     //Determines what corp a piece belongs to, based on their name
-    public int corpSet()
+    public int CorpsSet()
     {
         string[] tempName = this.name.Split(' ');
         switch (tempName[2])
@@ -144,24 +150,26 @@ public class BasePiece : EventTrigger
             case "2"://Pawn
             case "9"://Knight
             case "10"://Bishop
-                return 2;
+                return 2; // yellow, green
             case "5"://Pawn
             case "6"://Pawn
             case "7"://Pawn
             case "13"://Bishop
             case "14"://Knight
-                return 3;
+                return 3; // orange, cyan
             case "3"://Pawn
             case "4"://Pawn
             case "8"://Rook
             case "11"://King
             case "12"://Queen
             case "15"://Rook
-                return 1;
+                return 1; // red, blue
             default://Error
                 return 0;
         }
     }
+
+    #endregion
 
     #region Movement
 
@@ -236,11 +244,11 @@ public class BasePiece : EventTrigger
         foreach (Cell cell in mHighlightedCells)
         {
             cell.mOutlineImage.enabled = true;
-            if(mPieceManager.attacking)
-                cell.mOutlineImage.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
-            
+            if (mPieceManager.attacking)
+                cell.mOutlineImage.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f, 1.0f);
+            else
+                cell.mOutlineImage.GetComponent<Image>().color = new Color(0.18f, 0.42f, 0.64f, 1.0f);
         }
-
     }
 
     // clears the cells that are alread highlighted 
@@ -311,7 +319,7 @@ public class BasePiece : EventTrigger
         if (isPlayable && mColor == Color.white)
         {
             base.OnBeginDrag(eventData);
-            if (mPieceManager.GetTurnCount() == corp)
+            if (mPieceManager.GetTurnCount() == corps)
             {
                 CheckPathing();
             }
@@ -354,8 +362,10 @@ public class BasePiece : EventTrigger
         {
             base.OnEndDrag(eventData);
 
-            //removes the mHighlightedCells 
+            // removes the mHighlightedCells 
             ClearCells();
+            // 
+
 
             //Revert to original base sprite
             base.GetComponent<Image>().sprite = tempSprite;
@@ -375,6 +385,7 @@ public class BasePiece : EventTrigger
             */
             //use the Move function
             mPieceManager.IncreaseTurnCnt();
+            mCurrentCell.mOutlineImage.enabled = false;
             Move(false);
             //switch sides based on color
             if (mPieceManager.GetTurnCount() == 4)
@@ -385,14 +396,27 @@ public class BasePiece : EventTrigger
             }
         }
     }
+
+    // when mouse hovers over a piece
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        Transform child = this.transform.Find("corps");
+        Image image = child.GetComponent<Image>();
+        image.enabled = true;
+    }
+
+    // when mouse stops hovering over a piece
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        Transform child = this.transform.Find("corps");
+        Image image = child.GetComponent<Image>();
+        image.enabled = false;
+    }
     #endregion
 
     #region AI movement
     /*
      * Movement for the AI pieces
-     * 
-     * currently it is copying the player methods
-     * but more AI-specific code may be required in future
      */
     public void MoveAIPiece()
     {
@@ -418,6 +442,29 @@ public class BasePiece : EventTrigger
 
         mTargetCell = null;
     }
+    #endregion
 
+    #region Sprites
+    // Adds the base to the sprite, determined by team color
+    protected void CreateChildSprite(string spriteName, bool isCorps)
+    {
+        GameObject childSprite = new GameObject();
+        childSprite.transform.SetParent(transform);
+        childSprite.transform.localScale = new Vector3(1, 1, 1);
+        childSprite.name = spriteName;
+
+        childSprite.AddComponent<Image>();
+        Image image = childSprite.GetComponent<Image>();
+        image.sprite = Resources.Load<Sprite>(spriteName);
+
+        RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(75, 75);
+
+        if (isCorps)
+        {
+            childSprite.name = "corps";
+            image.enabled = false;
+        }
+    }
     #endregion
 }

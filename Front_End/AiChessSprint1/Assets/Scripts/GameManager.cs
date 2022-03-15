@@ -61,8 +61,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         #region UI > EL Update
         if (mPieceManager.GetTurnCount() == 4)
         {
@@ -173,17 +171,23 @@ public class GameManager : MonoBehaviour
         }
 
         #region UI Checks
-        if (mPieceManager.GetTurnCount() == 1)
+
+        int turnCount = mPieceManager.GetTurnCount();
+
+        if (turnCount == 1)
         {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+            ShowCorps(turnCount);
         }
-        else if (mPieceManager.GetTurnCount() == 2)
+        else if (turnCount == 2)
         {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(1f, 0.9f, 0f);
+            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+            ShowCorps(turnCount);
         }
-        else if (mPieceManager.GetTurnCount() == 3)
+        else if (turnCount == 3)
         {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.9f, 0.5f, 0f);
+            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+            ShowCorps(turnCount);
         }
         else
         {
@@ -198,6 +202,7 @@ public class GameManager : MonoBehaviour
         {
             attckButton.GetComponent<Image>().color = new Color(1f, 1f, 1.0f);
         }
+
         #endregion
     }
 
@@ -218,7 +223,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //switches between moving and attacking using the button on screen
+    // switches between moving and attacking using the button on screen
     public void moveOrAttackBttn()
     {
         if (mPieceManager.attacking)
@@ -240,4 +245,40 @@ public class GameManager : MonoBehaviour
         
      }
 
+    // 
+    private void ShowCorps(int corps)
+    {
+        foreach (Cell cell in mBoardUI.mAllCells)
+        {
+            if (cell.mCurrentPiece != null) // only check cells that have pieces
+            {
+                if (cell.mCurrentPiece.corps == corps && cell.mCurrentPiece.mColor == Color.white) // the current piece is the correct corps
+                {
+                    cell.mOutlineImage.enabled = true;
+                    cell.mOutlineImage.GetComponent<Image>().color = CorpsColor(corps);
+                }
+                else
+                    cell.mOutlineImage.enabled = false;
+            }
+        }
+    }
+
+    private Color CorpsColor(int corps)
+    {
+        if (mPieceManager.GetTurnCount() < 4)
+        {
+            switch (corps)
+            {
+                case 1:
+                    return new Color(0.85f, 0.20f, 0.20f, 0.75f); // red
+                case 2:
+                    return new Color(1f, 0.9f, 0f, 0.75f); // yellow
+                case 3:
+                    return new Color(0.9f, 0.5f, 0f, 0.75f); // orange
+                default:
+                    return new Color(0f, 0f, 0f, 0.75f);
+            }
+        }
+        return new Color(1.0f, 1.0f, 1.0f, 0.75f);
+    }
 }

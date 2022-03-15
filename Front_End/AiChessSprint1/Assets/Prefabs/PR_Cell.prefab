@@ -94,6 +94,7 @@ MonoBehaviour:
   mBoardPosition: {x: 0, y: 0}
   mBoardUI: {fileID: 0}
   mRectTransform: {fileID: 0}
+  isEnemy: 0
   mCurrentPiece: {fileID: 0}
 --- !u!1 &5571252234974874937
 GameObject:
@@ -154,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28627452, g: 0.48235294, b: 0.62352943, a: 1}
+  m_Color: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

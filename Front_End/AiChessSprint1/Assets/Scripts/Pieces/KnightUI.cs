@@ -15,9 +15,10 @@ public class KnightUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        createChildSprite("knight_" + spriteName);
-        createChildSprite("corp_" + spriteName + "_" + corp);
+        CreateChildSprite("knight_" + spriteName, false);
+        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
     }
+
     private bool MatchesState(int targetX, int targetY, CellState targetState)
     {
         CellState cellState = CellState.None;
@@ -65,21 +66,5 @@ public class KnightUI : BasePiece
                 MatchesState(currentX - 3, currentY - 1, CellState.Free);
             }
         }
-    }
-
-    //Adds the base to the sprite, determined by team color
-    protected void createChildSprite(string spriteName)
-    {
-        GameObject childSprite = new GameObject();
-        childSprite.transform.SetParent(transform);
-        childSprite.transform.localScale = new Vector3(1, 1, 1);
-        childSprite.name = spriteName;
-
-        childSprite.AddComponent<Image>();
-        Image image = childSprite.GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>(spriteName);
-
-        RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(75, 75);
     }
 }
