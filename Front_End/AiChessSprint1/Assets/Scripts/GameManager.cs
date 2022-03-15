@@ -245,14 +245,16 @@ public class GameManager : MonoBehaviour
         
      }
 
-    // 
+    #region UI Corps Display
+
+    // Highlights all units in an active corps
     private void ShowCorps(int corps)
     {
         foreach (Cell cell in mBoardUI.mAllCells)
         {
             if (cell.mCurrentPiece != null) // only check cells that have pieces
             {
-                if (cell.mCurrentPiece.corps == corps && cell.mCurrentPiece.mColor == Color.white) // the current piece is the correct corps
+                if (cell.mCurrentPiece.corps == corps && cell.mCurrentPiece.mColor == Color.white && cell.mCurrentPiece.IsPlayable) // the current piece is the correct corps, and is not in the graveyard
                 {
                     cell.mOutlineImage.enabled = true;
                     cell.mOutlineImage.GetComponent<Image>().color = CorpsColor(corps);
@@ -263,6 +265,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Determines a color based on corps
     private Color CorpsColor(int corps)
     {
         if (mPieceManager.GetTurnCount() < 4)
@@ -281,4 +284,6 @@ public class GameManager : MonoBehaviour
         }
         return new Color(1.0f, 1.0f, 1.0f, 0.75f);
     }
+
+    #endregion
 }

@@ -27,7 +27,7 @@ public class BasePiece : EventTrigger
     protected Vector3Int mMovement = Vector3Int.one;
     protected List<Cell> mHighlightedCells = new List<Cell>();
 
-    //
+    // Stores the original base sprite while a unit is selected
     protected Sprite tempSprite = null;
 
     // What corp the piece belongs to (1, 2, or 3)
@@ -35,6 +35,10 @@ public class BasePiece : EventTrigger
 
     // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
+    public bool IsPlayable
+    {
+        get { return isPlayable; }
+    }
 
     // Piece movement
     Vector3 destination, start;
@@ -50,7 +54,7 @@ public class BasePiece : EventTrigger
         {
             t += Time.deltaTime / speed;
             transform.position = Vector3.Lerp(start, destination, t);
-            if (t >= 1)
+            if (t >= 1) // Reached destination
                 isMoving = false;
         }
     }
