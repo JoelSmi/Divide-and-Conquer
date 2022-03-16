@@ -92,7 +92,7 @@ public class BoardUI : MonoBehaviour
             int newX = 0;
             if (x > 4)
             {
-                newX = 900;
+                newX = 1000;
             }
 
             //create Cell
@@ -100,7 +100,7 @@ public class BoardUI : MonoBehaviour
 
             //Position of new cell
             RectTransform rectTransform = newCell.GetComponent<RectTransform>();
-            rectTransform.position = new Vector2(200 + newX, 250);
+            rectTransform.localPosition= new Vector2(-500 + newX, -200);
             if (x <= 4)
             {
                 newCell.name = "Left Delegation";
