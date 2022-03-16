@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
-
         #region UI > EL Update
         if (mPieceManager.GetTurnCount() == 4)
         {
@@ -126,7 +125,28 @@ public class GameManager : MonoBehaviour
         #region Execution Layer > UI
         if (ExecutionBoard.hasActed)
         {
-            ExecutionBoard.hasActed = false;
+            //Board updates based on array of actions
+            /*
+             * while(ExecutionBoard.Actions.front() != Null{
+             *          int[,] tempAction = ExecutionBoard.Actions.pop_front();
+             *          int[] initial = {-1, -1};
+             *          int[] dest = { -1, -1};
+             *          assert(tempAction.GetLength(0) > 1);
+             *          
+             *          for(int i = 1; i < tempAction.GetLength(0); i++){
+            *                  initial = tempAction[i-1];
+            *                  dest = tempAction[i];
+            *                  if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
+                                {
+                                    BasePiece tempPiece = mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece;
+                                    tempPiece.mTargetCell = mBoardUI.mAllCells[dest[0], dest[1]];
+                                    tempPiece.MoveAIPiece();
+                                }
+             *          }
+             * }
+             * */
+
+
 
             /* 
              * Convert EL coordinates to UI coordinates
@@ -151,6 +171,8 @@ public class GameManager : MonoBehaviour
                 tempPiece.mTargetCell = mBoardUI.mAllCells[dest[0], dest[1]];
                 tempPiece.MoveAIPiece();
             }
+
+            ExecutionBoard.hasActed = false;
         }
         #endregion
 

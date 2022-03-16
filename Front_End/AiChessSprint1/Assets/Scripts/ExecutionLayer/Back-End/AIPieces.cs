@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 namespace BishopAI1 {
 	public enum Color {
@@ -38,6 +39,7 @@ namespace BishopAI1 {
 		protected HashSet<Direction> omni = new HashSet<Direction>(new Direction[] { Direction.North, Direction.Northwest, Direction.Northeast,
 			Direction.South, Direction.Southwest, Direction.Southeast, Direction.West, Direction.East });
 		protected HashSet<Direction> legalDirections;
+		protected List<List<int[]>> paths;
 		//This prints details about a piece
 		public void PrintPiece()
 		{
@@ -71,6 +73,19 @@ namespace BishopAI1 {
 		public HashSet<int[]> GetLegalAttacks() {
 			return legalAttacks;
 		}
+		//Get the paths to each space that a piece can legally move to
+		public List<List<int[]>> GetPaths() {
+			return paths;
+		}
+		//Return a valid path to the square at (row, col) if it is a legal move, or an empty path if it is not
+		public List<int[]> GetPath(int row, int col) {
+			foreach (List<int[]> path in paths) {
+				if (path[path.Count - 1][0] == row && path[path.Count - 1][1] == col) {
+					return path;
+				}
+			}
+			return new List<int[]>();
+		}
 		public bool HasLegalMove() {
 			return legalMoves != null && legalMoves.Count > 0;
 		}
@@ -82,8 +97,9 @@ namespace BishopAI1 {
 		}
 		//Update the legal moves and attacks for this piece based on the board and its position
 		public void UpdateLegalActions(Board b, int row, int col) {
-			//Update legal moves using recursive helper method
-			this.legalMoves = UpdateLegalMoves(b, row, col, movement, new HashSet<int[]>(), Direction.None);
+			//Update legal moves and paths using recursive helper method
+			paths = new List<List<int[]>>();
+			this.legalMoves = UpdateLegalMoves(b, row, col, movement, new List<int[]>(), new HashSet<int[]>(), Direction.None);
 			//Update legal attacks
 			legalAttacks.Clear();
 			if (this.GetType() == typeof(Rook)) {
@@ -124,10 +140,15 @@ namespace BishopAI1 {
 		public HashSet<Direction> GetLegalDirections() {
 			return legalDirections;
 		}
-		/**Recursive helper function for pathing all legal moves for a piece
-		* TODO: Implement Rook and Knight legal attacks
+		/**Recursive helper function for pathing all legal moves (and their paths) for a piece
 		* Precondition: Piece p is not an EmptySquare */
-		private HashSet<int[]> UpdateLegalMoves(Board b, int row, int col, int remainingMov, HashSet<int[]> legalMoves, Direction movementDir) {
+		private HashSet<int[]> UpdateLegalMoves(Board b, int row, int col, int remainingMov, 
+				List<int[]> path, HashSet<int[]> legalMoves, Direction movementDir) {
+			if (remainingMov < movement) {
+				//Add the path to this square to the list of paths
+				path.Add(new int[] { row, col });
+				paths.Add(path);
+			}
 			if (remainingMov <= 0) {
 				//Piece has no movement remaining, so return the compiled set of legal moves
 				return legalMoves;
@@ -170,7 +191,7 @@ namespace BishopAI1 {
 			foreach (Direction dir in directions.Keys) {
 				int[] square = directions[dir];
 				//Update the list of legal moves by traversing to each square in the queue and finding the legal moves given that square
-				legalMoves = new HashSet<int[]>(UpdateLegalMoves(b, square[0], square[1], remainingMov - 1, legalMoves, dir));
+				legalMoves = new HashSet<int[]>(UpdateLegalMoves(b, square[0], square[1], remainingMov - 1, new List<int[]>(path), legalMoves, dir));
 			}
 			return legalMoves;
 		}
