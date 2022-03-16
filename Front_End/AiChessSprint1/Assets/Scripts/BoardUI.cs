@@ -84,7 +84,6 @@ public class BoardUI : MonoBehaviour
         }
         #endregion
 
-
         #region delegation
         for (int x = 0; x < 8; x++)
         {
