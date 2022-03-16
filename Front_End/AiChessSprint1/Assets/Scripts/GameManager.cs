@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
             mPieceManager.ResetTurnCount();
             mPieceManager.actionTaken = true;
         }
+
         string TempLogBuff = "";
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
@@ -82,8 +83,8 @@ public class GameManager : MonoBehaviour
                 // 'M' indicates movement; 'A' indicates acttacking
             if (ActionType == 'M' || ActionType == 'A')
             {
-                
-                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], dest );
+                ExecutionBoard.actionPositions.Add(dest);
+                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], false);
                 TempLogBuff += ("Initial: " + currPos[0] + ", " + currPos[1] + "\n");
                 TempLogBuff += ("Destination: " + dest[0] + ", " + dest[1] + "\n");
             }

@@ -1,7 +1,7 @@
 using System;
 using Actions;
 using Pieces;
-using BishopAI1;
+using KingAI1;
 using System.Collections.Generic;
 
 namespace GameBoard
@@ -36,9 +36,11 @@ namespace GameBoard
 
         public int[] actionInitial { get; set; } = new int[2];
         public int[] actionDest { get; set; } = new int[2];
-        public int[,] actionPositions { get; set; } = new int[5,2];
+        public List<int[]> actionPositions { get; set; }
+        
 
         private const int MaxTeamActionCount = 6;
+        private int ActionCount { get; set; } = 0;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
@@ -154,8 +156,15 @@ namespace GameBoard
             this.BlackBishops = new Pieces.Bishop[] {BB1, BB2};
             //this.BlackBishops[1].getDelegates(this.BlackBoard, GetRow(BishopDelegations, 3));
 
+            this.actionPositions = new List<int[]>();
+
             //Restart match starting with White taking the first turn
             isWhite = true;
+        }
+
+        public void resetCount()
+        {
+            this.ActionCount = 0;
         }
         #endregion
 
@@ -214,35 +223,66 @@ namespace GameBoard
         }
 
         //Function call is made to the Action class to check if the action type is valid or not
-        public int takeAction(char ActionType, Pieces.Piece currPiece, int[] dest)
+        public int takeAction(char ActionType, Pieces.Piece currPiece, bool isAI)
         {
-            this.hasActed = true;
             int temp = 0;
-            int ActionCount = 0;
-            
-            this.actionInitial = currPiece.currPos;
-            this.actionDest = dest;
+            if (isAI) {
+                switch (ActionType)
+                {
+                    case 'M':
+                        temp = Actions.Action.moveAction2(this.actionPositions, this.GameBoard, currPiece);
+                        if (temp > 0 && this.ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            this.ActionCount += temp;
+                            this.actionPositions.RemoveAt(0);
+                            foreach(int [] next in this.actionPositions)
+                                    updateBoard(currPiece, currPiece.currPos, next);
+                        }
+                        break;
+                    case 'A':
+                        temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece);
+                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            ActionCount += temp;
+                            int[] previous = this.actionPositions[0];
+                            foreach (int[] dest in this.actionPositions)
+                            {
+                                if (previous[0] == dest[0] && previous[1] == dest[1])
+                                    continue;
+                                updateBoard(currPiece, currPiece.currPos, dest);
+                            }
+                        }
+                        break;
 
-            //Update for three command authority Actions
-            switch (ActionType) {
-                case 'M':
-                    temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                    {
-                        ActionCount += temp;
-                        updateBoard(currPiece, currPiece.currPos, dest);
-                    }
-                    break;
-                case 'A':
-                    temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, dest);
-                    if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                    {
-                        ActionCount += temp;
-                        updateBoard(currPiece, currPiece.currPos, dest);
-                    }
-                    break;
-                    
+                }
             }
+            else {
+                int ActionCount = 0;
+
+                this.actionInitial = currPiece.currPos;
+                this.actionDest = this.actionPositions[0];
+
+                switch (ActionType) {
+                    case 'M':
+                        temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, this.actionDest);
+                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            ActionCount += temp;
+                            updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                        }
+                        break;
+                    case 'A':
+                        temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, this.actionDest);
+                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            ActionCount += temp;
+                            updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                        }
+                        break;
+
+                } 
+            }
+            this.actionPositions.Clear();
             return ActionCount;
         }
 
@@ -291,7 +331,7 @@ namespace GameBoard
         //Call to create the necessary AI components and take action
         public void getAIAction()
         {
-            //bool act = false, BishopTurn = true;
+            /*//bool act = false, BishopTurn = true;
             //Here we will need to be able to input the board from the middle layer, for now we will create a temp board.
             //BishopAI1.Board b = new BishopAI1.Board(ConvertGameBoard());
             BishopAI1.Board b = new BishopAI1.Board(ConvertGameBoard());
@@ -325,9 +365,40 @@ namespace GameBoard
                 takeAction(ActionType, this.GameBoard[tempPos[0], tempPos[1]], tempDest);
 
             }
+            */
+            KingAI1.Board b = new KingAI1.Board(ConvertGameBoard());
 
+            KingAI1.AIKing KingAI = new KingAI1.AIKing(b);
+
+            KingAI1.Action[] AIActions = KingAI1.AIKing.KingAIFunction(KingAI);
+
+            //Applying Actions to Execution Layer
+            for (int idx = 0; idx < AIActions.Length; idx++)
+            {
+                this.actionPositions = AIActions[idx].getPath();
+
+                int[] tempPos = AIActions[idx].getOriginalCords(), tempDest = AIActions[idx].getDestinationCords();
+                if (AIActions[idx].getIsActing() && (GameBoard[tempPos[0], tempPos[1]].color.Equals("Black")))
+                {
+                    if (AIActions[idx].getIsAttack())
+                    {
+                        this.ActionCount += takeAction('A', this.GameBoard[tempPos[0], tempPos[1]], true);
+                    }
+                    else
+                    {
+                        
+                        this.ActionCount += takeAction('M', this.GameBoard[tempPos[0], tempPos[1]],true);
+                    }
+                }
+                if (this.ActionCount > 6)
+                    break;
+
+                this.hasActed = true;
+            }
+            
+            this.actionPositions.Clear();
+            resetCount();
             endTurn();
-
         }
         #endregion
 
@@ -376,6 +447,7 @@ namespace GameBoard
             CurrentState += "\n";
             return CurrentState;
         }
+
         public string[] GetRow(string[,] Matrix, int row)
         {
             string[] tempRow = new string[Matrix.GetLength(0)];

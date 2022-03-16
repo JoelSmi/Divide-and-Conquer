@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-namespace BishopAI1 {
+namespace KingAI1 {
 	public enum Color {
 		White, Black, Empty
 	}

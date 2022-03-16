@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BishopAI1
+namespace KingAI1
 {
     class AIBishop
 	{
@@ -78,8 +78,9 @@ namespace BishopAI1
 		The first argument is the enemy we want to kill.
 		The second argument is the array of pieces that are the subordinates of the commander.
 		This function will return the piece that is recommended to attack with.*/
-        private static Piece SubordinateAttackCheck(Piece enemyWeWantToAttack, Piece[] subordinates, Board b)
+        public static Piece SubordinateAttackCheck(Piece enemyWeWantToAttack, Piece[] subordinates, Board b)
         {
+            Piece attackingSubordinate = new EmptySquare();
             if (enemyWeWantToAttack != null)
             {
                 int[] square = GetLocation(enemyWeWantToAttack,b);
@@ -91,15 +92,32 @@ namespace BishopAI1
                         {
                             if (square[0] == move[0] && square[1] == move[1])
                             {
-                                Piece attackingSubordinate;
-                                if (p.GetType() == typeof(Knight))
+                                if (p.GetType() == typeof(Queen))
                                 {
                                     attackingSubordinate = p;
-                                    return attackingSubordinate;
+                                   
+                                }
+                                else if (p.GetType() == typeof(Rook))
+                                {
+                                    attackingSubordinate = p;
+                                
+                                }
+                                else if (p.GetType() == typeof(Bishop))
+                                {
+                                    attackingSubordinate = p;
+                                
+                                }
+                                else if (p.GetType() == typeof(Knight))
+                                {
+                                    attackingSubordinate = p;
+                                   
                                 }
                                 else if (p.GetType() == typeof(Pawn))
                                 {
                                     attackingSubordinate = p;
+                                    
+                                }
+                                if (OddsCheck(enemyWeWantToAttack, p)){
                                     return attackingSubordinate;
                                 }
                             }
@@ -108,8 +126,7 @@ namespace BishopAI1
                     
                 }
             }
-            Piece empty = new EmptySquare();
-            return empty;
+            return attackingSubordinate;
         }
         
         /*This method will be used when the AI wants to consider the probability a certain piece has of capturing
@@ -119,11 +136,11 @@ namespace BishopAI1
         This function will return a boolean value, True: if the odds are greater than or equal to 50%, False: if the
             odds are less than 50%. (We could make it so the AI will automatically know the number the roll will end up
             being, but this seems a bit unfair)*/
-        static bool OddsCheck(Piece defender, Piece attacker)
+        public static bool OddsCheck(Piece defender, Piece attacker)
         {
             if (defender != null && attacker != null){
                 int minimumRoll = Piece.getMinimumRoll(attacker, defender);
-                if (minimumRoll >= 4)
+                if (minimumRoll >= 3)
                     return true;
                 else
                     return false;
@@ -234,7 +251,8 @@ namespace BishopAI1
                     foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
                     {
                         //This is the if statement that is actually checking if it is in danger or not
-                        if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare) && IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
+                        if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare) && 
+                            IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
                         //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
                         //returning true or false
                         {
@@ -255,7 +273,7 @@ namespace BishopAI1
                                 if (commentsOn){
                                 Console.WriteLine(attackingPiece.GetType().ToString() + attackingPiece.GetID() + 
                                 " has been found to defend the commander.\nAction is being taken");
-                            }
+                                }
                                 //***************************************************** Double check with Madison about future use of attack
                                 //function, the rolling won't happen in this layer so we can only tell the execution layer that we want to attack
                                 //not that if it was successful or not.
@@ -269,6 +287,9 @@ namespace BishopAI1
                                 outgoingAction.setOriginalCord(subordinateSquare);
                                 outgoingAction.setPieceType(attackingPiece.GetType());
                                 outgoingAction.setIsAct(true);
+                                outgoingAction.setCommandingPiece(currentCommander);
+                                List<int[]> path = attackingPiece.GetPath(enemySquare[0], enemySquare[1]);
+                                outgoingAction.setPath(path);
                                 act = true;
                             }
 
@@ -300,6 +321,9 @@ namespace BishopAI1
                                         outgoingAction.setOriginalCord(subordinateSquare);
                                         outgoingAction.setPieceType(currentCommander.GetType());
                                         outgoingAction.setIsAct(true);
+                                        outgoingAction.setCommandingPiece(currentCommander);
+                                        List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
+                                        outgoingAction.setPath(path);
                                         act = true;
                                     }
                                     //If the odds weren't in our favor, we could check if the bishop could
@@ -321,6 +345,9 @@ namespace BishopAI1
                                         outgoingAction.setOriginalCord(subordinateSquare);
                                         outgoingAction.setPieceType(currentCommander.GetType());
                                         outgoingAction.setIsAct(true);
+                                        outgoingAction.setCommandingPiece(currentCommander);
+                                        List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
+                                        outgoingAction.setPath(path);
                                         act = true;
                                     }
                                     else //The bishop will attack if the enemy piece is in range and there is no other option
@@ -338,6 +365,9 @@ namespace BishopAI1
                                         outgoingAction.setOriginalCord(subordinateSquare);
                                         outgoingAction.setPieceType(currentCommander.GetType());
                                         outgoingAction.setIsAct(true);
+                                        outgoingAction.setCommandingPiece(currentCommander);
+                                        List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
+                                        outgoingAction.setPath(path);
                                         act = true;
                                     }
 
@@ -359,6 +389,9 @@ namespace BishopAI1
                                     outgoingAction.setOriginalCord(subordinateSquare);
                                     outgoingAction.setPieceType(currentCommander.GetType());
                                     outgoingAction.setIsAct(true);
+                                    outgoingAction.setCommandingPiece(currentCommander);
+                                    List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
+                                    outgoingAction.setPath(path);
                                     act = true;
                                 }
                                 //If there is no safeSpot for the bishop, it will have no choice but to hope for the king to
@@ -484,6 +517,9 @@ namespace BishopAI1
                                 outgoingAction.setOriginalCord(subordinateSquare);
                                 outgoingAction.setPieceType(attackingSubordinate.GetType());
                                 outgoingAction.setIsAct(true);
+                                outgoingAction.setCommandingPiece(currentCommander);
+                                List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
+                                outgoingAction.setPath(path);
                                 act = true;
                             }
                         }
@@ -503,6 +539,9 @@ namespace BishopAI1
                                 outgoingAction.setOriginalCord(subordinateSquare);
                                 outgoingAction.setPieceType(subordinateWeAreDefending.GetType());
                                 outgoingAction.setIsAct(true);
+                                outgoingAction.setCommandingPiece(currentCommander);
+                                List<int[]> path = subordinateWeAreDefending.GetPath(safeBlock[0], safeBlock[1]);
+                                outgoingAction.setPath(path);
                                 act = true;
                             }
                             //But if there is no safe spot for it to move to, then we will have to keep moving.
@@ -544,7 +583,12 @@ namespace BishopAI1
                                             outgoingAction.setOriginalCord(subordinateSquare);
                                             outgoingAction.setPieceType(attackingPiece.GetType());
                                             outgoingAction.setIsAct(true);
+                                            outgoingAction.setCommandingPiece(currentCommander);
+                                            List<int[]> path = attackingPiece.GetPath(moveToSquares[0], moveToSquares[1]);
+                                            outgoingAction.setPath(path);
+                                            
                                             act = true;
+                                            
                                         }
                                         //We use a foreach just to easily access the hashset.
                                     }
@@ -578,6 +622,9 @@ namespace BishopAI1
                                         outgoingAction.setOriginalCord(subordinateSquare);
                                         outgoingAction.setPieceType(p.GetType());
                                         outgoingAction.setIsAct(true);
+                                        outgoingAction.setCommandingPiece(currentCommander);
+                                        List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
+                                        outgoingAction.setPath(path);
                                         act = true;
                                     }
                                 }
@@ -603,6 +650,9 @@ namespace BishopAI1
                                         outgoingAction.setOriginalCord(subordinateSquare);
                                         outgoingAction.setPieceType(p.GetType());
                                         outgoingAction.setIsAct(true);
+                                        outgoingAction.setCommandingPiece(currentCommander);
+                                        List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
+                                        outgoingAction.setPath(path);
                                         act = true;
                                     }
                                 }
