@@ -36,6 +36,8 @@ TagManager:
   - R0
   - B0
   - AI
+  - lDel
+  - Rdel
   layers:
   - Default
   - TransparentFX

@@ -16,7 +16,9 @@ public enum CellState
     Friendly,
     Enemy,
     Free,
-    OutOfBounds
+    OutOfBounds,
+    LeftDelegate,
+    RightDelegate
 }
 public class BoardUI : MonoBehaviour
 {
@@ -26,7 +28,7 @@ public class BoardUI : MonoBehaviour
     [HideInInspector]
     // Cell matrix that contatins the board 
     //See Cell.cs for more information on Cells
-    public Cell[,] mAllCells = new Cell[8, 12];
+    public Cell[,] mAllCells = new Cell[8, 13];
 
     // creates the board
     public void Create()
@@ -82,6 +84,44 @@ public class BoardUI : MonoBehaviour
         }
         #endregion
 
+
+        #region delegation
+        for (int x = 0; x < 8; x++)
+        {
+            // delegation uses the last row of the actual board, displayed as 2 Tiles
+            int newX = 0;
+            if (x > 4)
+            {
+                newX = 900;
+            }
+
+            //create Cell
+            GameObject newCell = Instantiate(mCellPrefab, transform);
+
+            //Position of new cell
+            RectTransform rectTransform = newCell.GetComponent<RectTransform>();
+            rectTransform.position = new Vector2(200 + newX, 250);
+            if (x <= 4)
+            {
+                newCell.name = "Left Delegation";
+
+            }
+            else
+            {
+                newCell.name = "Right Delegation";
+            }
+
+            //setup
+            mAllCells[x, 12] = newCell.GetComponent<Cell>();
+            mAllCells[x, 12].Setup(new Vector2Int(x, 12), this);
+
+
+            // New initial color for Delegation tiles
+            mAllCells[x, 12].GetComponent<Image>().color = new Color32(119, 136, 153, 100);
+        }
+
+        #endregion
+
         #region Color
         //goes through Cell matrix and changes base color of prefab to fit alternating pattern
         for (int x = 0; x < 8; x += 2)
@@ -128,9 +168,17 @@ public class BoardUI : MonoBehaviour
         {
             return CellState.OutOfBounds;
         }
+        if (targetX < 4 && targetY == 12)
+        {
+            return CellState.LeftDelegate;
+        }
+        if(targetX>=4 && targetY == 12)
+        {
+            return CellState.RightDelegate;
+        }
 
         //Get Cell
-        Cell targetCell = mAllCells[targetX, targetY];
+            Cell targetCell = mAllCells[targetX, targetY];
 
         //if the cell has a piece
         if(targetCell.mCurrentPiece != null)

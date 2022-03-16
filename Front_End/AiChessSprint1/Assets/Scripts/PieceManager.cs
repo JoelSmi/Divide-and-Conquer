@@ -14,7 +14,13 @@ public class PieceManager : MonoBehaviour
     public int pmCurrentCellX, pmCurrentCellY, pmTargetCellX, pmTargetCellY;
     public bool actionTaken = false;
     public bool attacking = false;
-    
+    // delegation variable and get set functions will let the basepiece class know if its allowed to delegate again
+    private bool delegation = false;
+    public bool Delegation
+    {
+        get { return delegation; }
+        set { delegation = value; }
+    }
     private int turncount = 1;
 
     //instantiates objects to hold the pieces

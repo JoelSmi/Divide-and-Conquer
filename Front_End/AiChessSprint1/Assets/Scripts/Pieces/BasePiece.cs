@@ -31,6 +31,7 @@ public class BasePiece : EventTrigger
     protected Sprite tempSprite = null;
 
     // What corp the piece belongs to (1, 2, or 3)
+    public int originalcorps = 0;
     public int corps = 0;
 
     // Whether or not a piece is still alive and playable
@@ -106,7 +107,9 @@ public class BasePiece : EventTrigger
         mColor = newTeamColor;
         TagSet();
         mRectTransform = GetComponent<RectTransform>();
-        corps = CorpsSet();
+        //sets the initial original corps and corps values to the same value origianl corps will be used to return delegations
+        originalcorps = CorpsSet();
+        corps = originalcorps;
     }
 
     //Places the piece on the board using newCell that it recieved from PieceManager
@@ -218,6 +221,13 @@ public class BasePiece : EventTrigger
 
 
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
+        }
+        // selects the delegation tiles if the piece picked up can be delegated back to the king
+        if (mCurrentCell.mCurrentPiece.originalcorps == 1 && mCurrentCell.mCurrentPiece.name != "RED KingUI 11" && mPieceManager.Delegation == false)
+        {
+            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
+            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
+
         }
     }
 
@@ -374,12 +384,46 @@ public class BasePiece : EventTrigger
             //Revert to original base sprite
             base.GetComponent<Image>().sprite = tempSprite;
 
+            //grabs the corps sprite component
+            Transform child = mCurrentCell.mCurrentPiece.transform.Find("corps");
+            Image image = child.GetComponent<Image>();
             //if there isnt a target Cell return the piece to its current position
             if (!mTargetCell)
             {
                 transform.position = mCurrentCell.gameObject.transform.position;
                 return;
             }
+
+           // changes the corp and corps sprite component based on what corp and cell the piece was placed in.
+            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "right Delegation") && mCurrentCell.mCurrentPiece.corps != 1 && mCurrentCell.mCurrentPiece.originalcorps ==1)
+            {
+                mCurrentCell.mCurrentPiece.corps = 1;
+                Resources.UnloadAsset(image.sprite);
+                image.sprite = Resources.Load<Sprite>("corp_red_2");
+                transform.position = mCurrentCell.gameObject.transform.position;
+                mPieceManager.Delegation = true;
+                return;
+            }
+            else if (mTargetCell.name == "Left Delegation")
+            {
+                mCurrentCell.mCurrentPiece.corps = 2;
+                Resources.UnloadAsset(image.sprite);
+                image.sprite = Resources.Load<Sprite>("corp_red_2");
+                transform.position = mCurrentCell.gameObject.transform.position;
+                mPieceManager.Delegation = true;
+                return;
+            }
+            else if(mTargetCell.name == "Right Delegation")
+            {
+                mCurrentCell.mCurrentPiece.corps = 3;
+                Resources.UnloadAsset(image.sprite);
+                image.sprite = Resources.Load<Sprite>("corp_red_3");
+                transform.position = mCurrentCell.gameObject.transform.position;
+                mPieceManager.Delegation = true;
+                return;
+            }
+            
+
             /*//Move seems to just do everything that attacking needs to currently
             if (mTargetCell.mCurrentPiece != null) 
             {
@@ -397,6 +441,7 @@ public class BasePiece : EventTrigger
                 mPieceManager.ResetTurnCount();
                 mPieceManager.SwitchSides(mColor);
                 mPieceManager.actionTaken = true;
+                mPieceManager.Delegation = false;
             }
         }
     }
