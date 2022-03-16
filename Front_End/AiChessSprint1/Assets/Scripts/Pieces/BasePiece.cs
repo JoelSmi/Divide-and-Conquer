@@ -399,7 +399,7 @@ public class BasePiece : EventTrigger
             {
                 mCurrentCell.mCurrentPiece.corps = 1;
                 Resources.UnloadAsset(image.sprite);
-                image.sprite = Resources.Load<Sprite>("corp_red_2");
+                image.sprite = Resources.Load<Sprite>("corp_red_1");
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
                 return;
