@@ -19,7 +19,6 @@ namespace BishopAI1
 		private int[] destinationCords = {-1, -1};
 		private bool isAttack = false;
 		private String printedReference;
-		private bool isActing = false;
 
 		public Action(){
 			pieceType = typeof(EmptySquare);
