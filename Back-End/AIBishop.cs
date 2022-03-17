@@ -577,7 +577,7 @@ namespace KingAI1
                                             moveToSquares[1] = attack[1];
                                             //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
                                             int[] subordinateSquare = GetLocation(attackingPiece, b);
-                                            outgoingAction.setAttack(false);
+                                            outgoingAction.setAttack(true);
                                             outgoingAction.setDestinationCord(moveToSquares);
                                             outgoingAction.setID(attackingPiece.GetID());
                                             outgoingAction.setOriginalCord(subordinateSquare);
