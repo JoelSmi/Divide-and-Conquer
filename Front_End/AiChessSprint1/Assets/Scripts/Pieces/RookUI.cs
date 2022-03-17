@@ -15,8 +15,9 @@ public class RookUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        CreateChildSprite("rook_" + spriteName, false);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
+        CreateChildSprite("rook_" + spriteName, 0);
+        CreateChildSprite("corp_" + spriteName + "_" + corps, 1);
+        CreateChildSprite("comm_" + spriteName + "_" + corps, 2);
     }
 
     private bool MatchesState(int targetX, int targetY, CellState targetState)

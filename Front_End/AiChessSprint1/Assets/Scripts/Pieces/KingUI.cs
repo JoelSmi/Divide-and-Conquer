@@ -15,8 +15,12 @@ public class KingUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        CreateChildSprite("king_" + spriteName, false);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
+        // Commander status
+        isCommander = true;
+
+        CreateChildSprite("king_" + spriteName, 0);
+        CreateChildSprite("corp_" + spriteName + "_" + corps, 1);
+        CreateChildSprite("comm_" + spriteName + "_" + corps, 2);
     }
     private bool MatchesState(int targetX, int targetY, CellState targetState)
     {

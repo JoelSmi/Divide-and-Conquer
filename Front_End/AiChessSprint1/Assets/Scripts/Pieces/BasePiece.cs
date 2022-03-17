@@ -34,6 +34,14 @@ public class BasePiece : EventTrigger
     public int originalcorps = 0;
     public int corps = 0;
 
+    // If the piece is the leader of its corps
+    protected bool isCommander = false;
+    public bool IsCommander
+    {
+        get { return isCommander; }
+        set { isCommander = value; }
+    }
+
     // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
     public bool IsPlayable
@@ -48,6 +56,8 @@ public class BasePiece : EventTrigger
 
     #endregion
 
+    #region Update
+
     // Only for movement, at the moment, will separate if needed
     void Update()
     {
@@ -60,6 +70,10 @@ public class BasePiece : EventTrigger
         }
     }
 
+    #endregion
+
+    #region Miscellaneous
+
     // disables the piece so it cannot be interacted with and is not visible
     public virtual void Kill(BoardUI boardUI)
     {
@@ -71,6 +85,9 @@ public class BasePiece : EventTrigger
 
         // Disable interaction
         isPlayable = false;
+
+        // Remove commander status
+        isCommander = false;
 
         // Move to a graveyard
         for (int y = 11; y >= 8; y--) // Decrement because of how the board is set up
@@ -97,6 +114,8 @@ public class BasePiece : EventTrigger
         }
         //gameObject.SetActive(false); // disable the gameobject when not using the graveyard
     }
+
+    #endregion
 
     #region Initialize
 
@@ -152,28 +171,37 @@ public class BasePiece : EventTrigger
         string[] tempName = this.name.Split(' ');
         switch (tempName[2])
         {
-            case "0"://Pawn
-            case "1"://Pawn
-            case "2"://Pawn
-            case "9"://Knight
-            case "10"://Bishop
+            case "0": // Pawn
+            case "1": // Pawn
+            case "2": // Pawn
+            case "9": // Knight
+            case "10": // Bishop
                 return 2; // yellow, green
-            case "5"://Pawn
-            case "6"://Pawn
-            case "7"://Pawn
-            case "13"://Bishop
-            case "14"://Knight
+            case "5": // Pawn
+            case "6": // Pawn
+            case "7": // Pawn
+            case "13": // Bishop
+            case "14": // Knight
                 return 3; // orange, cyan
-            case "3"://Pawn
-            case "4"://Pawn
-            case "8"://Rook
-            case "11"://King
-            case "12"://Queen
-            case "15"://Rook
+            case "3": // Pawn
+            case "4": // Pawn
+            case "8": // Rook
+            case "11": // King
+            case "12": // Queen
+            case "15": // Rook
                 return 1; // red, blue
             default://Error
                 return 0;
         }
+    }
+
+    // Changing commander status during gameplay
+    protected void CommanderSet(bool enable)
+    {
+        this.isCommander = enable;
+        Transform child = this.transform.Find("commander");
+        Image image = child.GetComponent<Image>();
+        image.enabled = enable;
     }
 
     #endregion
@@ -499,7 +527,7 @@ public class BasePiece : EventTrigger
 
     #region Sprites
     // Adds the base to the sprite, determined by team color
-    protected void CreateChildSprite(string spriteName, bool isCorps)
+    protected void CreateChildSprite(string spriteName, int extra)
     {
         GameObject childSprite = new GameObject();
         childSprite.transform.SetParent(transform);
@@ -513,10 +541,15 @@ public class BasePiece : EventTrigger
         RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(75, 75);
 
-        if (isCorps)
+        if (extra == 1)
         {
             childSprite.name = "corps";
             image.enabled = false;
+        }
+        else if (extra == 2)
+        {
+            childSprite.name = "commander";
+            image.enabled = isCommander ? true : false;
         }
     }
     #endregion
