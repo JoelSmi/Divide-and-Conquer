@@ -127,6 +127,11 @@ namespace KingAI1 {
 									&& b.GetBoard()[square[0], square[1]].GetColor() != color
 									&& !Board.SetContainsSquare(legalAttacks, square)) {
 								legalAttacks.Add(square);
+								List<int[]> attackPath = new List<int[]>(this.GetPath(legalMove[0], legalMove[1]));
+								attackPath.Add(square);
+								if (!paths.Contains(attackPath)) {
+									paths.Add(attackPath);
+								}
 							}
 						}
 					}
