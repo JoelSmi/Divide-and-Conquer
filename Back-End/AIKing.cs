@@ -382,7 +382,7 @@ namespace KingAI1
             } 
 
             Random randomNum = new Random();
-            int length = subordinates.Length, prob = 0;
+            int length = subordinates.Length, prob = 0, prob1 = 0, counter = 0;
             bool hasMove = false, pieceFound = false, piecePicked = false;
             //If after checking all the subordinates, there's nothing that can immediately attack, we need to move.
             //First we need to check if even one subordinate can move. If even one can move, that's fine.
@@ -393,8 +393,9 @@ namespace KingAI1
                     pieceFound = true;
                     prob = randomNum.Next(0,2);
                     if (prob == 0 && act != true){
+                        prob1 = randomNum.Next(0, p.GetLegalMoves().Count);
                         foreach (int[] moves in p.GetLegalMoves()){
-                            if (!act)
+                            if (!act && counter == prob1)
                             {
                                 moveToSquares[0] = moves[0];
                                 moveToSquares[1] = moves[1];
@@ -409,6 +410,10 @@ namespace KingAI1
                                 List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
                                 outgoingAction.setPath(path);
                                 act = true;
+                            }
+                            else
+                            {
+                                counter++;
                             }
                         }
                     }
@@ -483,6 +488,19 @@ namespace KingAI1
                 if(bishop0Action.getIsActing())
                     kingAI.AddAnAction(bishop0Action);
             }
+
+            //We go ahead and take first bishops action, and implement them on our board if they are legal actions.
+            foreach(Action act in kingAI.GetListOfActions())
+            {
+                if(act.getIsActing() && !act.getCompleted()){
+                    b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
+                        act.getDestinationXCord(), act.getDestinationYCord());
+                    act.printAction();
+                    Console.WriteLine("New Board:");
+                    b.Print(); 
+                    act.setCompleted(true);
+                }
+            }
                 
             if (kingAI.GetCommander1()){
                 bishop1Action = AIBishop.BishopAI(b, bCommander1, c1Subordinates, LiveEnemyPlayers);
@@ -490,7 +508,7 @@ namespace KingAI1
                     kingAI.AddAnAction(bishop1Action);
             }
 
-            //Then we take their actions, and implement them on our board if they are legal actions.
+            //Then we take last bishop actions, and implement them on our board if they are legal actions.
             foreach(Action act in kingAI.GetListOfActions())
             {
                 if(act.getIsActing() && !act.getCompleted()){
@@ -549,33 +567,40 @@ namespace KingAI1
 
         }
 
-        static void Main(string[] args)
-        {
-            String[,] boardArray = new String [8,8] {
-                               {"R0","N0","B0","Q0","K0","B1","N1","R1"},
-                               {"P0","P1","P2","P3","P4","P5","P6","P7"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"e","e","e","e","e","e","e","e"},
-                               {"p0","p1","p2","p3","p4","p5","p6","p7"},
-                               {"r0","n0","b0","q0","k0","b1","n1","r1"}
-            }; 
+        // static void Main(string[] args)
+        // {
+        //     String[,] boardArray = new String [8,8] {
+        //                        {"R0","N0","B0","Q0","K0","B1","N1","R1"},
+        //                        {"e","e","e","e","e","e","e","e"},
+        //                        {"e","e","e","e","e","e","e","e"},
+        //                        {"e","e","e","e","e","e","e","e"},
+        //                        {"e","e","e","e","e","e","e","e"},
+        //                        {"e","e","e","e","e","e","e","e"},
+        //                        {"p0","p1","p2","p3","p4","p5","p6","p7"},
+        //                        {"r0","n0","b0","q0","k0","b1","n1","r1"}
+        //     }; 
 
-            String[,] boardArray2b = new String [8,8] {
-                            {"R0","N0","e","Q0","K0","B1","N1","R1"},
-                            {"e","P1","e","e.","P4","P5","P6","P7"},
-                            {"e","e","e","P2","e","e","e","e"},
-                            {"p0","e","B0","e","P3","e","e","e"},
-                            {"P0","e","b0","e","e","e","e","e"},
-                            {"p1","p2","e","e","e","e","e","e"},
-                            {"e","e","e","p3","p4","p5","p6","p7"},
-                            {"r0","n0","e","q0","k0","b1","n1","r1"}
-            }; 
-            Board board = new Board(boardArray2b);
+        //     String[,] boardArray2b = new String [8,8] {
+        //                     {"R0","N0","e","Q0","K0","B1","N1","R1"},
+        //                     {"e","P1","e","e.","P4","P5","P6","P7"},
+        //                     {"e","e","e","P2","e","e","e","e"},
+        //                     {"p0","e","B0","e","P3","e","e","e"},
+        //                     {"P0","e","b0","e","e","e","e","e"},
+        //                     {"p1","p2","e","e","e","e","e","e"},
+        //                     {"e","e","e","p3","p4","p5","p6","p7"},
+        //                     {"r0","n0","e","q0","k0","b1","n1","r1"}
+        //     }; 
+        //     Board board = new Board(boardArray);
 
 
-            // AIKing kingAI = new AIKing(board);
+        //     AIKing kingAI = new AIKing(board);
+        //     Action[] arrayofActions = new Action[3];
+        //     arrayofActions = KingAIFunction(kingAI);
+
+
+
+
+
             // //Declaration of 'global' variables used here.
             // Board b = kingAI.GetKingBoard();
             // Piece bCommander0 = kingAI.GetBishop0Commander();
@@ -671,9 +696,9 @@ namespace KingAI1
             //         b.Print(); 
             //         act.setCompleted(true);
             //     }
-            // }
+        //     // }
 
-        }
+        // }
 
         public Board GetKingBoard(){
             return b;
@@ -757,4 +782,8 @@ namespace KingAI1
 
 
     }
+    
+
+
+
 }//End of namespace
