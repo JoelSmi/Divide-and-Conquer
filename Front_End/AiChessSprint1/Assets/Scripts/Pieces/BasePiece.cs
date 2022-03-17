@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
 public class BasePiece : EventTrigger
 {
     #region Variables
@@ -55,7 +56,7 @@ public class BasePiece : EventTrigger
     protected float speed = 0.25f, t = 0;
 
     // Colors
-    readonly float[,] Colors =
+    readonly float[,] CORPS_COLORS =
     {
         {0.8f, 0.2f, 0.2f, 1.0f}, // Red
         {1.0f, 0.9f, 0.0f, 1.0f}, // Yellow
@@ -558,14 +559,12 @@ public class BasePiece : EventTrigger
         RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(75, 75);
 
+        // Corps sprite
         if (extra == 1)
-        {
             image.enabled = false;
-        }
+        // Commander sprite
         else if (extra == 2)
-        {
             image.enabled = isCommander ? true : false;
-        }
 
         // Change to corps color
         if (extra == 1 || extra == 2)
@@ -573,10 +572,11 @@ public class BasePiece : EventTrigger
             Color newColor;
             // Red
             if (mColor == Color.white)
-                newColor = new Color(Colors[corps - 1, 0], Colors[corps - 1, 1], Colors[corps - 1, 2], Colors[corps - 1, 3]);
+                newColor = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
             // Blue
             else
-                newColor = new Color(Colors[corps + 2, 0], Colors[corps + 2, 1], Colors[corps + 2, 2], Colors[corps + 2, 3]);
+                newColor = new Color(CORPS_COLORS[corps + 2, 0], CORPS_COLORS[corps + 2, 1], CORPS_COLORS[corps + 2, 2], CORPS_COLORS[corps + 2, 3]);
+
             image.color = newColor;
         }
     }
