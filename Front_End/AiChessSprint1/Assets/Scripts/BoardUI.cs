@@ -84,7 +84,6 @@ public class BoardUI : MonoBehaviour
         }
         #endregion
 
-
         #region delegation
         for (int x = 0; x < 8; x++)
         {
@@ -153,7 +152,21 @@ public class BoardUI : MonoBehaviour
                 mAllCells[finalX, y].GetComponent<Image>().color = new Color32(47, 79, 79, 100);
             }
         }
+
         #endregion
+        for (int x = 0; x < 8; x++)
+        {
+            // checks if the y position of the matrix is even or odd
+            //if it is odd it sets a new color for the cell in the next column
+            mAllCells[x, 12].GetComponent<Image>().color = new Color(1, 1, 0, .25f);
+            if (x > 4)
+            {
+                mAllCells[x, 12].GetComponent<Image>().color = new Color(1, 0.6f, 0, .25f);
+            }
+
+            //sets color for the cell
+            
+        }
     }
 
     // validates whether or not a piece can move to a Cell using the CellState Enum defined above

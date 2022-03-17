@@ -77,7 +77,7 @@ public class BasePiece : EventTrigger
         {
             for (int x = 7; x >= 0; x--)
             {
-                if (mColor == Color.black && (y == 9 || y == 11)) // Blue graveyard
+                if (mColor == Color.white && (y == 9 || y == 11)) // Blue graveyard
                 {
                     if (boardUI.mAllCells[x, y].mCurrentPiece == null)
                     {
@@ -85,7 +85,7 @@ public class BasePiece : EventTrigger
                         Move(true);
                     }
                 }
-                else if (mColor == Color.white && (y == 8 || y == 10)) // Red graveyard
+                else if (mColor == Color.black && (y == 8 || y == 10)) // Red graveyard
                 {
                     if (boardUI.mAllCells[x, y].mCurrentPiece == null)
                     {
@@ -399,7 +399,7 @@ public class BasePiece : EventTrigger
             {
                 mCurrentCell.mCurrentPiece.corps = 1;
                 Resources.UnloadAsset(image.sprite);
-                image.sprite = Resources.Load<Sprite>("corp_red_2");
+                image.sprite = Resources.Load<Sprite>("corp_red_1");
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
                 return;
