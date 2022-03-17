@@ -114,6 +114,12 @@ public class GameManager : MonoBehaviour
         {
 
             ExecutionBoard.getAIAction();
+            TempLogBuff += ExecutionBoard.AIActions[0].stringAction() + "\n";
+
+            TempLogBuff += ExecutionBoard.AIActions[1].stringAction() + "\n";
+
+            TempLogBuff += ExecutionBoard.AIActions[2].stringAction() + "\n";
+            ApplyAIActions();
 
             TempLogBuff += "AI Action:\n";
             TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
@@ -230,6 +236,59 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
+    public void UpdateUI(int[] initial, int[] dest)
+    {
+        //Making sure there is indeed a piece to be moved, might be a redundant/useless check
+        if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
+        {
+            BasePiece tempPiece = mBoardUI.mAllCells[initial[1],7 - initial[0]].mCurrentPiece;
+            tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 - dest[0]];
+            tempPiece.MoveAIPiece();
+        }
+    }
+
+    public void ApplyAIActions()
+    {
+        //Applying Actions to Execution Layer
+        for (int idx = 0; idx < ExecutionBoard.AIActions.Length; idx++)
+        {
+            ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
+
+            int[] tempPos = ExecutionBoard.AIActions[idx].getOriginalCords(), tempDest = ExecutionBoard.AIActions[idx].getDestinationCords();
+            /*if (ExecutionBoard.AIActions[idx].getIsActing() && (ExecutionBoard.GameBoard[tempPos[0], tempPos[1]].color.Equals("Black")))
+            {
+                if (ExecutionBoard.AIActions[idx].getIsAttack())
+                {
+                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[tempPos[0], tempPos[1]], true);
+                    
+                }
+                else
+                {
+
+                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('M', ExecutionBoard.GameBoard[tempPos[0], tempPos[1]], true);
+                }
+            }*/
+            if (ExecutionBoard.ActionCount > 6)
+                break;
+            if(ExecutionBoard.ActionCount > -1)
+            {
+                foreach (int[] dest in ExecutionBoard.actionPositions)
+                {
+                    if ((tempPos[0] == dest[0]) && (tempPos[1] == dest[1]))
+                        continue;
+                    UpdateUI(tempPos, dest);
+                    tempPos = dest;
+                }
+            }
+            ExecutionBoard.hasActed = true;
+        }
+
+        ExecutionBoard.actionPositions.Clear();
+        ExecutionBoard.resetCount();
+        ExecutionBoard.endTurn();
+
+        ExecutionBoard.hasActed = false;
+    }
 
     public void CellRelay()
     {

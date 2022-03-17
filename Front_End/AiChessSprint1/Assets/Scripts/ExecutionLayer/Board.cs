@@ -37,10 +37,12 @@ namespace GameBoard
         public int[] actionInitial { get; set; } = new int[2];
         public int[] actionDest { get; set; } = new int[2];
         public List<int[]> actionPositions { get; set; }
-        
+        public KingAI1.Action[] AIActions { get; set; }
+
+
 
         private const int MaxTeamActionCount = 6;
-        private int ActionCount { get; set; } = 0;
+        public int ActionCount { get; set; } = 0;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
@@ -370,9 +372,9 @@ namespace GameBoard
 
             KingAI1.AIKing KingAI = new KingAI1.AIKing(b);
 
-            KingAI1.Action[] AIActions = KingAI1.AIKing.KingAIFunction(KingAI);
+            this.AIActions = KingAI1.AIKing.KingAIFunction(KingAI);
 
-            //Applying Actions to Execution Layer
+            /*//Applying Actions to Execution Layer
             for (int idx = 0; idx < AIActions.Length; idx++)
             {
                 this.actionPositions = AIActions[idx].getPath();
@@ -394,11 +396,11 @@ namespace GameBoard
                     break;
 
                 this.hasActed = true;
-            }
+            }*/
             
-            this.actionPositions.Clear();
-            resetCount();
-            endTurn();
+            //this.actionPositions.Clear();
+            //resetCount();
+            //endTurn();
         }
         #endregion
 
