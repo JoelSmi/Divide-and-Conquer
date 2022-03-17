@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Button attckButton;
     
     //Execution Layer initialization 
+
     private GameBoard.Board ExecutionBoard;
     #region Piece Initialization
     private static string whitecol = "White";
@@ -61,137 +62,57 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        #region UI > EL Update
+        string TempLogBuff = "";
         if (mPieceManager.GetTurnCount() == 4)
         {
             mPieceManager.ResetTurnCount();
             mPieceManager.actionTaken = true;
+            ExecutionBoard.endTurn();
         }
 
-        string TempLogBuff = "";
+        #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
             CellRelay();
 
-            int[] currPos = {7 - uiCurrentCellY, uiCurrentCellX};
-            int[] dest = {7 - uiTargetCellY, uiTargetCellX};
+            int[] currPos = { 7 - uiCurrentCellY, uiCurrentCellX };
+            int[] dest = { 7 - uiTargetCellY, uiTargetCellX };
 
-            //Gianing the character of the action performed from the Execution Layer
-            char ActionType = ExecutionBoard.checkActionType(currPos, dest);
+            
+            TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
 
-            //Apply the found action type to the execution layer
-                // 'M' indicates movement; 'A' indicates acttacking
-            if (ActionType == 'M' || ActionType == 'A')
-            {
-                ExecutionBoard.actionPositions.Add(dest);
-                ExecutionBoard.takeAction(ActionType, ExecutionBoard.GameBoard[currPos[0],currPos[1]], false);
-                TempLogBuff += ("Initial: " + currPos[0] + ", " + currPos[1] + "\n");
-                TempLogBuff += ("Destination: " + dest[0] + ", " + dest[1] + "\n");
-            }
-                // 'N' indicates No Action
-            else if (ActionType == 'N')
-            {
-                TempLogBuff += ("No Action Detected\n");
-            }
-            else
-            {
-                TempLogBuff += ("Error: Invalid Action\n");
-            }
-
-            TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
             ExecutionBoard.endTurn();
-            
+
             EndTurn();
-            
+
             mPieceManager.actionTaken = false;
-            mPieceManager.SwitchSides(Color.black);            
+            mPieceManager.SwitchSides(Color.black);
         }
         #endregion
 
         #region EL > AI Call
         //update to the UI when the Execution Layer has been updated by the AI 
-        if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
+        if (!ExecutionBoard.isWhite &&  mPieceManager.mIsKingAlive)
         {
 
             ExecutionBoard.getAIAction();
-            TempLogBuff += ExecutionBoard.AIActions[0].stringAction() + "\n";
-
-            TempLogBuff += ExecutionBoard.AIActions[1].stringAction() + "\n";
-
-            TempLogBuff += ExecutionBoard.AIActions[2].stringAction() + "\n";
+            TempLogBuff += "AI Action:\n";
+            TempLogBuff += ExecutionBoard.AIActions[0].stringAction();
+            TempLogBuff += ExecutionBoard.AIActions[1].stringAction();
+            TempLogBuff += ExecutionBoard.AIActions[2].stringAction();
             ApplyAIActions();
 
-            TempLogBuff += "AI Action:\n";
+            TempLogBuff += "\n";
             TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
             
             EndTurn();
-        }
-        #endregion
-
-        #region Execution Layer > UI
-        if (ExecutionBoard.hasActed)
-        {
-            //Board updates based on array of actions
-            /*
-             * while(ExecutionBoard.Actions.front() != Null{
-             *          int[,] tempAction = ExecutionBoard.Actions.pop_front();
-             *          int[] initial = {-1, -1};
-             *          int[] dest = { -1, -1};
-             *          assert(tempAction.GetLength(0) > 1);
-             *          
-             *          for(int i = 1; i < tempAction.GetLength(0); i++){
-            *                  initial = tempAction[i-1];
-            *                  dest = tempAction[i];
-            *                  if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
-                                {
-                                    BasePiece tempPiece = mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece;
-                                    tempPiece.mTargetCell = mBoardUI.mAllCells[dest[0], dest[1]];
-                                    tempPiece.MoveAIPiece();
-                                }
-             *          }
-             * }
-             * */
-
-
-
-            /* 
-             * Convert EL coordinates to UI coordinates
-             * 
-             * todo: completely redo one coordinate system to the other
-             * ideally we just want to pass positions freely and not have
-             * to calculate positions between each layer
-             * 
-             * EL/AI seem to share the same coordinate systems
-             * but I believe the UI is more user friendly
-             * 
-             * EL/AI:   (Y,X) from top > bottom
-             * UI:      (X,Y) from bottom > top
-             */
-            int[] initial = { ExecutionBoard.actionInitial[1], 7 - ExecutionBoard.actionInitial[0] };
-            int[] dest = { ExecutionBoard.actionDest[1], 7 - ExecutionBoard.actionDest[0] };
-
-            //Making sure there is indeed a piece to be moved, might be a redundant/useless check
-            if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
-            {
-                BasePiece tempPiece = mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece;
-                tempPiece.mTargetCell = mBoardUI.mAllCells[dest[0], dest[1]];
-                tempPiece.MoveAIPiece();
-            }
-
-            ExecutionBoard.hasActed = false;
         }
         #endregion
 
         #region ActionLog
         if (!TempLogBuff.Equals(""))
         {
-            lock(this.WriteLock)
-            {
-                StreamWriter file = new(ActionLog, append: true);
-                file.WriteLine(TempLogBuff);
-                file.Close();
-            }
-            
+            PrintLog(TempLogBuff);            
         }
         #endregion
 
@@ -236,16 +157,28 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
+    public void PrintLog(string TempLogBuff){
+        lock(this.WriteLock){
+            StreamWriter file = new(ActionLog, append: true);
+            file.WriteLine(TempLogBuff);
+            file.Close();
+        }
+    }
+
+    #region Execution Layer > UI
     public void UpdateUI(int[] initial, int[] dest)
     {
         //Making sure there is indeed a piece to be moved, might be a redundant/useless check
-        if (mBoardUI.mAllCells[initial[0], initial[1]].mCurrentPiece != null)
+        if (mBoardUI.mAllCells[initial[1], 7- initial[0]].mCurrentPiece != null)
         {
-            BasePiece tempPiece = mBoardUI.mAllCells[initial[1],7 - initial[0]].mCurrentPiece;
-            tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 - dest[0]];
+            PrintLog("Row: " + initial[0] + "; Col: " + initial[1]);
+            PrintLog("Row: " + dest[0] + "; Col: " + dest[1]);
+            BasePiece tempPiece = mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece;
+            tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 -  dest[0] ];
             tempPiece.MoveAIPiece();
         }
     }
+    #endregion
 
     public void ApplyAIActions()
     {
@@ -253,24 +186,21 @@ public class GameManager : MonoBehaviour
         for (int idx = 0; idx < ExecutionBoard.AIActions.Length; idx++)
         {
             ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
+            ExecutionBoard.actionInitial = ExecutionBoard.AIActions[idx].getOriginalCords();
+            ExecutionBoard.actionDest = ExecutionBoard.AIActions[idx].getDestinationCords();
 
-            int[] tempPos = ExecutionBoard.AIActions[idx].getOriginalCords(), tempDest = ExecutionBoard.AIActions[idx].getDestinationCords();
-            /*if (ExecutionBoard.AIActions[idx].getIsActing() && (ExecutionBoard.GameBoard[tempPos[0], tempPos[1]].color.Equals("Black")))
+            if (ExecutionBoard.AIActions[idx].getIsActing() && (ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]].color.Equals("Black")))
             {
-                if (ExecutionBoard.AIActions[idx].getIsAttack())
-                {
-                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[tempPos[0], tempPos[1]], true);
-                    
+                if (ExecutionBoard.AIActions[idx].getIsAttack()){
+                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
                 }
-                else
-                {
+                else{
+                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('M', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
+                }
+            }
 
-                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('M', ExecutionBoard.GameBoard[tempPos[0], tempPos[1]], true);
-                }
-            }*/
-            if (ExecutionBoard.ActionCount > 6)
-                break;
-            if(ExecutionBoard.ActionCount > -1)
+            int[] tempPos = ExecutionBoard.actionInitial;
+            if (ExecutionBoard.ActionCount > -1)
             {
                 foreach (int[] dest in ExecutionBoard.actionPositions)
                 {

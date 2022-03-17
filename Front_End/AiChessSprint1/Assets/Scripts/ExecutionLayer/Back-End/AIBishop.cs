@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace KingAI1
@@ -599,19 +599,21 @@ namespace KingAI1
                     }             
 
                     Random randomNum = new Random();
-                    int length = subordinates.Length, prob = 0;
+                    int length = subordinates.Length, prob = 0, prob1 = 0, counter = 0;
                     bool hasMove = false, pieceFound = false, piecePicked = false;
                     //If after checking all the subordinates, there's nothing that can immediately attack, we need to move.
                     //First we need to check if even one subordinate can move. If even one can move, that's fine.
                     //If there's even one subordinate that can move, we will pick a random number per subordinate, if they can't move, we roll again.
+                    //NEED TO ADD A CHECK TO MAKE SURE THAT SQUARE ISNT DANGEROUS
                     foreach (Piece p in subordinates){
                         if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
                         {
                             pieceFound = true;
                             prob = randomNum.Next(0,2);
                             if (prob == 0 && act != true){
+                                prob1 = randomNum.Next(0, p.GetLegalMoves().Count);
                                 foreach (int[] moves in p.GetLegalMoves()){
-                                    if (!act)
+                                    if (!act && counter == prob1)
                                     {
                                         moveToSquares[0] = moves[0];
                                         moveToSquares[1] = moves[1];
@@ -626,6 +628,10 @@ namespace KingAI1
                                         List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
                                         outgoingAction.setPath(path);
                                         act = true;
+                                    }
+                                    else
+                                    {
+                                        counter++;
                                     }
                                 }
                             }

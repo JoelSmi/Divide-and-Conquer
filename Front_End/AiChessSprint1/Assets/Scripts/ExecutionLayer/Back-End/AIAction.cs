@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace KingAI1
 {
 	public class Action {
@@ -50,57 +51,6 @@ namespace KingAI1
 			return column + row;
 		}
 
-		public String stringAction()
-		{
-			if (isAttack)
-			{
-				String act = "The outgoing action returned is:\n";
-				//Console.WriteLine("The outgoing action returned is:");
-				//Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
-				//+ " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
-				//+ GetNotation(destinationCords[0], destinationCords[1]));
-
-				act += ("The " + pieceType.ToString() + " with an id of " + id
-				+ " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to "
-				+ GetNotation(destinationCords[0], destinationCords[1]) + "\n");
-
-				//Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
-				//+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
-				//Console.Write("Path taken:");
-				act += ("Path taken: ");
-				foreach (int[] square in path)
-				{
-					//Console.Write("[" + square[0] + "," + square[1] + "]");
-					act += ("[" + square[0] + "," + square[1] + "]\n");
-				}
-				return act;
-
-			}
-			else
-			{
-				//Console.WriteLine("The outgoing action returned is:");
-				//Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
-				//+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
-				//+ GetNotation(destinationCords[0], destinationCords[1]));
-				//Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
-				//+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
-				//Console.Write("Path taken:");
-
-				String act = "The outgoing action returned is:";
-				act += ("The " + pieceType.ToString() + " with an id of " + id
-				+ " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to "
-				+ GetNotation(destinationCords[0], destinationCords[1]) + "\n");
-
-				foreach (int[] square in path)
-				{
-					//Console.Write("[" + square[0] + "," + square[1] + "]");
-					act += ("[" + square[0] + "," + square[1] + "]\n");
-				}
-				//Console.Write("\n");
-				return act;
-			}
-		}
-
 		public void printAction(){
 			if (isAttack){
 				Console.WriteLine("The outgoing action returned is:");
@@ -130,6 +80,36 @@ namespace KingAI1
 			}
 			
 		}
+
+		public string stringAction(){
+            if (isAttack){
+                String act = "The outgoing action returned is:\n";
+                act += ("The " + pieceType.ToString() + " with an id of " + id 
+                + " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+                + GetNotation(destinationCords[0], destinationCords[1]) + "\n");
+                act += ("Path taken: ");
+                foreach(int[] square in path){
+                    act += ("[" + square[0] + "," + square[1] + "]\n");
+                }
+                return act;
+
+            }
+            else{
+                String act = "The outgoing action returned is:\n";
+                act += ("The " + pieceType.ToString() + " with an id of " + id 
+                + " will move from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
+                + GetNotation(destinationCords[0], destinationCords[1]) + "\n");
+
+                foreach(int[] square in path){
+                    //Console.Write("[" + square[0] + "," + square[1] + "]");
+                    act += ("[" + square[0] + "," + square[1] + "]\n");
+                }
+                //Console.Write("\n");
+                return act;
+            }
+        }
+
+
 
 		public void setPieceType(Type piece){
 			this.pieceType = piece;
