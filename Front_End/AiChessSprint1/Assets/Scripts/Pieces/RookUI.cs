@@ -16,8 +16,8 @@ public class RookUI : BasePiece
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
         CreateChildSprite("rook_" + spriteName, 0);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, 1);
-        CreateChildSprite("comm_" + spriteName + "_" + corps, 2);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
 
     private bool MatchesState(int targetX, int targetY, CellState targetState)
@@ -52,12 +52,6 @@ public class RookUI : BasePiece
                     MatchesState(currentX + i, currentY + j, CellState.Enemy);
                 }
             }
-            
-            
-            
-
-            
         }
     }
-
 }

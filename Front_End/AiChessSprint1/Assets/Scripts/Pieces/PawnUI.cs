@@ -19,8 +19,8 @@ public class PawnUI : BasePiece
         //TagSet(newTeamColor);
 
         CreateChildSprite("pawn_" + spriteName, 0);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, 1);
-        CreateChildSprite("comm_" + spriteName + "_" + corps, 2);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
 
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells

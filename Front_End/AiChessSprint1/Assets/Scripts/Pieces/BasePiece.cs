@@ -54,6 +54,17 @@ public class BasePiece : EventTrigger
     protected bool isMoving = false;
     protected float speed = 0.25f, t = 0;
 
+    // Colors
+    readonly float[,] Colors =
+    {
+        {0.8f, 0.2f, 0.2f, 1.0f}, // Red
+        {1.0f, 0.9f, 0.0f, 1.0f}, // Yellow
+        {1.0f, 0.6f, 0.0f, 1.0f}, // Orange
+        {0.2f, 0.4f, 0.8f, 1.0f}, // Blue
+        {0.2f, 0.8f, 0.2f, 1.0f}, // Green
+        {0.2f, 0.8f, 0.8f, 1.0f} // Cyan
+    };
+
     #endregion
 
     #region Update
@@ -477,17 +488,23 @@ public class BasePiece : EventTrigger
     // when mouse hovers over a piece
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        Transform child = this.transform.Find("corps");
-        Image image = child.GetComponent<Image>();
-        image.enabled = true;
+        if (!isCommander)
+        {
+            Transform child = this.transform.Find("corps");
+            Image image = child.GetComponent<Image>();
+            image.enabled = true;
+        }
     }
 
     // when mouse stops hovering over a piece
     public override void OnPointerExit(PointerEventData eventData)
     {
-        Transform child = this.transform.Find("corps");
-        Image image = child.GetComponent<Image>();
-        image.enabled = false;
+        if (!isCommander)
+        {
+            Transform child = this.transform.Find("corps");
+            Image image = child.GetComponent<Image>();
+            image.enabled = false;
+        }
     }
     #endregion
 
@@ -543,13 +560,24 @@ public class BasePiece : EventTrigger
 
         if (extra == 1)
         {
-            childSprite.name = "corps";
             image.enabled = false;
         }
         else if (extra == 2)
         {
-            childSprite.name = "commander";
             image.enabled = isCommander ? true : false;
+        }
+
+        // Change to corps color
+        if (extra == 1 || extra == 2)
+        {
+            Color newColor;
+            // Red
+            if (mColor == Color.white)
+                newColor = new Color(Colors[corps - 1, 0], Colors[corps - 1, 1], Colors[corps - 1, 2], Colors[corps - 1, 3]);
+            // Blue
+            else
+                newColor = new Color(Colors[corps + 2, 0], Colors[corps + 2, 1], Colors[corps + 2, 2], Colors[corps + 2, 3]);
+            image.color = newColor;
         }
     }
     #endregion

@@ -18,7 +18,7 @@ public class BishopUI : BasePiece
         isCommander = true;
 
         CreateChildSprite("bishop_" + spriteName, 0);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, 1);
-        CreateChildSprite("comm_" + spriteName + "_" + corps, 2);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
 }
