@@ -472,6 +472,10 @@ public class BasePiece : EventTrigger
         // Initialize movement variables
         start = mCurrentCell.transform.position;
         destination = mTargetCell.transform.position;
+        // the piece is not moving (a turn is skipped)
+        if (destination == start)
+            return;
+
         t = 0;
 
         //removes Pieece from the board at target cell
