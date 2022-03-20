@@ -20,44 +20,52 @@ public class QueenUI : BasePiece
         CreateChildSprite("commander", 2);
     }
     //checks if the state matches the state in the CheckPathing function if so it adds the move possibility to the MhighlightedCells
-    private bool MatchesState(int targetX, int targetY, CellState targetState)
+    private bool MatchesState(int targetX, int targetY, CellState targetState, int movecount)
     {
-        CellState cellState = CellState.None;
+        movecount++;
+        CellState cellState = CellState.Free;
         cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
-          
-        if (cellState == targetState)
+        if (cellState == targetState && movecount <= mMovement.x)
         {
+
+
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
+            MatchesState(targetX, targetY + 1, targetState, movecount);
+            MatchesState(targetX, targetY - 1, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY, targetState, movecount);
+            MatchesState(targetX - 1, targetY, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX + 1, targetY - 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY - 1, targetState, movecount);
+
+
+            Debug.Log(movecount);
             return true;
         }
-
-        return false;
+        else { return false; }
     }
 
     protected override void CheckPathing()
     {
-        
-        base.CheckPathing();
+        //base.CheckPathing();
         if (!mPieceManager.attacking)
         {
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
-            if (MatchesState(currentX, currentY + 1, CellState.Free) || MatchesState(currentX, currentY + 1, CellState.Free))
-            {
-                MatchesState(currentX - 1, currentY + 2, CellState.Free);
-                MatchesState(currentX + 1, currentY + 2, CellState.Free);
 
+            MatchesState(currentX, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX, currentY - 1, CellState.Free, 0);
 
-                MatchesState(currentX - 1, currentY - 2, CellState.Free);
-                MatchesState(currentX + 1, currentY - 2, CellState.Free);
-            }
-            if (MatchesState(currentX - 1, currentY, CellState.Free) || MatchesState(currentX + 1, currentY, CellState.Free))
-            {
-                MatchesState(currentX - 2, currentY + 1, CellState.Free);
-                MatchesState(currentX - 2, currentY - 1, CellState.Free);
-                MatchesState(currentX + 2, currentY + 1, CellState.Free);
-                MatchesState(currentX + 2, currentY - 1, CellState.Free);
-            }
+            MatchesState(currentX + 1, currentY, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY, CellState.Free, 0);
+
+            MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
         }
     }
 }
