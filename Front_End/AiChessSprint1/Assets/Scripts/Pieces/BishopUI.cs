@@ -14,7 +14,11 @@ public class BishopUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        CreateChildSprite("bishop_" + spriteName, false);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
+        // Commander status
+        isCommander = true;
+
+        CreateChildSprite("bishop_" + spriteName, 0);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
 }

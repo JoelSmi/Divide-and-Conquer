@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
 public class BasePiece : EventTrigger
 {
     #region Variables
@@ -34,6 +35,14 @@ public class BasePiece : EventTrigger
     public int originalcorps = 0;
     public int corps = 0;
 
+    // If the piece is the leader of its corps
+    protected bool isCommander = false;
+    public bool IsCommander
+    {
+        get { return isCommander; }
+        set { isCommander = value; }
+    }
+
     // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
     public bool IsPlayable
@@ -46,7 +55,20 @@ public class BasePiece : EventTrigger
     protected bool isMoving = false;
     protected float speed = 0.25f, t = 0;
 
+    // Colors
+    readonly float[,] CORPS_COLORS =
+    {
+        {0.8f, 0.2f, 0.2f, 1.0f}, // Red
+        {1.0f, 0.9f, 0.0f, 1.0f}, // Yellow
+        {1.0f, 0.6f, 0.0f, 1.0f}, // Orange
+        {0.2f, 0.4f, 0.8f, 1.0f}, // Blue
+        {0.2f, 0.8f, 0.2f, 1.0f}, // Green
+        {0.2f, 0.8f, 0.8f, 1.0f} // Cyan
+    };
+
     #endregion
+
+    #region Update
 
     // Only for movement, at the moment, will separate if needed
     void Update()
@@ -60,6 +82,10 @@ public class BasePiece : EventTrigger
         }
     }
 
+    #endregion
+
+    #region Miscellaneous
+
     // disables the piece so it cannot be interacted with and is not visible
     public virtual void Kill(BoardUI boardUI)
     {
@@ -71,6 +97,9 @@ public class BasePiece : EventTrigger
 
         // Disable interaction
         isPlayable = false;
+
+        // Remove commander status
+        isCommander = false;
 
         // Move to a graveyard
         for (int y = 11; y >= 8; y--) // Decrement because of how the board is set up
@@ -97,6 +126,8 @@ public class BasePiece : EventTrigger
         }
         //gameObject.SetActive(false); // disable the gameobject when not using the graveyard
     }
+
+    #endregion
 
     #region Initialize
 
@@ -152,28 +183,37 @@ public class BasePiece : EventTrigger
         string[] tempName = this.name.Split(' ');
         switch (tempName[2])
         {
-            case "0"://Pawn
-            case "1"://Pawn
-            case "2"://Pawn
-            case "9"://Knight
-            case "10"://Bishop
+            case "0": // Pawn
+            case "1": // Pawn
+            case "2": // Pawn
+            case "9": // Knight
+            case "10": // Bishop
                 return 2; // yellow, green
-            case "5"://Pawn
-            case "6"://Pawn
-            case "7"://Pawn
-            case "13"://Bishop
-            case "14"://Knight
+            case "5": // Pawn
+            case "6": // Pawn
+            case "7": // Pawn
+            case "13": // Bishop
+            case "14": // Knight
                 return 3; // orange, cyan
-            case "3"://Pawn
-            case "4"://Pawn
-            case "8"://Rook
-            case "11"://King
-            case "12"://Queen
-            case "15"://Rook
+            case "3": // Pawn
+            case "4": // Pawn
+            case "8": // Rook
+            case "11": // King
+            case "12": // Queen
+            case "15": // Rook
                 return 1; // red, blue
             default://Error
                 return 0;
         }
+    }
+
+    // Changing commander status during gameplay
+    protected void CommanderSet(bool enable)
+    {
+        this.isCommander = enable;
+        Transform child = this.transform.Find("commander");
+        Image image = child.GetComponent<Image>();
+        image.enabled = enable;
     }
 
     #endregion
@@ -449,17 +489,23 @@ public class BasePiece : EventTrigger
     // when mouse hovers over a piece
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        Transform child = this.transform.Find("corps");
-        Image image = child.GetComponent<Image>();
-        image.enabled = true;
+        if (!isCommander)
+        {
+            Transform child = this.transform.Find("corps");
+            Image image = child.GetComponent<Image>();
+            image.enabled = true;
+        }
     }
 
     // when mouse stops hovering over a piece
     public override void OnPointerExit(PointerEventData eventData)
     {
-        Transform child = this.transform.Find("corps");
-        Image image = child.GetComponent<Image>();
-        image.enabled = false;
+        if (!isCommander)
+        {
+            Transform child = this.transform.Find("corps");
+            Image image = child.GetComponent<Image>();
+            image.enabled = false;
+        }
     }
     #endregion
 
@@ -472,6 +518,10 @@ public class BasePiece : EventTrigger
         // Initialize movement variables
         start = mCurrentCell.transform.position;
         destination = mTargetCell.transform.position;
+        // the piece is not moving (a turn is skipped)
+        if (destination == start)
+            return;
+
         t = 0;
 
         //removes Pieece from the board at target cell
@@ -495,7 +545,7 @@ public class BasePiece : EventTrigger
 
     #region Sprites
     // Adds the base to the sprite, determined by team color
-    protected void CreateChildSprite(string spriteName, bool isCorps)
+    protected void CreateChildSprite(string spriteName, int extra)
     {
         GameObject childSprite = new GameObject();
         childSprite.transform.SetParent(transform);
@@ -509,10 +559,25 @@ public class BasePiece : EventTrigger
         RectTransform rectTransform = childSprite.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(75, 75);
 
-        if (isCorps)
-        {
-            childSprite.name = "corps";
+        // Corps sprite
+        if (extra == 1)
             image.enabled = false;
+        // Commander sprite
+        else if (extra == 2)
+            image.enabled = isCommander ? true : false;
+
+        // Change to corps color
+        if (extra == 1 || extra == 2)
+        {
+            Color newColor;
+            // Red
+            if (mColor == Color.white)
+                newColor = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
+            // Blue
+            else
+                newColor = new Color(CORPS_COLORS[corps + 2, 0], CORPS_COLORS[corps + 2, 1], CORPS_COLORS[corps + 2, 2], CORPS_COLORS[corps + 2, 3]);
+
+            image.color = newColor;
         }
     }
     #endregion

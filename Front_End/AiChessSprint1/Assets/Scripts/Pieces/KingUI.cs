@@ -15,46 +15,64 @@ public class KingUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        CreateChildSprite("king_" + spriteName, false);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
+        // Commander status
+        isCommander = true;
+
+        CreateChildSprite("king_" + spriteName, 0);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
-    private bool MatchesState(int targetX, int targetY, CellState targetState)
+    private bool MatchesState(int targetX, int targetY, CellState targetState, int movecount)
     {
-        CellState cellState = CellState.None;
+        movecount++;
+        CellState cellState = CellState.Free;
         cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
-        if (cellState == targetState)
+        if (cellState == targetState && movecount <= mMovement.x)
         {
+
+
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
+            MatchesState(targetX, targetY + 1, targetState, movecount);
+            MatchesState(targetX, targetY - 1, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY, targetState, movecount);
+            MatchesState(targetX - 1, targetY, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX + 1, targetY - 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY - 1, targetState, movecount);
+
+
+            Debug.Log(movecount);
             return true;
         }
-
-        return false;
+        else { return false; }
     }
 
     protected override void CheckPathing()
     {
         base.CheckPathing();
+        int movement = mMovement.x;
+        if (!mPieceManager.CommandAuthority)
+            mMovement.x = 1;
         if (!mPieceManager.attacking)
         {
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
-            if (MatchesState(currentX, currentY + 1, CellState.Free) || MatchesState(currentX, currentY + 1, CellState.Free))
-            {
-                MatchesState(currentX - 1, currentY + 2, CellState.Free);
-                MatchesState(currentX + 1, currentY + 2, CellState.Free);
 
+            MatchesState(currentX, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX, currentY - 1, CellState.Free, 0);
 
-                MatchesState(currentX - 1, currentY - 2, CellState.Free);
-                MatchesState(currentX + 1, currentY - 2, CellState.Free);
-            }
-            if (MatchesState(currentX - 1, currentY, CellState.Free) || MatchesState(currentX + 1, currentY, CellState.Free))
-            {
-                MatchesState(currentX - 2, currentY + 1, CellState.Free);
-                MatchesState(currentX - 2, currentY - 1, CellState.Free);
-                MatchesState(currentX + 2, currentY + 1, CellState.Free);
-                MatchesState(currentX + 2, currentY - 1, CellState.Free);
-            }
+            MatchesState(currentX + 1, currentY, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY, CellState.Free, 0);
+
+            MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
         }
+        mMovement.x = movement;
 
     }
 

@@ -21,6 +21,13 @@ public class PieceManager : MonoBehaviour
         get { return delegation; }
         set { delegation = value; }
     }
+
+    private bool commandAuthority = true;
+    public bool CommandAuthority
+    {
+        get { return commandAuthority; }
+        set { commandAuthority = value; }
+    }
     private int turncount = 1;
 
     //instantiates objects to hold the pieces

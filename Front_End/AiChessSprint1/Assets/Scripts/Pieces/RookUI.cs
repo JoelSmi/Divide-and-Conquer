@@ -15,21 +15,37 @@ public class RookUI : BasePiece
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);
 
-        CreateChildSprite("rook_" + spriteName, false);
-        CreateChildSprite("corp_" + spriteName + "_" + corps, true);
+        CreateChildSprite("rook_" + spriteName, 0);
+        CreateChildSprite("corps", 1);
+        CreateChildSprite("commander", 2);
     }
 
-    private bool MatchesState(int targetX, int targetY, CellState targetState)
+    private bool MatchesState(int targetX, int targetY, CellState targetState, int movecount)
     {
-        CellState cellState = CellState.None;
+        movecount++;
+        CellState cellState = CellState.Free;
         cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
-        if (cellState == targetState)
+        if (cellState == targetState || targetState == CellState.Free && movecount <= mMovement.x)
         {
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
+            if(cellState == targetState)
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
+
+            MatchesState(targetX, targetY + 1, targetState, movecount);
+            MatchesState(targetX, targetY - 1, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY, targetState, movecount);
+            MatchesState(targetX - 1, targetY, targetState, movecount);
+
+            MatchesState(targetX + 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX + 1, targetY - 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY + 1, targetState, movecount);
+            MatchesState(targetX - 1, targetY - 1, targetState, movecount);
+
+
+            Debug.Log(movecount);
             return true;
         }
-
-        return false;
+        else { return false; }
     }
 
     protected override void CheckPathing()
@@ -39,24 +55,17 @@ public class RookUI : BasePiece
         {
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
-            
-            for (int i = 0; i<4; i++)
-            {
-                for (int j = 0; j<4; j++)
-                {
-                    MatchesState(currentX - i, currentY - j, CellState.Enemy);
-                    MatchesState(currentX - i, currentY + j, CellState.Enemy);
 
-                    MatchesState(currentX + i, currentY - j, CellState.Enemy);
-                    MatchesState(currentX + i, currentY + j, CellState.Enemy);
-                }
-            }
-            
-            
-            
+            MatchesState(currentX, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX, currentY - 1, CellState.Free, 0);
 
-            
+            MatchesState(currentX + 1, currentY, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY, CellState.Free, 0);
+
+            MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
+            MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
         }
     }
-
 }

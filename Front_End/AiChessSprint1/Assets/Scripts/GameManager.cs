@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour
         #region UI Checks
 
         int turnCount = mPieceManager.GetTurnCount();
+        ShowCorps(turnCount);
 
         if (turnCount == 1)
         {
@@ -254,6 +255,7 @@ public class GameManager : MonoBehaviour
     // function attached to the NextTurnButton in scene. manually progresses the phase
     public void NextTurnButton()
     {
+        mPieceManager.CommandAuthority = true;
         mPieceManager.IncreaseTurnCnt();
         
      }
