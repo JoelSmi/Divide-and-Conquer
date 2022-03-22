@@ -171,8 +171,8 @@ public class GameManager : MonoBehaviour
         //Making sure there is indeed a piece to be moved, might be a redundant/useless check
         if (mBoardUI.mAllCells[initial[1], 7- initial[0]].mCurrentPiece != null)
         {
-            PrintLog("Row: " + initial[0] + "; Col: " + initial[1]);
-            PrintLog("Row: " + dest[0] + "; Col: " + dest[1]);
+            PrintLog("Starting; \nRow: " + initial[0] + "; Col: " + initial[1]);
+            PrintLog("Destination; \nRow: " + dest[0] + "; Col: " + dest[1]);
             BasePiece tempPiece = mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece;
             tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 -  dest[0] ];
             tempPiece.MoveAIPiece();
