@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -223,47 +224,52 @@ public class BasePiece : EventTrigger
     // creates the cell path to use for the highlighted cells
     protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
-        //the current x, and y coordinates of the piece based on its current cell
-        int currentX = mCurrentCell.mBoardPosition.x;
-        int currentY = mCurrentCell.mBoardPosition.y;
-
-        // a for loop to create the path based of the mMovement 
-        for(int i = 1; i<= movement; i++)
+        if (mPieceManager.CommandAuthority || mCurrentCell.mCurrentPiece.name.Contains("Bishop"))
         {
-            // adds the direction to the current
-            currentX += xDirection;
-            currentY += yDirection;
+            if (mCurrentCell.mCurrentPiece.name.Contains("Bishop") && !mPieceManager.CommandAuthority)
+                movement = 1;
+            //the current x, and y coordinates of the piece based on its current cell
+            int currentX = mCurrentCell.mBoardPosition.x;
+            int currentY = mCurrentCell.mBoardPosition.y;
 
-            // creates a cellstate for checking possibilities
-            //and then checks the state for the currentX, ,andCurrentY
-            CellState cellState = CellState.None;
-            cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
-
-            // if the cell contatins something other than an enemy or a free state it breaks the loop
-            if (mPieceManager.attacking)
+            // a for loop to create the path based of the mMovement 
+            for (int i = 1; i <= movement; i++)
             {
-                if (cellState == CellState.Enemy)
+                // adds the direction to the current
+                currentX += xDirection;
+                currentY += yDirection;
+
+                // creates a cellstate for checking possibilities
+                //and then checks the state for the currentX, ,andCurrentY
+                CellState cellState = CellState.None;
+                cellState = mCurrentCell.mBoardUI.ValidateCell(currentX, currentY, this);
+
+                // if the cell contatins something other than an enemy or a free state it breaks the loop
+                if (mPieceManager.attacking)
                 {
-                    if (i == 1)
+                    if (cellState == CellState.Enemy)
                     {
-                        mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
+                        if (i == 1)
+                        {
+                            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
 
+                        }
+                        else break;
                     }
-                    else break;
-                }
-                break;
-            }
-            if (!mPieceManager.attacking)
-            {
-                if (cellState != CellState.Free)
                     break;
+                }
+                if (!mPieceManager.attacking)
+                {
+                    if (cellState != CellState.Free)
+                        break;
+                }
+
+
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
             }
-
-
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[currentX, currentY]);
         }
         // selects the delegation tiles if the piece picked up can be delegated back to the king
-        if (mCurrentCell.mCurrentPiece.originalcorps == 1 && mCurrentCell.mCurrentPiece.name != "RED KingUI 11" && mPieceManager.Delegation == false)
+        if (mCurrentCell.mCurrentPiece.originalcorps == 1 && !mCurrentCell.mCurrentPiece.name.Contains("King") && mPieceManager.Delegation == false && !mPieceManager.attacking)
         {
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
@@ -463,6 +469,23 @@ public class BasePiece : EventTrigger
                 return;
             }
             
+            if(mPieceManager.CommandAuthority == true && (!mCurrentCell.mCurrentPiece.name.Contains("King") || !mCurrentCell.mCurrentPiece.name.Contains("Bishop")))
+            {
+                mPieceManager.CommandAuthority = false;
+                mCurrentCell.mOutlineImage.enabled = false;
+                Move(false);
+                return;
+                
+            }
+            if (mPieceManager.CommandAuthority == true && (mCurrentCell.mCurrentPiece.name.Contains("King") || mCurrentCell.mCurrentPiece.name.Contains("Bishop")) 
+                && Math.Abs(mCurrentCell.mBoardPosition.x-mCurrentCell.mBoardPosition.x)>1 && Math.Abs(mCurrentCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y) > 1)
+            {
+                mPieceManager.CommandAuthority = false;
+                mCurrentCell.mOutlineImage.enabled = false;
+                Move(false);
+                return;
+
+            }
 
             /*//Move seems to just do everything that attacking needs to currently
             if (mTargetCell.mCurrentPiece != null) 
@@ -473,6 +496,7 @@ public class BasePiece : EventTrigger
             */
             //use the Move function
             mPieceManager.IncreaseTurnCnt();
+            mPieceManager.CommandAuthority = false;
             mCurrentCell.mOutlineImage.enabled = false;
             Move(false);
             //switch sides based on color
