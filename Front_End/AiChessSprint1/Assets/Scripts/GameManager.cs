@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
         string TempLogBuff = "";
         if (mPieceManager.GetTurnCount() == 4)
         {
+            mPieceManager.Delegation = false;
             mPieceManager.ResetTurnCount();
             mPieceManager.actionTaken = true;
             ExecutionBoard.endTurn();
@@ -256,6 +257,8 @@ public class GameManager : MonoBehaviour
     public void NextTurnButton()
     {
         mPieceManager.CommandAuthority = true;
+        mPieceManager.CommanderMoved = false;
+
         mPieceManager.IncreaseTurnCnt();
         
      }

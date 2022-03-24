@@ -28,6 +28,13 @@ public class PieceManager : MonoBehaviour
         get { return commandAuthority; }
         set { commandAuthority = value; }
     }
+    private bool commanderMoved = false;
+    public bool CommanderMoved
+    {
+        get { return commanderMoved; }
+        set { commanderMoved = value; }
+    }
+            
     private int turncount = 1;
 
     //instantiates objects to hold the pieces

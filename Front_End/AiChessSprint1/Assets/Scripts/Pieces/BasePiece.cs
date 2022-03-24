@@ -38,11 +38,12 @@ public class BasePiece : EventTrigger
 
     // If the piece is the leader of its corps
     protected bool isCommander = false;
-    public bool IsCommander
+    protected bool IsCommander
     {
         get { return isCommander; }
         set { isCommander = value; }
     }
+    
 
     // Whether or not a piece is still alive and playable
     protected bool isPlayable = true;
@@ -224,9 +225,9 @@ public class BasePiece : EventTrigger
     // creates the cell path to use for the highlighted cells
     protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
-        if (mPieceManager.CommandAuthority || mCurrentCell.mCurrentPiece.name.Contains("Bishop"))
+        if (mPieceManager.CommandAuthority ||(mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved))
         {
-            if (mCurrentCell.mCurrentPiece.name.Contains("Bishop") && !mPieceManager.CommandAuthority)
+            if (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommandAuthority)
                 movement = 1;
             //the current x, and y coordinates of the piece based on its current cell
             int currentX = mCurrentCell.mBoardPosition.x;
@@ -269,7 +270,7 @@ public class BasePiece : EventTrigger
             }
         }
         // selects the delegation tiles if the piece picked up can be delegated back to the king
-        if (mCurrentCell.mCurrentPiece.originalcorps == 1 && !mCurrentCell.mCurrentPiece.name.Contains("King") && mPieceManager.Delegation == false && !mPieceManager.attacking)
+        if (mCurrentCell.mCurrentPiece.originalcorps == 1 && !mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.Delegation && !mPieceManager.attacking)
         {
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
             mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
@@ -379,7 +380,7 @@ public class BasePiece : EventTrigger
         if (isPlayable && mColor == Color.white)
         {
             base.OnBeginDrag(eventData);
-            if (mPieceManager.GetTurnCount() == corps)
+            if (mPieceManager.GetTurnCount() == originalcorps)
             {
                 CheckPathing();
             }
@@ -440,12 +441,12 @@ public class BasePiece : EventTrigger
                 return;
             }
 
-           // changes the corp and corps sprite component based on what corp and cell the piece was placed in.
-            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "right Delegation") && mCurrentCell.mCurrentPiece.corps != 1 && mCurrentCell.mCurrentPiece.originalcorps ==1)
+            // changes the corp and corps sprite component based on what corp and cell the piece was placed in.
+            #region Delegation
+            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
             {
                 mCurrentCell.mCurrentPiece.corps = 1;
-                Resources.UnloadAsset(image.sprite);
-                image.sprite = Resources.Load<Sprite>("corp_red_1");
+                image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
                 return;
@@ -453,8 +454,7 @@ public class BasePiece : EventTrigger
             else if (mTargetCell.name == "Left Delegation")
             {
                 mCurrentCell.mCurrentPiece.corps = 2;
-                Resources.UnloadAsset(image.sprite);
-                image.sprite = Resources.Load<Sprite>("corp_red_2");
+                image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
                 return;
@@ -462,28 +462,29 @@ public class BasePiece : EventTrigger
             else if(mTargetCell.name == "Right Delegation")
             {
                 mCurrentCell.mCurrentPiece.corps = 3;
-                Resources.UnloadAsset(image.sprite);
-                image.sprite = Resources.Load<Sprite>("corp_red_3");
+                image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
                 return;
             }
-            
-            if(mPieceManager.CommandAuthority == true && (!mCurrentCell.mCurrentPiece.name.Contains("King") || !mCurrentCell.mCurrentPiece.name.Contains("Bishop")))
+            #endregion
+
+            if (mPieceManager.CommandAuthority && (!mCurrentCell.mCurrentPiece.isCommander))
             {
-                mPieceManager.CommandAuthority = false;
                 mCurrentCell.mOutlineImage.enabled = false;
                 Move(false);
+                mPieceManager.CommandAuthority = false;
                 return;
                 
             }
-            if (mPieceManager.CommandAuthority == true && (mCurrentCell.mCurrentPiece.name.Contains("King") || mCurrentCell.mCurrentPiece.name.Contains("Bishop")) 
-                && Math.Abs(mCurrentCell.mBoardPosition.x-mCurrentCell.mBoardPosition.x)>1 && Math.Abs(mCurrentCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y) > 1)
+            if (mCurrentCell.mCurrentPiece.isCommander)
             {
-                mPieceManager.CommandAuthority = false;
-                mCurrentCell.mOutlineImage.enabled = false;
-                Move(false);
-                return;
+                mPieceManager.CommanderMoved = true;
+                Debug.Log("0");
+                if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) > 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) > 1))
+                {
+                    mPieceManager.CommandAuthority = false;
+                }
 
             }
 
@@ -495,17 +496,22 @@ public class BasePiece : EventTrigger
             }
             */
             //use the Move function
-            mPieceManager.IncreaseTurnCnt();
-            mPieceManager.CommandAuthority = false;
             mCurrentCell.mOutlineImage.enabled = false;
             Move(false);
-            //switch sides based on color
-            if (mPieceManager.GetTurnCount() == 4)
+            if (!mPieceManager.CommandAuthority && mPieceManager.Delegation)
             {
-                mPieceManager.ResetTurnCount();
-                mPieceManager.SwitchSides(mColor);
-                mPieceManager.actionTaken = true;
-                mPieceManager.Delegation = false;
+                mPieceManager.IncreaseTurnCnt();
+                mPieceManager.CommandAuthority = true;
+                mPieceManager.CommanderMoved = false;
+                
+                //switch sides based on color
+                if (mPieceManager.GetTurnCount() == 4)
+                {
+                    mPieceManager.ResetTurnCount();
+                    mPieceManager.SwitchSides(mColor);
+                    mPieceManager.actionTaken = true;
+                    mPieceManager.Delegation = false;
+                }
             }
         }
     }

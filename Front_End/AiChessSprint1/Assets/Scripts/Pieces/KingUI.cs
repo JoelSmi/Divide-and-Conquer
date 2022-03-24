@@ -43,8 +43,6 @@ public class KingUI : BasePiece
             MatchesState(targetX - 1, targetY + 1, targetState, movecount);
             MatchesState(targetX - 1, targetY - 1, targetState, movecount);
 
-
-            Debug.Log(movecount);
             return true;
         }
         else { return false; }
@@ -56,7 +54,7 @@ public class KingUI : BasePiece
         int movement = mMovement.x;
         if (!mPieceManager.CommandAuthority)
             mMovement.x = 1;
-        if (!mPieceManager.attacking)
+        if (!mPieceManager.attacking && !mPieceManager.CommanderMoved)
         {
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
