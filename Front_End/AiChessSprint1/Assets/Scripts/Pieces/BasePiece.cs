@@ -338,6 +338,7 @@ public class BasePiece : EventTrigger
         //sets the current cell = to the target cell
         //selects this piece as the current piece at the new current cell
         mPieceManager.UIRelay(mCurrentCell.mBoardPosition.x, mCurrentCell.mBoardPosition.y, mTargetCell.mBoardPosition.x, mTargetCell.mBoardPosition.y);
+        mPieceManager.actionTaken = true;
         mCurrentCell = mTargetCell;
         mCurrentCell.mCurrentPiece = this;
 
@@ -509,7 +510,6 @@ public class BasePiece : EventTrigger
                 {
                     mPieceManager.ResetTurnCount();
                     mPieceManager.SwitchSides(mColor);
-                    mPieceManager.actionTaken = true;
                     mPieceManager.Delegation = false;
                 }
             }

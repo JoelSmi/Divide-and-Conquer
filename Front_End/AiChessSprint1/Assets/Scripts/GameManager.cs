@@ -38,7 +38,11 @@ public class GameManager : MonoBehaviour
                     new Knight("N1",blackcol),new Rook("R1",blackcol)} };
     #endregion
 
-    protected int uiCurrentCellX, uiCurrentCellY, uiTargetCellX, uiTargetCellY;
+    protected List<int> uiCurrentCellX = new List<int>();
+    protected List<int> uiCurrentCellY = new List<int>();
+    protected List<int> uiTargetCellX = new List<int>();
+    protected List<int> uiTargetCellY = new List<int>();
+    private int moveCount = 0;
 
     //Action Log
     protected string ActionLog = "ActionLog.txt";
@@ -65,6 +69,22 @@ public class GameManager : MonoBehaviour
         string TempLogBuff = "";
         if (mPieceManager.GetTurnCount() == 4)
         {
+            for (int i = 0; i < moveCount; i++)
+            {
+                int[] currPos = { 7 - (uiCurrentCellY[i]), uiCurrentCellX[i] };
+                int[] dest = { 7 - uiTargetCellY[i], uiTargetCellX[i] };
+
+
+                TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
+
+                
+            }
+            ExecutionBoard.endTurn();
+
+            EndTurn();
+
+            mPieceManager.actionTaken = false;
+            mPieceManager.SwitchSides(Color.black);
             mPieceManager.Delegation = false;
             mPieceManager.ResetTurnCount();
             mPieceManager.actionTaken = true;
@@ -75,19 +95,9 @@ public class GameManager : MonoBehaviour
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
             CellRelay();
-
-            int[] currPos = { 7 - uiCurrentCellY, uiCurrentCellX };
-            int[] dest = { 7 - uiTargetCellY, uiTargetCellX };
-
-            
-            TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
-
-            ExecutionBoard.endTurn();
-
-            EndTurn();
-
+            moveCount++;
             mPieceManager.actionTaken = false;
-            mPieceManager.SwitchSides(Color.black);
+                        
         }
         #endregion
 
@@ -224,10 +234,11 @@ public class GameManager : MonoBehaviour
 
     public void CellRelay()
     {
-        uiCurrentCellX = mPieceManager.pmCurrentCellX;
-        uiCurrentCellY = mPieceManager.pmCurrentCellY;
-        uiTargetCellX = mPieceManager.pmTargetCellX;
-        uiTargetCellY = mPieceManager.pmTargetCellY;
+        uiCurrentCellX.Add(mPieceManager.pmCurrentCellX);
+        uiCurrentCellY.Add(mPieceManager.pmCurrentCellY);
+        uiTargetCellX.Add(mPieceManager.pmTargetCellX);
+        uiTargetCellY.Add(mPieceManager.pmTargetCellY);
+        
     }
     
     public void EndTurn()
