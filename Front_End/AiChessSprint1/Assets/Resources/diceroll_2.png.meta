@@ -1,0 +1,738 @@
+fileFormatVersion: 2
+guid: 651664a6569fb424f8231edd89b69821
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: diceroll_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8b0f958c357621408dea2513b92b1fd
+      internalID: 1803630692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_1
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8681d08e8a2aa2045b91daa8cd84fc11
+      internalID: -177882739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_2
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: badfee3b2f05dbc4ebf3a6ebf507e3ad
+      internalID: 1533914500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_3
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7becac1431fe16c429e8b2a8bf913998
+      internalID: 891916185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_4
+      rect:
+        serializedVersion: 2
+        x: 1208
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13a8106f3e6d8e14caf6fdeefde98d15
+      internalID: -1717164547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_5
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 1840
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcd329dd42ff045448d87ab238a1807d
+      internalID: -46409748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08b1034e91eb36848a6e71b9c1312028
+      internalID: 95978133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_7
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8325626ec7333a443bd950f34c53904d
+      internalID: -963904513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_8
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bae72948d7c15746aa7684146b61531
+      internalID: -361660033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_9
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e710358fe3b660d4abcc6a6535328e11
+      internalID: -1304897399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_10
+      rect:
+        serializedVersion: 2
+        x: 1208
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9187914ba5b7fb841a296fa9edb8db79
+      internalID: 837313876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_11
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 1380
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56bf64b810284a64bb733d122555073e
+      internalID: 544761613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2945849436070a34b90a39c85989af74
+      internalID: 325902595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_13
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41c6b771bcc4de94984c8fa113d0d54e
+      internalID: 526258995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_14
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5122e7b6126eca34da202429fb04b1af
+      internalID: 1122915974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_15
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6842512ea6f684469bfe00f42c3621b
+      internalID: 1317680742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_16
+      rect:
+        serializedVersion: 2
+        x: 1208
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be5a0a0033827d44a96ecdcf1684349d
+      internalID: -40877857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_17
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 920
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c255930c1022c1f4e9b8faa6fb1ae2c5
+      internalID: -827890332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8e1ccab207d4e74fb83089486e92898
+      internalID: -691589107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_19
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3c1b871a28ecdd4fb047aef61d958e5
+      internalID: -657496693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_20
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dd9382d6643c4148bbdc08a5b3a2a1e
+      internalID: -2087876396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_21
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f176396f55bff114fba60be79c20b992
+      internalID: 674278196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_22
+      rect:
+        serializedVersion: 2
+        x: 1208
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea1c94a48d1b5b046b355c17eba2da2b
+      internalID: 1653817790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_23
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 460
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 145fd5af5fe0ce9429f380dc5fd2e02c
+      internalID: -28632777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52ecbc15f9887c54697b6b03515527d8
+      internalID: 1852117413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_25
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 0
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a443ba65ccd4a914da5a76ea9e393d05
+      internalID: 652907830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_26
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 0
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09b0b85965223284fb25ace3028fab6e
+      internalID: 1456552093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: diceroll_2_27
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 0
+        width: 302
+        height: 460
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d74cd4975e3b34c4ebb297bd1af7e38b
+      internalID: -2063602773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      diceroll_2_2: 1533914500
+      diceroll_2_0: 1803630692
+      diceroll_2_13: 526258995
+      diceroll_2_19: -657496693
+      diceroll_2_10: 837313876
+      diceroll_2_23: -28632777
+      diceroll_2_8: -361660033
+      diceroll_2_24: 1852117413
+      diceroll_2_7: -963904513
+      diceroll_2_17: -827890332
+      diceroll_2_27: -2063602773
+      diceroll_2_9: -1304897399
+      diceroll_2_18: -691589107
+      diceroll_2_3: 891916185
+      diceroll_2_11: 544761613
+      diceroll_2_16: -40877857
+      diceroll_2_21: 674278196
+      diceroll_2_4: -1717164547
+      diceroll_2_5: -46409748
+      diceroll_2_12: 325902595
+      diceroll_2_14: 1122915974
+      diceroll_2_20: -2087876396
+      diceroll_2_25: 652907830
+      diceroll_2_26: 1456552093
+      diceroll_2_6: 95978133
+      diceroll_2_1: -177882739
+      diceroll_2_15: 1317680742
+      diceroll_2_22: 1653817790
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
