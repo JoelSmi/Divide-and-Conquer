@@ -150,12 +150,17 @@ namespace KingAI1{
 		public void Print() {
 			/* Uppercase pieces are black, lowercase pieces are white
 			K = King, Q = Queen, R = Rook, N = Knight, B = Bishop, P = Pawn, - = empty space */
-			int col = 0;
+			int col = 0, row = 0;
+			Console.WriteLine("   0  1  2  3  4  5  6  7");
+			Console.Write(row);
+			row++;
 			foreach (Piece piece in board) {
 				Console.Write("|" + piece);
 				col++;
 				if (col == dim) {
 					Console.WriteLine("|");
+					if (row != 8) Console.Write(row);
+					row++;
 					col = 0;
 				}
 			}
@@ -201,6 +206,7 @@ namespace KingAI1{
 		public Piece[] GetSubordinates(Piece commander) {
 			//For now it will only say 3 because bishop in sprint 1 only has 3 subordinates
 			Piece[] subordinates = new Piece[6];
+			Piece[] kingSub = new Piece[16];
 			int counter = 0;
 			if (commander.ToString() == "B0") {
 				foreach (Piece p in board) {
@@ -225,6 +231,20 @@ namespace KingAI1{
 					}
 				}
 			}
+			else if (commander.ToString() == "K0")
+			{
+				foreach (Piece p in board)
+				{
+					if (p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "R0" || p.ToString() == "R1"|| p.ToString() == "Q0")
+					{
+						//Console.WriteLine("We found " + p.ToString());
+						//Console.WriteLine("Counter is at " + counter);
+						kingSub[counter] = p;
+						counter++;
+					}
+				}
+				return kingSub;
+			}
 			
 			if (counter != subordinates.Length-1)
 			{
@@ -237,73 +257,73 @@ namespace KingAI1{
 			return subordinates;
 		}		
 
-		//Returns subordinate arrays fpor the king, even if bishops are captured
-		public Piece[] GetKingSubordinates(bool commander0, bool commander1){
-			Piece[] subordinates = new Piece[16];
-			int counter = 0;
-			if (commander0 && commander1){
-				foreach (Piece p in board)
-				{
-					if (p.ToString() == "R0" || p.ToString() == "B0" || p.ToString() == "Q0" || p.ToString() == "B1" ||
-						p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4")
-					{
-						//Console.WriteLine("We found " + p.ToString());
-						//Console.WriteLine("Counter is at " + counter);
-						subordinates[counter] = p;
-						counter++;
-					}
-				}
-			}
+		// //Returns subordinate arrays fpor the king, even if bishops are captured
+		// public Piece[] GetKingSubordinates(bool commander0, bool commander1){
+		// 	Piece[] subordinates = new Piece[16];
+		// 	int counter = 0;
+		// 	if (commander0 && commander1){
+		// 		foreach (Piece p in board)
+		// 		{
+		// 			if (p.ToString() == "R0" || p.ToString() == "Q0" ||
+		// 				p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4")
+		// 			{
+		// 				//Console.WriteLine("We found " + p.ToString());
+		// 				//Console.WriteLine("Counter is at " + counter);
+		// 				subordinates[counter] = p;
+		// 				counter++;
+		// 			}
+		// 		}
+		// 	}
 				
-			if (commander0 && !commander1){
-				foreach (Piece p in board)
-				{
-					if (p.ToString() == "R0" || p.ToString() == "B0" || p.ToString() == "Q0" || p.ToString() == "B1" ||
-						p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P0" || 
-						p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0")
-					{
-						//Console.WriteLine("We found " + p.ToString());
-						//Console.WriteLine("Counter is at " + counter);
-						subordinates[counter] = p;
-						counter++;
-					}
-				}
-			}
+		// 	if (commander0 && !commander1){
+		// 		foreach (Piece p in board)
+		// 		{
+		// 			if (p.ToString() == "R0" || p.ToString() == "Q0" ||
+		// 				p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P0" || 
+		// 				p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0")
+		// 			{
+		// 				//Console.WriteLine("We found " + p.ToString());
+		// 				//Console.WriteLine("Counter is at " + counter);
+		// 				subordinates[counter] = p;
+		// 				counter++;
+		// 			}
+		// 		}
+		// 	}
 
-			if (!commander0 && commander1){
-				foreach (Piece p in board)
-				{
-					if (p.ToString() == "R0" || p.ToString() == "B0" || p.ToString() == "Q0" || p.ToString() == "B1" ||
-						p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P5" || 
-						p.ToString() == "P6" || p.ToString() == "P7" || p.ToString() == "N1")
-					{
-						//Console.WriteLine("We found " + p.ToString());
-						//Console.WriteLine("Counter is at " + counter);
-						subordinates[counter] = p;
-						counter++;
-					}
-				}
-			}
+		// 	if (!commander0 && commander1){
+		// 		foreach (Piece p in board)
+		// 		{
+		// 			if (p.ToString() == "R0" || p.ToString() == "Q0" || 
+		// 				p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P5" || 
+		// 				p.ToString() == "P6" || p.ToString() == "P7" || p.ToString() == "N1")
+		// 			{
+		// 				//Console.WriteLine("We found " + p.ToString());
+		// 				//Console.WriteLine("Counter is at " + counter);
+		// 				subordinates[counter] = p;
+		// 				counter++;
+		// 			}
+		// 		}
+		// 	}
 
-			if (!commander0 && !commander1){
-				foreach (Piece p in board)
-				{
-					if (p.ToString() == "R0" || p.ToString() == "B0" || p.ToString() == "Q0" || p.ToString() == "B1" ||
-						p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P0" || 
-						p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0" || p.ToString() == "P5" || 
-						p.ToString() == "P6" || p.ToString() == "P7" || p.ToString() == "N1")
-					{
-						//Console.WriteLine("We found " + p.ToString());
-						//Console.WriteLine("Counter is at " + counter);
-						subordinates[counter] = p;
-						counter++;
-					}
-				}
-			}
+		// 	if (!commander0 && !commander1){
+		// 		foreach (Piece p in board)
+		// 		{
+		// 			if (p.ToString() == "R0" || p.ToString() == "Q0" ||
+		// 				p.ToString() == "R1" || p.ToString() == "P3" || p.ToString() == "P4" || p.ToString() == "P0" || 
+		// 				p.ToString() == "P1" || p.ToString() == "P2" || p.ToString() == "N0" || p.ToString() == "P5" || 
+		// 				p.ToString() == "P6" || p.ToString() == "P7" || p.ToString() == "N1")
+		// 			{
+		// 				//Console.WriteLine("We found " + p.ToString());
+		// 				//Console.WriteLine("Counter is at " + counter);
+		// 				subordinates[counter] = p;
+		// 				counter++;
+		// 			}
+		// 		}
+		// 	}
 
 
-			return subordinates;
-		}
+		// 	return subordinates;
+		// }
 		
 		
 		//Gets the set of enemy (human-controlled) pieces that are still active on the board
