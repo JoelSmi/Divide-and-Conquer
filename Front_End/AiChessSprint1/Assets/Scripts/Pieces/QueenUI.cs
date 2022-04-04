@@ -42,7 +42,6 @@ public class QueenUI : BasePiece
             MatchesState(targetX - 1, targetY - 1, targetState, movecount);
 
 
-            Debug.Log(movecount);
             return true;
         }
         else { return false; }

@@ -41,16 +41,6 @@ public class PawnUI : BasePiece
     // checks the path using the constraints of the pawns movement
     protected override void CheckPathing()
     {
-        /*// we are ignoring finer details of pawns for now
-        int currentX = mCurrentCell.mBoardPosition.x;
-        int currentY = mCurrentCell.mBoardPosition.y;
-
-        MatchesState(currentX - mMovement.z, currentY + mMovement.z, CellState.Free);
-
-        MatchesState(currentX, currentY + mMovement.y, CellState.Free);
-
-        MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Free);
-        */
         
             //Vertical
             CreateCellPath(0, 1, mMovement.y);

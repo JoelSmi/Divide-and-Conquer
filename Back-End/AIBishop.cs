@@ -573,6 +573,7 @@ namespace KingAI1
                                     if (offensiveSub && OddsCheck(attackingPiece, sub))
                                     {
                                         foreach (int[] attack in sub.GetLegalAttacks()){
+                                            Console.WriteLine("CHECK");
                                             moveToSquares[0] = attack[0];
                                             moveToSquares[1] = attack[1];
                                             //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
