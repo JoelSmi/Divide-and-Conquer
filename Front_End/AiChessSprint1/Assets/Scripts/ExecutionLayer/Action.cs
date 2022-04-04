@@ -30,8 +30,13 @@ namespace Actions
             int x = -1, y = -1;
             GameBoard = GB;
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
-            int[] previous = moveSet[0];
+            int[] previous = currPiece.currPos;
             //Iterates through the first dimension of the array
+            if(moveSet.Count < 1)
+            {
+                return -1;
+            }
+
             foreach (int[] dest in moveSet)
             {
                 if (previous[0] == dest[0] && previous[1] == dest[1])
@@ -126,7 +131,11 @@ namespace Actions
             //Counter is used to check whether to place the value from the 2d array into x or y,
             bool actionValid = true;
             GameBoard = GB;
-            int[] initial = moveSet[0];
+            int[] initial = currPiece.currPos;
+            if (moveSet.Count < 1)
+            {
+                return -1;
+            }
             int[] dest = moveSet[moveSet.Count - 1];
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
             char enemyType = char.ToUpper(GameBoard[dest[0], dest[1]].id.ToCharArray()[0]);
@@ -375,6 +384,7 @@ namespace Actions
             return -1;
         }
         #endregion
+
 
         #region MoveCall
         public static int moveAction(Piece[,] GB,Piece currPiece, int[] pos, int[] dest)
@@ -5580,6 +5590,7 @@ namespace Actions
         }
     }
     #endregion
+
 }
 
 

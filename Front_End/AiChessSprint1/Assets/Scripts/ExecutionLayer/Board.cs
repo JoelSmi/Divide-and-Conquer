@@ -21,6 +21,7 @@ namespace GameBoard
          * |r0 n0 b0 q0 k0 b1 n1 r1|
          */
 
+        #region GameBoard Global Variables
         //Matricies storing the current game board and the white and black pieces being used
         public Pieces.Piece[,] GameBoard { get; private set; } = new Pieces.Piece[8, 8];
         public Pieces.Piece[,] WhiteBoard { get; private set; } = new Pieces.Piece[2, 8];
@@ -46,6 +47,7 @@ namespace GameBoard
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
         public bool hasActed { get; set; } = false;
+        #endregion
 
         #region Board Initialization
         public Board(Pieces.Piece[,] initialWhite, Pieces.Piece[,] initialBlack)
@@ -230,7 +232,7 @@ namespace GameBoard
             int temp = 0;
 
             //Attempted applying new path checking functions
-            /*if (isAI) {
+            if (isAI) {
                 switch (ActionType)
                 {
                     case 'M':
@@ -238,8 +240,8 @@ namespace GameBoard
                         if (temp > 0 && this.ActionCount + temp <= MaxTeamActionCount)
                         {
                             this.ActionCount += temp;
-                            int[] previous = this.actionPositions[0];
-                            foreach (int[] next in this.actionPositions)
+                            int[] previous = currPiece.currPos;
+                            foreach (int[] dest in this.actionPositions)
                             {
                                 if (previous[0] == dest[0] && previous[1] == dest[1])
                                     continue;
@@ -263,39 +265,40 @@ namespace GameBoard
                         break;
 
                 }
-            }*/
-            //else {
-
-            int ActionCount = 0;
-
-            this.actionInitial = currPiece.currPos;
-            if (this.actionPositions.Count > 0 && this.actionPositions[this.actionPositions.Count - 1][0] >= 0 && this.actionPositions[this.actionPositions.Count- 1][0] < 8 && this.actionPositions[this.actionPositions.Count- 1][1] >= 0 && this.actionPositions[this.actionPositions.Count- 1][1] < 8) {
-                this.actionDest = this.actionPositions[this.actionPositions.Count - 1];
             }
             else {
-                this.actionPositions.Clear();
-                return -1; 
-            }
 
-            switch (ActionType) {
-                    case 'M':
-                        temp = Actions.Action.moveAction(this.GameBoard, currPiece, currPiece.currPos, this.actionDest);
-                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                        {
-                            ActionCount += temp;
-                            updateBoard(currPiece, currPiece.currPos, this.actionDest);
-                        }
-                        break;
-                    case 'A':
-                        temp = Actions.Action.attackAction(this.GameBoard, currPiece, currPiece.currPos, this.actionDest);
-                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                        {
-                            ActionCount += temp;
-                            updateBoard(currPiece, currPiece.currPos, this.actionDest);
-                        }
-                        break;
-                } 
-            //}
+                int ActionCount = 0;
+
+                this.actionInitial = currPiece.currPos;
+                if (this.actionPositions.Count > 0 && this.actionPositions[this.actionPositions.Count - 1][0] >= 0 && this.actionPositions[this.actionPositions.Count- 1][0] < 8 && this.actionPositions[this.actionPositions.Count- 1][1] >= 0 && this.actionPositions[this.actionPositions.Count- 1][1] < 8) {
+                    this.actionDest = this.actionPositions[this.actionPositions.Count - 1];
+                }
+                else {
+                    this.actionPositions.Clear();
+                    return -1; 
+                }
+
+                switch (ActionType) {
+                        case 'M':
+                            temp = Actions.Action.moveAction2(this.actionPositions, this.GameBoard, currPiece);
+                            if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                            {
+                                ActionCount += temp;
+                                updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                            }
+                            break;
+                        case 'A':
+                            temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece);
+                            if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                            {
+                                ActionCount += temp;
+                                updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                            }
+                            break;
+                }
+                this.actionPositions.Clear();
+            }
             return ActionCount;
         }
 
@@ -340,6 +343,8 @@ namespace GameBoard
         }
         #endregion
 
+
+        #region UI Action
         public string UIAction(int[] pos, int [] dest)
         {
             string TempLogBuff = "";
@@ -351,7 +356,6 @@ namespace GameBoard
             if (ActionType == 'M' || ActionType == 'A')
             {
                 this.actionPositions = new List<int[]>();
-                this.actionPositions.Add(pos);
                 this.actionPositions.Add(dest);
                 this.takeAction(ActionType, this.GameBoard[pos[0], pos[1]], false);
                 TempLogBuff += ("Initial: " + pos[0] + ", " + pos[1] + "\n");
@@ -371,6 +375,7 @@ namespace GameBoard
 
             return TempLogBuff;
         }
+        #endregion
 
         #region AI Call
         //Call to create the necessary AI components and take action
