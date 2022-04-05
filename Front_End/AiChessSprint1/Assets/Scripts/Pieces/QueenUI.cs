@@ -49,9 +49,10 @@ public class QueenUI : BasePiece
 
     protected override void CheckPathing()
     {
-        //base.CheckPathing();
-        if (!mPieceManager.attacking)
+        
+        if (!mPieceManager.attacking && !mPieceManager.CommandAuthority)
         {
+            base.CheckPathing();
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
 

@@ -34,6 +34,12 @@ public class PieceManager : MonoBehaviour
         get { return commanderMoved; }
         set { commanderMoved = value; }
     }
+    private int cMoveCount = 0;
+    public int CMoveCount
+    {
+        get { return cMoveCount; }
+        set { cMoveCount = value; }
+    }
             
     private int turncount = 1;
 
@@ -45,7 +51,7 @@ public class PieceManager : MonoBehaviour
     private string[] mPieceOrder = new string[16]
     {
         "P", "P", "P", "P", "P", "P", "P", "P",
-        "R", "KN", "B", "K", "Q", "B", "KN", "R"
+        "R", "KN", "B", "Q", "K", "B", "KN", "R"
     };
 
     // for access to the entire board, used for moving to graveyards

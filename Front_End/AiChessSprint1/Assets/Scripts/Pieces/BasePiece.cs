@@ -82,6 +82,24 @@ public class BasePiece : EventTrigger
             if (t >= 1) // Reached destination
                 isMoving = false;
         }
+        if (mPieceManager.CMoveCount == 2)
+            mPieceManager.CommandAuthority = false;
+        if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved)
+        {
+            mPieceManager.IncreaseTurnCnt();
+            mPieceManager.CommandAuthority = true;
+            mPieceManager.CommanderMoved = false;
+            mPieceManager.CMoveCount = 0;
+
+            //switch sides based on color
+            if (mPieceManager.GetTurnCount() == 4)
+            {
+                mPieceManager.ResetTurnCount();
+                mPieceManager.SwitchSides(mColor);
+                mPieceManager.Delegation = false;
+            }
+        }
+
     }
 
     #endregion
@@ -225,10 +243,12 @@ public class BasePiece : EventTrigger
     // creates the cell path to use for the highlighted cells
     protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
-        if (mPieceManager.CommandAuthority ||(mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved))
+        if (mPieceManager.CommandAuthority || (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved))
         {
             if (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommandAuthority)
                 movement = 1;
+            if (mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
+                movement = movement - 1;
             //the current x, and y coordinates of the piece based on its current cell
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
@@ -381,9 +401,14 @@ public class BasePiece : EventTrigger
         if (isPlayable && mColor == Color.white)
         {
             base.OnBeginDrag(eventData);
-            if (mPieceManager.GetTurnCount() == originalcorps)
+            if (mPieceManager.GetTurnCount() == originalcorps && mPieceManager.CMoveCount<2)
             {
+                if((mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CMoveCount<2) || (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority))
                 CheckPathing();
+            }
+            if (!mPieceManager.Delegation && originalcorps == mPieceManager.GetTurnCount())
+            {
+                CreateCellPath(0, 0, 0);
             }
             ShowCells();
 
@@ -480,11 +505,14 @@ public class BasePiece : EventTrigger
             }
             if (mCurrentCell.mCurrentPiece.isCommander)
             {
-                mPieceManager.CommanderMoved = true;
-                Debug.Log("0");
+                mPieceManager.CMoveCount++;
+                if((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) <= 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) <= 1))
+                    mPieceManager.CommanderMoved = true;
+                
                 if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) > 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) > 1))
                 {
                     mPieceManager.CommandAuthority = false;
+                    mPieceManager.CommanderMoved = true;
                 }
 
             }
@@ -499,20 +527,6 @@ public class BasePiece : EventTrigger
             //use the Move function
             mCurrentCell.mOutlineImage.enabled = false;
             Move(false);
-            if (!mPieceManager.CommandAuthority && mPieceManager.Delegation)
-            {
-                mPieceManager.IncreaseTurnCnt();
-                mPieceManager.CommandAuthority = true;
-                mPieceManager.CommanderMoved = false;
-                
-                //switch sides based on color
-                if (mPieceManager.GetTurnCount() == 4)
-                {
-                    mPieceManager.ResetTurnCount();
-                    mPieceManager.SwitchSides(mColor);
-                    mPieceManager.Delegation = false;
-                }
-            }
         }
     }
 

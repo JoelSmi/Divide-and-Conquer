@@ -269,6 +269,7 @@ public class GameManager : MonoBehaviour
     {
         mPieceManager.CommandAuthority = true;
         mPieceManager.CommanderMoved = false;
+        mPieceManager.CMoveCount = 0;
 
         mPieceManager.IncreaseTurnCnt();
         

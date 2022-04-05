@@ -50,11 +50,14 @@ public class KingUI : BasePiece
 
     protected override void CheckPathing()
     {
-        base.CheckPathing();
         int movement = mMovement.x;
-        if (!mPieceManager.CommandAuthority)
+        if (!mPieceManager.CommandAuthority )
             mMovement.x = 1;
-        if (!mPieceManager.attacking && !mPieceManager.CommanderMoved)
+        if (!mPieceManager.CommandAuthority && mPieceManager.CMoveCount > 0)
+            mMovement.x = 0;
+        if (mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
+            mMovement.x = movement - 1;
+        if (mPieceManager.CMoveCount < 2 || mPieceManager.CommandAuthority )//|| (mPieceManager.CommanderMoved && mPieceManager.CommandAuthority))
         {
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
