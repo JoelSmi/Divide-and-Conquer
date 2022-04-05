@@ -67,29 +67,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         string TempLogBuff = "";
-        if (mPieceManager.GetTurnCount() == 4)
-        {
-            for (int i = 0; i < moveCount; i++)
-            {
-                int[] currPos = { 7 - (uiCurrentCellY[i]), uiCurrentCellX[i] };
-                int[] dest = { 7 - uiTargetCellY[i], uiTargetCellX[i] };
-
-
-                TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
-
-                
-            }
-            ExecutionBoard.endTurn();
-
-            EndTurn();
-
-            mPieceManager.actionTaken = false;
-            mPieceManager.SwitchSides(Color.black);
-            mPieceManager.Delegation = false;
-            mPieceManager.ResetTurnCount();
-            mPieceManager.actionTaken = true;
-            ExecutionBoard.endTurn();
-        }
+        
 
         #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
@@ -98,6 +76,26 @@ public class GameManager : MonoBehaviour
             moveCount++;
             mPieceManager.actionTaken = false;
                         
+        }
+        if (mPieceManager.GetTurnCount() == 4)
+        {
+            for (int i = 0; i < moveCount - 1; i++)
+            {
+                int[] currPos = { (7 - uiCurrentCellY[i]), uiCurrentCellX[i] };
+                int[] dest = { (7 - uiTargetCellY[i]), uiTargetCellX[i] };
+
+
+                TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
+            }
+
+
+
+            mPieceManager.actionTaken = false;
+            mPieceManager.SwitchSides(Color.black);
+            mPieceManager.Delegation = false;
+            mPieceManager.ResetTurnCount();
+            ExecutionBoard.endTurn();
+            EndTurn();
         }
         #endregion
 

@@ -91,13 +91,8 @@ public class BasePiece : EventTrigger
             mPieceManager.CommanderMoved = false;
             mPieceManager.CMoveCount = 0;
 
-            //switch sides based on color
-            if (mPieceManager.GetTurnCount() == 4)
-            {
-                mPieceManager.ResetTurnCount();
-                mPieceManager.SwitchSides(mColor);
-                mPieceManager.Delegation = false;
-            }
+            
+            
         }
 
     }
@@ -401,7 +396,7 @@ public class BasePiece : EventTrigger
         if (isPlayable && mColor == Color.white)
         {
             base.OnBeginDrag(eventData);
-            if (mPieceManager.GetTurnCount() == originalcorps && mPieceManager.CMoveCount<2)
+            if (mPieceManager.GetTurnCount() == corps && mPieceManager.CMoveCount<2)
             {
                 if((mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CMoveCount<2) || (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority))
                 CheckPathing();
