@@ -80,7 +80,13 @@ public class BasePiece : EventTrigger
             t += Time.deltaTime / speed;
             transform.position = Vector3.Lerp(start, destination, t);
             if (t >= 1) // Reached destination
+            {
                 isMoving = false;
+            }
+        }
+        if (mPieceManager.GetTurnCount() != 1)
+        {
+            mPieceManager.Delegation= true;
         }
         if (mPieceManager.CMoveCount == 2)
             mPieceManager.CommandAuthority = false;
@@ -96,6 +102,7 @@ public class BasePiece : EventTrigger
         }
 
     }
+    
 
     #endregion
 
