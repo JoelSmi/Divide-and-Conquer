@@ -385,6 +385,7 @@ namespace GameBoard
             KingAI1.Board b = new KingAI1.Board(ConvertGameBoard());
 
             KingAI1.AIKing KingAI = new KingAI1.AIKing(b);
+            KingAI1.AIKing.KingBoardUpdate(b, KingAI);
 
             this.AIActions = KingAI1.AIKing.KingAIFunction(KingAI);
         }

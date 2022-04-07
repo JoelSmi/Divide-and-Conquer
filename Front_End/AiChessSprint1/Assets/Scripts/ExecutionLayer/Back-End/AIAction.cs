@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace KingAI1
 {
 	public class Action {
@@ -108,8 +107,6 @@ namespace KingAI1
                 return act;
             }
         }
-
-
 
 		public void setPieceType(Type piece){
 			this.pieceType = piece;

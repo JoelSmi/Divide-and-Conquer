@@ -127,6 +127,11 @@ namespace KingAI1 {
 									&& b.GetBoard()[square[0], square[1]].GetColor() != color
 									&& !Board.SetContainsSquare(legalAttacks, square)) {
 								legalAttacks.Add(square);
+								List<int[]> attackPath = new List<int[]>(this.GetPath(legalMove[0], legalMove[1]));
+								attackPath.Add(square);
+								if (!paths.Contains(attackPath)) {
+									paths.Add(attackPath);
+								}
 							}
 						}
 					}
@@ -142,13 +147,8 @@ namespace KingAI1 {
 		}
 		/**Recursive helper function for pathing all legal moves (and their paths) for a piece
 		* Precondition: Piece p is not an EmptySquare */
-		private HashSet<int[]> UpdateLegalMoves(Board b, int row, int col, int remainingMov, 
+		private HashSet<int[]> UpdateLegalMoves(Board b, int row, int col, int remainingMov,
 				List<int[]> path, HashSet<int[]> legalMoves, Direction movementDir) {
-			if (remainingMov < movement) {
-				//Add the path to this square to the list of paths
-				path.Add(new int[] { row, col });
-				paths.Add(path);
-			}
 			if (remainingMov <= 0) {
 				//Piece has no movement remaining, so return the compiled set of legal moves
 				return legalMoves;
@@ -171,12 +171,16 @@ namespace KingAI1 {
 					}
 				}
 			}
-			//Filter out spaces that are out of bounds or occupied by an ally piece
+			//Filter out spaces that are out of bounds, occupied by an ally piece, or already explored
 			HashSet<Direction> directionKeys = new HashSet<Direction>(directions.Keys);
 			foreach (Direction dir in directionKeys) {
 				int[] square = directions[dir];
-				if (!b.IsInBounds(square[0], square[1]) || Board.SetContainsSquare(legalMoves, square)
-						|| b.GetBoard()[square[0], square[1]].GetColor() == color) {
+				List<int[]> pathToDir = this.GetPath(square[0], square[1]); //Path to current directional square
+				int pathLength = pathToDir.Count; //Length of path to current directional square (0 if not found)
+				if (!b.IsInBounds(square[0], square[1]) || b.GetBoard()[square[0], square[1]].GetColor() == color
+						|| (Board.SetContainsSquare(legalMoves, square) && pathLength > 0 
+						&& pathLength <= movement - remainingMov + 1)) {
+					//Out of bounds, occupied by ally piece, or already explored along an equal or shorter path
 					directions.Remove(dir);
 				} else if (b.GetBoard()[square[0], square[1]].GetColor() != Color.Empty) {
 					directions.Remove(dir);
@@ -184,14 +188,21 @@ namespace KingAI1 {
 						legalAttacks.Add(square);
 					}
 				} else {
-					//A legal empty square which we have not yet traversed has been found
+					//A legal empty square which we have not yet efficiently traversed has been found
 					legalMoves.Add(square);
+					//Remove the inefficient path already calculated to this square, if one exists
+					paths.Remove(pathToDir);
+					//Add the path to this square to the list of paths
+					List<int[]> newPath = new List<int[]>(path);
+					newPath.Add(new int[] { square[0], square[1] });
+					paths.Add(newPath);
 				}
 			}
 			foreach (Direction dir in directions.Keys) {
 				int[] square = directions[dir];
 				//Update the list of legal moves by traversing to each square in the queue and finding the legal moves given that square
-				legalMoves = new HashSet<int[]>(UpdateLegalMoves(b, square[0], square[1], remainingMov - 1, new List<int[]>(path), legalMoves, dir));
+				legalMoves = new HashSet<int[]>(UpdateLegalMoves(b, square[0], square[1], remainingMov - 1, 
+					this.GetPath(square[0], square[1]), legalMoves, dir));
 			}
 			return legalMoves;
 		}

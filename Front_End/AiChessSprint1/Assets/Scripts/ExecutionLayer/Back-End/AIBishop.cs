@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace KingAI1
@@ -573,11 +573,12 @@ namespace KingAI1
                                     if (offensiveSub && OddsCheck(attackingPiece, sub))
                                     {
                                         foreach (int[] attack in sub.GetLegalAttacks()){
+                                            Console.WriteLine("CHECK");
                                             moveToSquares[0] = attack[0];
                                             moveToSquares[1] = attack[1];
                                             //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
                                             int[] subordinateSquare = GetLocation(attackingPiece, b);
-                                            outgoingAction.setAttack(false);
+                                            outgoingAction.setAttack(true);
                                             outgoingAction.setDestinationCord(moveToSquares);
                                             outgoingAction.setID(attackingPiece.GetID());
                                             outgoingAction.setOriginalCord(subordinateSquare);
