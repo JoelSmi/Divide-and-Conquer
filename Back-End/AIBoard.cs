@@ -150,7 +150,7 @@ namespace KingAI1{
 		public void Print() {
 			/* Uppercase pieces are black, lowercase pieces are white
 			K = King, Q = Queen, R = Rook, N = Knight, B = Bishop, P = Pawn, - = empty space */
-			int col = 0, row = 0;
+			int col = 0, row = 0, counter = 8;
 			Console.WriteLine("   0  1  2  3  4  5  6  7");
 			Console.Write(row);
 			row++;
@@ -158,12 +158,14 @@ namespace KingAI1{
 				Console.Write("|" + piece);
 				col++;
 				if (col == dim) {
-					Console.WriteLine("|");
+					Console.WriteLine("| " + counter);
+					counter--;
 					if (row != 8) Console.Write(row);
 					row++;
 					col = 0;
 				}
 			}
+			Console.WriteLine("   A  B  C  D  E  F  G  H");
 			Console.WriteLine();
 		}
 		//Update legal moves and attacks for all pieces on the board
