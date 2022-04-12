@@ -88,7 +88,7 @@ public class BasePiece : EventTrigger
         {
             mPieceManager.Delegation= true;
         }
-        if (mPieceManager.CMoveCount == 2)
+        if (mPieceManager.CMoveCount >= 2)
             mPieceManager.CommandAuthority = false;
         if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved)
         {
@@ -249,7 +249,7 @@ public class BasePiece : EventTrigger
         {
             if (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommandAuthority)
                 movement = 1;
-            if (mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
+            if (mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
                 movement = movement - 1;
             //the current x, and y coordinates of the piece based on its current cell
             int currentX = mCurrentCell.mBoardPosition.x;
@@ -405,8 +405,11 @@ public class BasePiece : EventTrigger
             base.OnBeginDrag(eventData);
             if (mPieceManager.GetTurnCount() == corps && mPieceManager.CMoveCount<2)
             {
-                if((mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CMoveCount<2) || (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority))
-                CheckPathing();
+                if(mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CMoveCount<2) 
+                    CheckPathing();
+
+                if (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority)
+                    CheckPathing();
             }
             if (!mPieceManager.Delegation && originalcorps == mPieceManager.GetTurnCount())
             {
@@ -508,7 +511,7 @@ public class BasePiece : EventTrigger
             if (mCurrentCell.mCurrentPiece.isCommander)
             {
                 mPieceManager.CMoveCount++;
-                if((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) <= 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) <= 1))
+                if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) < 2) && (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) <= 1))
                     mPieceManager.CommanderMoved = true;
                 
                 if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) > 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) > 1))
