@@ -44,4 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12ce5e7823e229142860f5c47dfaaba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mBoard: {fileID: 0}
+  mBoardUI: {fileID: 0}
+  mPieceManager: {fileID: 0}
+  txt: {fileID: 0}
+  nxtTrnBtn: {fileID: 0}
+  attckButton: {fileID: 0}
+  diceRoll: {fileID: 0}
