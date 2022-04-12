@@ -119,10 +119,20 @@ namespace KingAI1{
 				+ " to " + GetNotation(destinationRow, destinationCol));
 			this.UpdateAllLegalMoves();
 		}
+		
+		/*Generete random number*/
+		public static int rollAttack()
+        	{
+            		Random roll = new Random();
+            		int output = roll.Next(1, 7);
+           		return output;
+        	}
+		
 		/** Attack a piece at the coordinates [defenderRow, defenderCol] with the piece on [attackerRow, attackerCol] with the given roll
 		* This method is for pieces that will not move before attacking, knights should use the AttackAndMove() method if they are moving before attacking
 		* Precondition: The attack being made is a legal attack for the attacker */
 		public void Attack(int attackerRow, int attackerCol, int defenderRow, int defenderCol, int roll) {
+			//int roll = rollAttack();
 			int minRoll = Piece.getMinimumRoll(board[attackerRow, attackerCol], board[defenderRow, defenderCol]);
 			if (roll >= minRoll) {
 				Piece capturedPiece = board[defenderRow, defenderCol];
@@ -150,7 +160,7 @@ namespace KingAI1{
 		public void Print() {
 			/* Uppercase pieces are black, lowercase pieces are white
 			K = King, Q = Queen, R = Rook, N = Knight, B = Bishop, P = Pawn, - = empty space */
-			int col = 0, row = 0;
+			int col = 0, row = 0, counter = 8;
 			Console.WriteLine("   0  1  2  3  4  5  6  7");
 			Console.Write(row);
 			row++;
@@ -158,12 +168,14 @@ namespace KingAI1{
 				Console.Write("|" + piece);
 				col++;
 				if (col == dim) {
-					Console.WriteLine("|");
+					Console.WriteLine("| " + counter);
+					counter--;
 					if (row != 8) Console.Write(row);
 					row++;
 					col = 0;
 				}
 			}
+			Console.WriteLine("   A  B  C  D  E  F  G  H");
 			Console.WriteLine();
 		}
 		//Update legal moves and attacks for all pieces on the board

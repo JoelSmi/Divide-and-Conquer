@@ -195,6 +195,8 @@ public class GameManager : MonoBehaviour
         //Applying Actions to Execution Layer
         for (int idx = 0; idx < ExecutionBoard.AIActions.Length; idx++)
         {
+            if (ExecutionBoard.AIActions[idx].getIsActing() == false)
+                continue;
             ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
             ExecutionBoard.actionInitial = ExecutionBoard.AIActions[idx].getOriginalCords();
             ExecutionBoard.actionDest = ExecutionBoard.AIActions[idx].getDestinationCords();
