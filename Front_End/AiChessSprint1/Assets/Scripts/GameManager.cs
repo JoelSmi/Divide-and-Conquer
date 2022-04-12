@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI txt;
     public Button nxtTrnBtn;
     public Button attckButton;
+    public GameObject diceRoll;
     
     //Execution Layer initialization 
 
@@ -252,6 +253,10 @@ public class GameManager : MonoBehaviour
     // switches between moving and attacking using the button on screen
     public void moveOrAttackBttn()
     {
+        /* REMOVE */
+        rollTheDice(UnityEngine.Random.Range(1, 4));
+        /* ENDREMOVE */
+
         if (mPieceManager.attacking)
         {
             txt.text = "Moving";
@@ -313,6 +318,17 @@ public class GameManager : MonoBehaviour
             }
         }
         return new Color(1.0f, 1.0f, 1.0f, 0.75f);
+    }
+
+    #endregion
+
+    #region Dice roll animation
+
+    // Plays a dice roll animation based on a predetermined parameter
+    public void rollTheDice(int number)
+    {
+        diceRoll.active = true;
+        diceRoll.GetComponent<Animator>().SetTrigger("" + number);
     }
 
     #endregion

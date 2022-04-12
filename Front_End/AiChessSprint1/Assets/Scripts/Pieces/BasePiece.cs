@@ -430,12 +430,25 @@ public class BasePiece : EventTrigger
         {
             base.OnDrag(eventData);
 
-            //matches mouse movement
-            transform.position += (Vector3)eventData.delta;
+            // Find the canvas object
+            Canvas myCanvas = null;
+            GameObject tempObj = GameObject.Find("Parent Canvas");
+            if (tempObj != null) // Canvas was found
+            {
+                myCanvas = tempObj.GetComponent<Canvas>();
+            }
+            // Convert the position of from screen space to world space
+            Vector2 pos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
+            transform.position = myCanvas.transform.TransformPoint(pos);
+
             // the cell the mouse is hovering over inside the list of mHighlightedCells is set to the target cell 
             foreach (Cell cell in mHighlightedCells)
             {
-                if (RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition))
+                Debug.Log(pos);
+                Debug.Log(cell.mRectTransform.position);
+                // Added the main camera as a parameter, since movement is slightly changed
+                if (RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition, myCanvas.worldCamera))
                 {
                     mTargetCell = cell;
                     break;
@@ -456,15 +469,14 @@ public class BasePiece : EventTrigger
 
             // removes the mHighlightedCells 
             ClearCells();
-            // 
 
-
-            //Revert to original base sprite
+            // Revert to original base sprite
             base.GetComponent<Image>().sprite = tempSprite;
 
             //grabs the corps sprite component
             Transform child = mCurrentCell.mCurrentPiece.transform.Find("corps");
             Image image = child.GetComponent<Image>();
+
             //if there isnt a target Cell return the piece to its current position
             if (!mTargetCell)
             {
@@ -522,13 +534,6 @@ public class BasePiece : EventTrigger
 
             }
 
-            /*//Move seems to just do everything that attacking needs to currently
-            if (mTargetCell.mCurrentPiece != null) 
-            {
-                Attack();
-                return;
-            }
-            */
             //use the Move function
             mCurrentCell.mOutlineImage.enabled = false;
             Move(false);

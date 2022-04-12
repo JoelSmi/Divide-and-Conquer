@@ -240,6 +240,7 @@ namespace KingAI1
             Action emptyAction2 = new Action();
             Action[] outgoingAction = {emptyAction0, emptyAction1, emptyAction2};
             int counter1 = 0;
+            Random rnd = new Random();
             //This for loop is so that we can check every single enemy to see if it attacking the commander
             foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
             {
@@ -282,6 +283,10 @@ namespace KingAI1
                         outgoingAction[counter1].setCommandingPiece(currentCommander);
                         List<int[]> path = attackingPiece.GetPath(enemySquare[0], enemySquare[1]);
                         outgoingAction[counter1].setPath(path);
+                        outgoingAction[counter1].setRoll(rnd.Next(0,7));
+                        if (path.Count() > 1){
+                            outgoingAction[counter1].setAttackAndMove(true);
+                        }
                         act = true;
                     }
 
@@ -315,7 +320,11 @@ namespace KingAI1
                                 outgoingAction[counter1].setCommandingPiece(currentCommander);
                                 List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
                                 outgoingAction[counter1].setPath(path);
+                                outgoingAction[counter1].setRoll(rnd.Next(0,7));
                                 act = true;
+                                if (path.Count() > 1){
+                                    outgoingAction[counter1].setAttackAndMove(true);
+                                }
                             }
                             //If the odds weren't in our favor, we could check if the bishop could
                             //move out of the way
@@ -378,7 +387,11 @@ namespace KingAI1
                                 outgoingAction[counter1].setCommandingPiece(currentCommander);
                                 List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
                                 outgoingAction[counter1].setPath(path);
+                                outgoingAction[counter1].setRoll(rnd.Next(0,7));
                                 act = true;
+                                if (path.Count() > 1){
+                                    outgoingAction[counter1].setAttackAndMove(true);
+                                }
                             }
 
                         }
@@ -451,6 +464,7 @@ namespace KingAI1
             Piece[] subordinatesInDanger = new Piece[8], attackingPieces = new Piece[16];
             Piece subordinateWeAreDefending = null, attackingPiece = null;
             int counter = 0, counter1 = 0;
+            Random rnd = new Random();
             //BishopSubordinateScan()
             foreach(Piece p in subordinates)
             {
@@ -561,8 +575,11 @@ namespace KingAI1
                         outgoingAction[counter1].setCommandingPiece(currentCommander);
                         List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
                         outgoingAction[counter1].setPath(path);
+                        outgoingAction[counter1].setRoll(rnd.Next(0,7));
                         act = true;
-
+                        if (path.Count() > 1){
+                            outgoingAction[counter1].setAttackAndMove(true);
+                        }
 
                     }
                 }
@@ -602,6 +619,7 @@ namespace KingAI1
             Piece attackingPiece;
             int counter1 = 0;
             int[] moveToSquares = {-1, -1};
+            Random rnd = new Random();
             //First we will check if any subordinates can attack an enemy.
             foreach (Piece sub in subordinates){
                 if(sub != null && sub.GetType() != typeof(EmptySquare) && sub.HasLegalAttack())
@@ -633,8 +651,11 @@ namespace KingAI1
                                     outgoingAction[counter1].setCommandingPiece(currentCommander);
                                     List<int[]> path = attackingPiece.GetPath(moveToSquares[0], moveToSquares[1]);
                                     outgoingAction[counter1].setPath(path);
+                                    outgoingAction[counter1].setRoll(rnd.Next(0,7));
                                     act = true;
-                                    
+                                    if (path.Count() > 1){
+                                        outgoingAction[counter1].setAttackAndMove(true);
+                                    }
                                 }
                                 //We use a foreach just to easily access the hashset.
                             }
@@ -719,7 +740,7 @@ namespace KingAI1
 		{
             //At first we will always use the left bishop.
             //Declaration of variables we will need
-            bool act = false, BishopTurn = true, commentsOn = true, free = false;
+            bool act = false, BishopTurn = true, commentsOn = false, free = false;
             Action emptyAction = new Action();
             Action emptyAction1 = new Action();
             Action emptyAction2 = new Action();

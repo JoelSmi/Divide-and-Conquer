@@ -69,7 +69,8 @@ namespace KingAI1
         //This will be the King Immediate Threat Detection  
         public static Action KingImmediateThreatDetection(
             AIKing kingAI, Piece[] LiveEnemyPlayers, Piece king, Board b, bool commentsOn){
-
+            
+            Random rnd = new Random();
             Action outgoingAction = new Action();
             Piece[] dangerPlayers = new Piece[16];
 
@@ -108,7 +109,11 @@ namespace KingAI1
                             outgoingAction.setCommandingPiece(king);
                             List<int[]> path = king.GetPath(enemySquare[0], enemySquare[1]);
                             outgoingAction.setPath(path);
+                            outgoingAction.setRoll(rnd.Next(0,7));
                             act = true;
+                            if (path.Count() > 1){
+                                outgoingAction.setAttackAndMove(true);
+                            }
                         }      
                     }
                 }
@@ -143,7 +148,9 @@ namespace KingAI1
                                 List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
                                 outgoingAction.setPath(path);
                                 act = true;
-                            
+                                if (path.Count() > 1){
+                                    outgoingAction.setAttackAndMove(true);
+                                }
                             }
 
                         }
@@ -191,6 +198,7 @@ namespace KingAI1
             Piece[] subordinatesInDanger = new Piece[16];
             Piece[] attackingPieces = new Piece[16];
             Piece attackingPiece = null;
+            Random rnd = new Random();
                 
             bool danger = false, dangerPiece = false, canAttack = false, dangerFound = false, act = false;
             int counter = 0, attackCounter = 0;
@@ -297,7 +305,11 @@ namespace KingAI1
                     outgoingAction.setCommandingPiece(king);
                     List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
                     outgoingAction.setPath(path);
+                    outgoingAction.setRoll(rnd.Next(0,7));
                     act = true;
+                    if (path.Count() > 1){
+                        outgoingAction.setAttackAndMove(true);
+                    }
                 }
 
                 /*If we couldn't find anyone to attack, then we need to move the subordinate. To do this safely,
@@ -337,6 +349,7 @@ namespace KingAI1
             int[] moveToSquares = {-1, -1};
 
             Action outgoingAction = new Action();
+            Random rnd = new Random();
 
             // First we check if any subordinates can attack an enemy
             foreach (Piece sub in subordinates){
@@ -359,7 +372,7 @@ namespace KingAI1
                                     moveToSquares[1] = attack[1];
                                     //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
                                     int[] subordinateSquare = AIBishop.GetLocation(attackingPiece, b);
-                                    outgoingAction.setAttack(false);
+                                    outgoingAction.setAttack(true);
                                     outgoingAction.setDestinationCord(moveToSquares);
                                     outgoingAction.setID(attackingPiece.GetID());
                                     outgoingAction.setOriginalCord(subordinateSquare);
@@ -367,8 +380,12 @@ namespace KingAI1
                                     outgoingAction.setIsAct(true);
                                     outgoingAction.setCommandingPiece(king);
                                     List<int[]> path = attackingPiece.GetPath(moveToSquares[0], moveToSquares[1]);
-                                outgoingAction.setPath(path);
+                                    outgoingAction.setPath(path);
+                                    outgoingAction.setRoll(rnd.Next(0,7));
                                     act = true;
+                                    if (path.Count() > 1){
+                                        outgoingAction.setAttackAndMove(true);
+                                    }
                                 }
                                 //We use a foreach just to easily access the hashset.
                             }
@@ -742,13 +759,13 @@ namespace KingAI1
         public static bool KingOversightFunction(AIKing kingAI){
             int totalSubordinates = 0;
             if (kingAI.GetCommander0() && kingAI.GetCommander1())
-                totalSubordinates = kingAI.GetBishop0Subordinates().Count() + kingAI.GetBishop1Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+                totalSubordinates = kingAI.GetBishop0Subordinates().Length + kingAI.GetBishop1Subordinates().Length + kingAI.GetKingSubordinates().Length;
             else if (kingAI.GetCommander0())
-                totalSubordinates = kingAI.GetBishop0Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+                totalSubordinates = kingAI.GetBishop0Subordinates().Length + kingAI.GetKingSubordinates().Length;
             else if (kingAI.GetCommander1())
-                totalSubordinates = kingAI.GetBishop1Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+                totalSubordinates = kingAI.GetBishop1Subordinates().Length + kingAI.GetKingSubordinates().Length;
             else
-                totalSubordinates = kingAI.GetKingSubordinates().Count();
+                totalSubordinates = kingAI.GetKingSubordinates().Length;
             
             if (totalSubordinates >= 8)
                 return true;
@@ -868,13 +885,35 @@ namespace KingAI1
             foreach(Action act in kingAI.GetListOfActions())
             {
                 if(act.getIsActing() && !act.getCompleted()){
-                    b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
+                    //This is if we dont attack and just move
+                    if(!act.getIsAttack()){
+                        b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                    //act.printAction();
-                    act.printAction();
-                    Console.WriteLine("New Board:");
-                    b.Print(); 
-                    act.setCompleted(true);
+                        //act.printAction();
+                        act.printAction();
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else if (act.getAttackAndMove()){
+                        List<int[]> path = act.getPath();
+                        int len = path.Count() - 2;
+                        Console.WriteLine("~!~~~~~~~~~~~~~~~~~~");
+                        int[] dest = path[len];
+                        b.AttackAndMove(act.getOriginalXCord(), act.getOriginalYCord(), dest[0], dest[1], act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else{//attack is true but doesn't move
+                        b.Attack(act.getOriginalXCord(), act.getOriginalYCord(), act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        act.printAction();
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+
+                    
                 }
             }
 
@@ -897,11 +936,31 @@ namespace KingAI1
             foreach(Action act in kingAI.GetListOfActions())
             {
                 if(act.getIsActing() && !act.getCompleted()){
-                    b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
+                    if (!act.getIsAttack()){
+                        b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                    Console.WriteLine("New Board:");
-                    b.Print(); 
-                    act.setCompleted(true);
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else if (act.getAttackAndMove()){
+                        List<int[]> path = act.getPath();
+                        int len = path.Count() - 2;
+                        Console.WriteLine("~!~~~~~~~~~~~~~~~~~~");
+                        int[] dest = path[len];
+                        b.AttackAndMove(act.getOriginalXCord(), act.getOriginalYCord(), dest[0], dest[1], act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else{
+                        b.Attack(act.getOriginalXCord(), act.getOriginalYCord(), 
+                        act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    
                 }
             }
                 
@@ -923,11 +982,31 @@ namespace KingAI1
             foreach(Action act in kingAI.GetListOfActions())
             {
                 if(act.getIsActing() && !act.getCompleted()){
-                    b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
+                    if (!act.getIsAttack()){
+                        b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                    Console.WriteLine("New Board:");
-                    b.Print(); 
-                    act.setCompleted(true);
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else if (act.getAttackAndMove()){
+                        List<int[]> path = act.getPath();
+                        int len = path.Count() - 2;
+                        Console.WriteLine("~!~~~~~~~~~~~~~~~~~~");
+                        int[] dest = path[len];
+                        b.AttackAndMove(act.getOriginalXCord(), act.getOriginalYCord(), dest[0], dest[1], act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    else{
+                        b.Attack(act.getOriginalXCord(), act.getOriginalYCord(), 
+                        act.getDestinationXCord(), act.getDestinationYCord(), act.getRoll());
+                        Console.WriteLine("New Board:");
+                        b.Print(); 
+                        act.setCompleted(true);
+                    }
+                    
                 }
             }
 
@@ -1001,7 +1080,7 @@ namespace KingAI1
             bool commentsOn = false;
 
             AIKing kingAI = new AIKing(board);
-            Action[] arrayofActions = new Action[3];
+            Action[] arrayofActions = new Action[6];
             arrayofActions = KingAIFunction(kingAI);
 
             Console.WriteLine("Final Array of Actions");
@@ -1027,8 +1106,6 @@ namespace KingAI1
                     act.printAction();
             }
 
-            Console.WriteLine("This is the tertiary phase, now we manually input the next board as if the EL is sending us a board");
-
             Board board2 = new Board(boardArray3c);
             board2.Print();
             KingBoardUpdate(board2, kingAI, commentsOn);
@@ -1037,7 +1114,7 @@ namespace KingAI1
             newBoard1.Print();
             arrayofActions = KingAIFunction(kingAI);
 
-            Console.WriteLine("Final Array of Actions");
+            Console.WriteLine("Final Array of " + kingAI.GetListOfActions().Length + " Actions");
             foreach (Action act in kingAI.GetListOfActions()){
                 if (act.getIsActing())
                     act.printAction();
