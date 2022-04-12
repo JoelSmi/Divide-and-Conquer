@@ -25,7 +25,7 @@ public class RookUI : BasePiece
         movecount++;
         CellState cellState = CellState.Free;
         cellState = mCurrentCell.mBoardUI.ValidateCell(targetX, targetY, this);
-        if (cellState == targetState || targetState == CellState.Free && movecount <= mMovement.x)
+        if ((cellState == targetState || cellState!= CellState.OutOfBounds) && movecount <= mMovement.x+1)
         {
             if(cellState == targetState)
                 mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[targetX, targetY]);
@@ -56,16 +56,16 @@ public class RookUI : BasePiece
             int currentX = mCurrentCell.mBoardPosition.x;
             int currentY = mCurrentCell.mBoardPosition.y;
 
-            MatchesState(currentX, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX, currentY - 1, CellState.Free, 0);
+            MatchesState(currentX, currentY + 1, CellState.Enemy, 0);
+            MatchesState(currentX, currentY - 1, CellState.Enemy, 0);
 
-            MatchesState(currentX + 1, currentY, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY, CellState.Free, 0);
+            MatchesState(currentX + 1, currentY, CellState.Enemy, 0);
+            MatchesState(currentX - 1, currentY, CellState.Enemy, 0);
 
-            MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
+            MatchesState(currentX + 1, currentY + 1, CellState.Enemy, 0);
+            MatchesState(currentX + 1, currentY - 1, CellState.Enemy, 0);
+            MatchesState(currentX - 1, currentY + 1, CellState.Enemy, 0);
+            MatchesState(currentX - 1, currentY - 1, CellState.Enemy, 0);
         }
     }
 }

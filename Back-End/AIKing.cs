@@ -19,7 +19,7 @@ namespace KingAI1
         bool commander0 = true;
         bool commander1 = true;
 
-        private Action[] listOfActions = new Action[3];
+        private Action[] listOfActions = new Action[6];
 
         //Constructors for the King
         // Creates the board, creates the list of subordinates and list of enemy pieces for AI to refer to.
@@ -128,21 +128,22 @@ namespace KingAI1
                                 if (commentsOn){
                                     Console.WriteLine(attackingSubordinate.GetType().ToString() + attackingSubordinate.GetID() + 
                                     " has been found to defend the King.\nAction is being taken");
-                                    int[] subordinateSquare = AIBishop.GetLocation(attackingSubordinate, b);
-                                    int[] enemySquare = AIBishop.GetLocation(dangerPiece, b);
-                                    //If the king can attack the piece, now we want to make sure that that move won't put us
-                                    //in further danger, future feature*********** For now we will just attack
-                                    outgoingAction.setAttack(true);
-                                    outgoingAction.setDestinationCord(enemySquare);
-                                    outgoingAction.setID(attackingSubordinate.GetID());
-                                    outgoingAction.setOriginalCord(subordinateSquare);
-                                    outgoingAction.setPieceType(attackingSubordinate.GetType());
-                                    outgoingAction.setIsAct(true);
-                                    outgoingAction.setCommandingPiece(attackingSubordinate);
-                                    List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
-                                    outgoingAction.setPath(path);
-                                    act = true;
                                 }
+                                int[] subordinateSquare = AIBishop.GetLocation(attackingSubordinate, b);
+                                int[] enemySquare = AIBishop.GetLocation(dangerPiece, b);
+                                //If the king can attack the piece, now we want to make sure that that move won't put us
+                                //in further danger, future feature*********** For now we will just attack
+                                outgoingAction.setAttack(true);
+                                outgoingAction.setDestinationCord(enemySquare);
+                                outgoingAction.setID(attackingSubordinate.GetID());
+                                outgoingAction.setOriginalCord(subordinateSquare);
+                                outgoingAction.setPieceType(attackingSubordinate.GetType());
+                                outgoingAction.setIsAct(true);
+                                outgoingAction.setCommandingPiece(attackingSubordinate);
+                                List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
+                                outgoingAction.setPath(path);
+                                act = true;
+                            
                             }
 
                         }
@@ -569,7 +570,7 @@ namespace KingAI1
         }
 
 
-        public static void KingBoardUpdate(Board newBoard, AIKing kingAI){
+        public static void KingBoardUpdate(Board newBoard, AIKing kingAI, bool commentsOn){
             bool com0 = false, com1 = false, sub0 = false, sub1 = false, b0 = false, b1 = false, k = false;
             int counter = 0, counter1 = 0, counter2 = 0, enemyCounter = 0;
             Piece[] oldSub0 = kingAI.GetBishop0Subordinates();
@@ -583,26 +584,27 @@ namespace KingAI1
             Piece[] futureEnemy = new Piece[16];
             Board oldBoard = kingAI.GetKingBoard();
 
-            Console.WriteLine("Old Bishop 0 Subordinates");
-            foreach (Piece p in oldSub0)
-                Console.Write(p + " ");
-            Console.Write("\n");
+            if (commentsOn){
+                Console.WriteLine("Old Bishop 0 Subordinates");
+                foreach (Piece p in oldSub0)
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("Old Bishop 1 Subordinates");
-            foreach (Piece p in oldSub1)
-                Console.Write(p + " ");
-            Console.Write("\n");
+                Console.WriteLine("Old Bishop 1 Subordinates");
+                foreach (Piece p in oldSub1)
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("Old King");
-            foreach (Piece p in oldKing)
-                Console.Write(p + " ");
-            Console.Write("\n");
+                Console.WriteLine("Old King");
+                foreach (Piece p in oldKing)
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("Old Live Enemy Players");
-            foreach (Piece p in oldEnemy)
-                Console.Write(p + " ");
-            Console.Write("\n");
-
+                Console.WriteLine("Old Live Enemy Players");
+                foreach (Piece p in oldEnemy)
+                    Console.Write(p + " ");
+                Console.Write("\n");
+            }
             
             //Here we check if the commander is on the board, and if not, we turn the setting to false
             foreach (Piece p in newBoard.GetBoard()){
@@ -710,28 +712,53 @@ namespace KingAI1
             //     Console.Write(p + " ");
             // Console.Write("\n");
 
-            Console.WriteLine("New Bishop 0 Subordinates");
-            foreach (Piece p in kingAI.GetBishop0Subordinates())
-                Console.Write(p + " ");
-            Console.Write("\n");
+            if (commentsOn){
+                Console.WriteLine("New Bishop 0 Subordinates");
+                foreach (Piece p in kingAI.GetBishop0Subordinates())
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("New Bishop 1 Subordinates");
-            foreach (Piece p in kingAI.GetBishop1Subordinates())
-                Console.Write(p + " ");
-            Console.Write("\n");
+                Console.WriteLine("New Bishop 1 Subordinates");
+                foreach (Piece p in kingAI.GetBishop1Subordinates())
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("New King");
-            foreach (Piece p in kingAI.GetKingSubordinates())
-                Console.Write(p + " ");
-            Console.Write("\n");
+                Console.WriteLine("New King");
+                foreach (Piece p in kingAI.GetKingSubordinates())
+                    Console.Write(p + " ");
+                Console.Write("\n");
 
-            Console.WriteLine("New Live Enemy Players");
-            foreach (Piece p in kingAI.GetKingSubordinates())
-                Console.Write(p + " ");
-            Console.Write("\n");
+                Console.WriteLine("New Live Enemy Players");
+                foreach (Piece p in kingAI.GetKingSubordinates())
+                    Console.Write(p + " ");
+                Console.Write("\n");
+            }
 
             kingAI.SetKingBoard(newBoard);
 
+        }
+
+        //Here we add the king oversight function, we need to assign kingOversightDefense, if the king has lost a commander, we should be on the defensive. or if we have all three commanders but only 5 subordinates
+        public static bool KingOversightFunction(AIKing kingAI){
+            int totalSubordinates = 0;
+            if (kingAI.GetCommander0() && kingAI.GetCommander1())
+                totalSubordinates = kingAI.GetBishop0Subordinates().Count() + kingAI.GetBishop1Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+            else if (kingAI.GetCommander0())
+                totalSubordinates = kingAI.GetBishop0Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+            else if (kingAI.GetCommander1())
+                totalSubordinates = kingAI.GetBishop1Subordinates().Count() + kingAI.GetKingSubordinates().Count();
+            else
+                totalSubordinates = kingAI.GetKingSubordinates().Count();
+            
+            if (totalSubordinates >= 8)
+                return true;
+
+            if (!kingAI.GetCommander0())
+                return false;
+            if (!kingAI.GetCommander1())
+                return false;
+
+            return true;
         }
 
         public static Action[] KingAIFunction(AIKing kingAI){
@@ -740,26 +767,38 @@ namespace KingAI1
                 To-do List:
                 Fix Subordinate Issue:
                 ~~Made it so Bishops aren't kings subordinates (Done)
-                - For now the king won't care if they are in danger, might need to add that
+                ~~For now the king won't care if they are in danger, might need to add that
                 Implement Delegation:
                 ~~Make it so list of subordinates stay with the king and isn't recalculated each time (Done)
                 ~~Make a check within the KingAIFunction (new method) where if the bishops dont have the needed subordinates, we delegate it to em (Done)
                 ~~And implement the above ^ (Done)
-                Implement Move-To-Attack:
-                - We want to move to the piece next to it (if a knight) (Maybe have a move action?) 
-                - We don't want to just move the piece to capture, we want to initialize the capture and still have the correct destination coordinates. 
                 Implement Board updating
                 ~~As of now, the EL creates a new KingAI object every time it needs a decision (Done)
                 ~~We next need to implement a way to update the game board and consequently update Live enemy players, Live subordinates/commanders, and go from there (Done)
                 Implement Attack Paths for the knight:
                 ~~We need paths for the action class to print out when the knight attacks. (Done)
+                Implement Free Action:
+                ~~Need to make Bishop return an array of actions, not just one action (Done)
+                ~~Need to make it so bishops only use a free action once (Done)
+                ~~Need to make it so Kings can use an array of actions from the bishops, not just one action (Done)
                 Implement Kings Oversight:
-                - Need to give bishops a perrogative, either be on defense mode or offense mode. If offense mode, then we skip the thread detection.
-                - For this, we may need to make the bishopAI into functions like the king, and change the order accordingly. Maybe have an offensive function and a defensive function where we change the order?
+                ~~Need to give bishops a perrogative, either be on defense mode or offense mode. If offense mode, then we do offense play before threat detection.(Done)
+                ~~For this, we may need to make the bishopAI into functions like the king, and change the order accordingly. (Done)
+                ~~Maybe have an offensive function and a defensive function where we change the order? (Done)
+                ~~Have a check before the bishops move, we check how many pieces we have on the board and if we have lost a subordinate (Done)
+                ~~If there are less than 8 subordinates total or if we have lost a commander, we will go on defense mode. (Done)
+                ~~In defense mode: Bishop Immediate Threat Detection, then Bishop Subordinate Threat Detection, then Bishop Offensive Play (Done)
+                ~~In offense mode: Bishop Immediate Threat Detection, then Bishop Offensive Play, then Bishop Subordinate Threat Detection (Done)
+
+                Implement Move-To-Attack:
+                - We want to move to the piece next to it (if a knight) (Maybe have a move action?) 
+                - We don't want to just move the piece to capture, we want to initialize the capture and still have the correct destination coordinates. 
                 Implement Die Roll:
                 - If there is an attack, we want to request the die roll (prior to this we will generate a random number)
                 - And if successful, then capture the piece
-
+                
+                
+                
 
             */
             //Declaration of 'global' variables used here.
@@ -778,21 +817,22 @@ namespace KingAI1
             Piece[] kingSubordinates = kingAI.GetKingSubordinates();
             Piece[] LiveEnemyPlayers = kingAI.GetLiveEnemyPlayers();
 
-            Action bishop0Action = new Action();
-            Action bishop1Action = new Action();
+            Action[] bishop0Actions = new Action[3];
+            Action[] bishop1Actions = new Action[3];
             Action kingAction = new Action();
 
             // b.Print();
 
             int actionCounter = 0;
-            bool commentsOn = true, kingAct = false;
+            bool commentsOn = false, kingAct = false, kingOversightDefense = false;
         
+            //Here we add the king oversight function, we need to assign kingOversightDefense
+            kingOversightDefense = KingOversightFunction(kingAI);
+
+
             //Here we clear the list of actions we will fill by the end of the AI run.
             kingAI.ClearListOfActions();
-
-            // Then we need to call BishopAI for the two bishops if they exist. For now they will only return one action
-            //Eventually we want them to be able to make two moves if they need to.
-            
+        
 
             Action outgoingAction = new Action();
 
@@ -822,6 +862,8 @@ namespace KingAI1
                 }   
             }
 
+            Console.WriteLine("King Actions.");
+
             //We then implement the king's actions
             foreach(Action act in kingAI.GetListOfActions())
             {
@@ -829,20 +871,26 @@ namespace KingAI1
                     b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
                     //act.printAction();
-                    String check = "";
-                    check = act.stringAction();
-                    Console.WriteLine(check);
+                    act.printAction();
                     Console.WriteLine("New Board:");
                     b.Print(); 
                     act.setCompleted(true);
                 }
             }
 
+            Console.WriteLine("~~~~~~~~~~~~~~~~~");
+
             //If the kingAI has an active commander 0, we get the needed action from it.
             if (kingAI.GetCommander0()){
-                bishop0Action = AIBishop.BishopAI(b, bCommander0, c0Subordinates, LiveEnemyPlayers);
-                if(bishop0Action.getIsActing())
-                    kingAI.AddAnAction(bishop0Action);
+                bishop0Actions = AIBishop.BishopAI(b, bCommander0, c0Subordinates, LiveEnemyPlayers, kingOversightDefense);
+                Console.WriteLine("Bishop 0 Actions.");
+                foreach(Action act in bishop0Actions){
+                    if(act.getIsActing()){
+                        kingAI.AddAnAction(act);
+                        act.printAction();
+                    }
+                }
+                Console.WriteLine("~~~~~~~~~~~~~~~~~");
             }
 
             //We go ahead and take first bishops action, and implement them on our board if they are legal actions.
@@ -851,7 +899,6 @@ namespace KingAI1
                 if(act.getIsActing() && !act.getCompleted()){
                     b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                    act.printAction();
                     Console.WriteLine("New Board:");
                     b.Print(); 
                     act.setCompleted(true);
@@ -860,9 +907,16 @@ namespace KingAI1
                 
             //If the kingAI has an active commander 1, we get the needed action from it.
             if (kingAI.GetCommander1()){
-                bishop1Action = AIBishop.BishopAI(b, bCommander1, c1Subordinates, LiveEnemyPlayers);
-                if(bishop1Action.getIsActing())
-                    kingAI.AddAnAction(bishop1Action);
+                bishop1Actions = AIBishop.BishopAI(b, bCommander1, c1Subordinates, LiveEnemyPlayers, kingOversightDefense);
+                Console.WriteLine("Bishop 1 Actions.");
+                foreach(Action act in bishop1Actions){
+                    if(act.getIsActing())
+                    {
+                        kingAI.AddAnAction(act);
+                        act.printAction();
+                    }
+                }
+                Console.WriteLine("~~~~~~~~~~~~~~~~~");
             }
 
             //Then we take last bishop actions, and implement them on our board if they are legal actions.
@@ -871,7 +925,6 @@ namespace KingAI1
                 if(act.getIsActing() && !act.getCompleted()){
                     b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                    act.printAction();
                     Console.WriteLine("New Board:");
                     b.Print(); 
                     act.setCompleted(true);
@@ -928,26 +981,67 @@ namespace KingAI1
                 {"r0","n0","b0","q0","k0","b1","n1","r1"}
             };
 
+            String[,] boardArray3c = new String [8,8] {
+                {"R0","N0","B0","Q0","K0","e","e","R1"},
+                {"e","P1","P2","e","e","P5","P6","e"},
+                {"P0","e","P3","P4","e","e","P7","e"},
+                {"e","e","p5","e","e","N1","e","e"},
+                {"e","e","e","e","e","e","e","e"},
+                {"e","e","B1","e","e","e","e","e"},
+                {"p0","p1","p2","p3","p4","e","p6","p7"},
+                {"r0","n0","b0","q0","k0","b1","n1","r1"}
+            };
+
 
 
             Board board = new Board(boardArray2b);
 
             board.Print();
 
+            bool commentsOn = false;
+
             AIKing kingAI = new AIKing(board);
             Action[] arrayofActions = new Action[3];
             arrayofActions = KingAIFunction(kingAI);
+
+            Console.WriteLine("Final Array of Actions");
+            foreach (Action act in kingAI.GetListOfActions()){
+                if (act.getIsActing())
+                    act.printAction();
+            }
 
             Console.WriteLine("This is the initial phase, now we manually input the next board as if the EL is sending us a board");
 
             Board board1 = new Board(boardArray2c);
             board1.Print();
-            KingBoardUpdate(board1, kingAI);
+            KingBoardUpdate(board1, kingAI, commentsOn);
 
 
             Board newBoard = kingAI.GetKingBoard();
             newBoard.Print();
             arrayofActions = KingAIFunction(kingAI);
+
+            Console.WriteLine("Final Array of Actions");
+            foreach (Action act in kingAI.GetListOfActions()){
+                if (act.getIsActing())
+                    act.printAction();
+            }
+
+            Console.WriteLine("This is the tertiary phase, now we manually input the next board as if the EL is sending us a board");
+
+            Board board2 = new Board(boardArray3c);
+            board2.Print();
+            KingBoardUpdate(board2, kingAI, commentsOn);
+
+            Board newBoard1 = kingAI.GetKingBoard();
+            newBoard1.Print();
+            arrayofActions = KingAIFunction(kingAI);
+
+            Console.WriteLine("Final Array of Actions");
+            foreach (Action act in kingAI.GetListOfActions()){
+                if (act.getIsActing())
+                    act.printAction();
+            }
             
 
             // //Declaration of 'global' variables used here.

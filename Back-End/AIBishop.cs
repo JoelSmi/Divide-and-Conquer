@@ -233,446 +233,649 @@ namespace KingAI1
 
         }
 		//static void Main(string[] args)
-        public static Action BishopAI(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers)
-		{
-            //At first we will always use the left bishop.
-            //Declaration of variables we will need
-            bool act = false, BishopTurn = true, commentsOn = true;
-            Action outgoingAction = new Action();
 
-            //TestingFunctions1(b, currentCommander, subordinates, LiveEnemyPlayers);
-
-			while(BishopTurn)
-			{
-                //This will be the bishop immediate threat detection:
-                if (!act)
+        public static Action[] BishopImmediateThreatDetection(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers, bool commentsOn, bool act, bool free){
+            Action emptyAction0 = new Action();
+            Action emptyAction1 = new Action();
+            Action emptyAction2 = new Action();
+            Action[] outgoingAction = {emptyAction0, emptyAction1, emptyAction2};
+            int counter1 = 0;
+            //This for loop is so that we can check every single enemy to see if it attacking the commander
+            foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
+            {
+                //This is the if statement that is actually checking if it is in danger or not
+                if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare) && 
+                    IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
+                //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
+                //returning true or false
                 {
-                    //This for loop is so that we can check every single enemy to see if it attacking the commander
-                    foreach (Piece currentEnemyPlayer in LiveEnemyPlayers)
-                    {
-                        //This is the if statement that is actually checking if it is in danger or not
-                        if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare) && 
-                            IndividualAttackCheck(currentCommander, currentEnemyPlayer, b))
-                        //reminder: IndividualAttackCheck checks if a single enemy can attack a single ally piece,
-                        //returning true or false
-                        {
-                            if (commentsOn){
-                                Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + " has been found to be in danger");
-                            }
-                            //If it is true, we need to see which subordinate(s) can attack the dangerous enemy piece.
-                            Piece attackingPiece = SubordinateAttackCheck(currentEnemyPlayer, subordinates, b);
-                            /*If one is found, SubordinateAttackCheck should have already considered
-                            possibilities and accounted for them. SubordinateAttackCheck will find any subordinates who
-                            can attack the threat and if there are any, it will return the designation for that piece.
+                    if (commentsOn){
+                        Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + " has been found to be in danger");
+                    }
+                    //If it is true, we need to see which subordinate(s) can attack the dangerous enemy piece.
+                    Piece attackingPiece = SubordinateAttackCheck(currentEnemyPlayer, subordinates, b);
+                    /*If one is found, SubordinateAttackCheck should have already considered
+                    possibilities and accounted for them. SubordinateAttackCheck will find any subordinates who
+                    can attack the threat and if there are any, it will return the designation for that piece.
 
-                            In the case we did find a good subordinate to attack with, we can go ahead and call that the
-                            attacking piece. We can play around with this option vs. using the bishop offensively first
-                            in Sprint3*/
-                            if (attackingPiece.GetType().Name != "EmptySquare")
+                    In the case we did find a good subordinate to attack with, we can go ahead and call that the
+                    attacking piece. We can play around with this option vs. using the bishop offensively first
+                    in Sprint3*/
+                    if (attackingPiece.GetType().Name != "EmptySquare")
+                    {
+                        if (commentsOn){
+                        Console.WriteLine(attackingPiece.GetType().ToString() + attackingPiece.GetID() + 
+                        " has been found to defend the commander.\nAction is being taken");
+                        }
+                        //***************************************************** Double check with Madison about future use of attack
+                        //function, the rolling won't happen in this layer so we can only tell the execution layer that we want to attack
+                        //not that if it was successful or not.
+                        int[] subordinateSquare = GetLocation(attackingPiece, b);
+                        int[] enemySquare = GetLocation(currentEnemyPlayer, b);
+                        //Attack method
+                        outgoingAction[counter1].setAttack(true);
+                        outgoingAction[counter1].setDestinationCord(enemySquare);
+                        outgoingAction[counter1].setID(attackingPiece.GetID());
+                        outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                        outgoingAction[counter1].setPieceType(attackingPiece.GetType());
+                        outgoingAction[counter1].setIsAct(true);
+                        outgoingAction[counter1].setCommandingPiece(currentCommander);
+                        List<int[]> path = attackingPiece.GetPath(enemySquare[0], enemySquare[1]);
+                        outgoingAction[counter1].setPath(path);
+                        act = true;
+                    }
+
+                    //If no attacking piece is found, the bishop will have to be considered.
+                    if (attackingPiece.GetType() == typeof(EmptySquare) && currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare))
+                    {
+                        int[] safeSquare = {-1,-1};
+                        bool individualAttackCheckBool = IndividualAttackCheck(currentEnemyPlayer, currentCommander,b);
+                        //We need to check if the bishop itself can attack the threat
+                        if (individualAttackCheckBool)
+                        {
+                            //If it can attack, we need to make sure the odds are in our favor
+                            bool oddsCheckBool = OddsCheck(currentEnemyPlayer, currentCommander);
+                            if (oddsCheckBool)
                             {
                                 if (commentsOn){
-                                Console.WriteLine(attackingPiece.GetType().ToString() + attackingPiece.GetID() + 
-                                " has been found to defend the commander.\nAction is being taken");
+                                    Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
+                                    " will defend itself.\nAction is being taken");
                                 }
-                                //***************************************************** Double check with Madison about future use of attack
-                                //function, the rolling won't happen in this layer so we can only tell the execution layer that we want to attack
-                                //not that if it was successful or not.
-                                int[] subordinateSquare = GetLocation(attackingPiece, b);
+                                //attack the currentEnemyPlayer
+                                int[] subordinateSquare = GetLocation(currentCommander, b);
                                 int[] enemySquare = GetLocation(currentEnemyPlayer, b);
                                 //Attack method
                                 //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
-                                outgoingAction.setAttack(true);
-                                outgoingAction.setDestinationCord(enemySquare);
-                                outgoingAction.setID(attackingPiece.GetID());
-                                outgoingAction.setOriginalCord(subordinateSquare);
-                                outgoingAction.setPieceType(attackingPiece.GetType());
-                                outgoingAction.setIsAct(true);
-                                outgoingAction.setCommandingPiece(currentCommander);
-                                List<int[]> path = attackingPiece.GetPath(enemySquare[0], enemySquare[1]);
-                                outgoingAction.setPath(path);
+                                outgoingAction[counter1].setAttack(true);
+                                outgoingAction[counter1].setDestinationCord(enemySquare);
+                                outgoingAction[counter1].setID(currentCommander.GetID());
+                                outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                outgoingAction[counter1].setIsAct(true);
+                                outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
+                                outgoingAction[counter1].setPath(path);
+                                act = true;
+                            }
+                            //If the odds weren't in our favor, we could check if the bishop could
+                            //move out of the way
+                            
+                            safeSquare = safeSpot(currentCommander, currentEnemyPlayer, LiveEnemyPlayers);
+                            if (safeSquare[0] != -1 && safeSquare[1] != -1 && !free) //If safeSquare != -1, then safespot found something
+                            {
+                                if (commentsOn){
+                                    Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
+                                    " will move.\nAction is being taken.");
+                                }
+                                //*********************
+                                //Here we need to code the movement to the safeSquare as the desired move.
+                                List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
+                                int[] subordinateSquare = GetLocation(currentCommander, b);
+                                //This will be a case where if the bishop can move without using its command authority, it wont.
+                                if (path.Count == 1 && !free){
+                                    outgoingAction[counter1].setAttack(false);
+                                    outgoingAction[counter1].setDestinationCord(safeSquare);
+                                    outgoingAction[counter1].setID(currentCommander.GetID());
+                                    outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                    outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                    outgoingAction[counter1].setIsAct(true);
+                                    outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                    outgoingAction[counter1].setPath(path);
+                                    outgoingAction[counter1].setFreeAction(true);
+                                    counter1++;
+                                    free = true;
+                                    if (commentsOn)
+                                        Console.WriteLine("Free Action0 was implemented");
+                                }
+                                else if(!free){
+                                    outgoingAction[counter1].setAttack(false);
+                                    outgoingAction[counter1].setDestinationCord(safeSquare);
+                                    outgoingAction[counter1].setID(currentCommander.GetID());
+                                    outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                    outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                    outgoingAction[counter1].setIsAct(true);
+                                    outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                    outgoingAction[counter1].setPath(path);
+                                    act = true;
+                                }
+                                
+                            }
+                            else //The bishop will attack if the enemy piece is in range and there is no other option
+                            {
+                                //*********************
+                                //Code in attack from bishop to threat
+                                //********Again, get with madison about coding attacking
+                                int[] subordinateSquare = GetLocation(currentCommander, b);
+                                int[] enemySquare = GetLocation(currentEnemyPlayer, b);
+                                //Attack method
+                                //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
+                                outgoingAction[counter1].setAttack(true);
+                                outgoingAction[counter1].setDestinationCord(enemySquare);
+                                outgoingAction[counter1].setID(currentCommander.GetID());
+                                outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                outgoingAction[counter1].setIsAct(true);
+                                outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
+                                outgoingAction[counter1].setPath(path);
                                 act = true;
                             }
 
-                            //If no attacking piece is found, the bishop will have to be considered.
-                            if (attackingPiece.GetType() == typeof(EmptySquare) && currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare))
-                            {
-                                int[] safeSquare = {-1,-1};
-                                bool individualAttackCheckBool = IndividualAttackCheck(currentEnemyPlayer, currentCommander,b);
-                                //We need to check if the bishop itself can attack the threat
-                                if (individualAttackCheckBool)
-                                {
-                                    //If it can attack, we need to make sure the odds are in our favor
-                                    bool oddsCheckBool = OddsCheck(currentEnemyPlayer, currentCommander);
-                                    if (oddsCheckBool)
-                                    {
-                                        if (commentsOn){
-                                            Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
-                                            " will defend itself.\nAction is being taken");
-                                        }
-                                        //********Again, get with madison about coding attacking, but here the commander will
-                                        //attack the currentEnemyPlayer
-                                        int[] subordinateSquare = GetLocation(currentCommander, b);
-                                        int[] enemySquare = GetLocation(currentEnemyPlayer, b);
-                                        //Attack method
-                                        //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
-                                        outgoingAction.setAttack(true);
-                                        outgoingAction.setDestinationCord(enemySquare);
-                                        outgoingAction.setID(currentCommander.GetID());
-                                        outgoingAction.setOriginalCord(subordinateSquare);
-                                        outgoingAction.setPieceType(currentCommander.GetType());
-                                        outgoingAction.setIsAct(true);
-                                        outgoingAction.setCommandingPiece(currentCommander);
-                                        List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
-                                        outgoingAction.setPath(path);
-                                        act = true;
-                                    }
-                                    //If the odds weren't in our favor, we could check if the bishop could
-                                    //move out of the way
-                                    
-                                    safeSquare = safeSpot(currentCommander, currentEnemyPlayer, LiveEnemyPlayers);
-                                    if (safeSquare[0] != -1 && safeSquare[1] != -1) //If safeSquare != -1, then safespot found something
-                                    {
-                                        if (commentsOn){
-                                            Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
-                                            " will move.\nAction is being taken.");
-                                        }
-                                        //*********************
-                                        //Here we need to code the movement to the safeSquare as the desired move.
-                                        int[] subordinateSquare = GetLocation(currentCommander, b);
-                                        outgoingAction.setAttack(false);
-                                        outgoingAction.setDestinationCord(safeSquare);
-                                        outgoingAction.setID(currentCommander.GetID());
-                                        outgoingAction.setOriginalCord(subordinateSquare);
-                                        outgoingAction.setPieceType(currentCommander.GetType());
-                                        outgoingAction.setIsAct(true);
-                                        outgoingAction.setCommandingPiece(currentCommander);
-                                        List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
-                                        outgoingAction.setPath(path);
-                                        act = true;
-                                    }
-                                    else //The bishop will attack if the enemy piece is in range and there is no other option
-                                    {
-                                        //*********************
-                                        //Code in attack from bishop to threat
-                                        //********Again, get with madison about coding attacking
-                                        int[] subordinateSquare = GetLocation(currentCommander, b);
-                                        int[] enemySquare = GetLocation(currentEnemyPlayer, b);
-                                        //Attack method
-                                        //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
-                                        outgoingAction.setAttack(true);
-                                        outgoingAction.setDestinationCord(enemySquare);
-                                        outgoingAction.setID(currentCommander.GetID());
-                                        outgoingAction.setOriginalCord(subordinateSquare);
-                                        outgoingAction.setPieceType(currentCommander.GetType());
-                                        outgoingAction.setIsAct(true);
-                                        outgoingAction.setCommandingPiece(currentCommander);
-                                        List<int[]> path = currentCommander.GetPath(enemySquare[0], enemySquare[1]);
-                                        outgoingAction.setPath(path);
-                                        act = true;
-                                    }
+                        }
+                        //If the bishop cannot attack the threat, it will have to move.
+                        safeSquare = safeSpot(currentCommander, currentEnemyPlayer, LiveEnemyPlayers);
+                        if (safeSquare[0] != -1 && safeSquare[1] != -1 && !free) //If safeSquare != -1, then safespot found something
+                        {
+                            if (commentsOn){
+                                Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
+                                " will move.\nAction is being taken.");
+                            }
+                            //If there is a safe spot, we will move there.
+                            //*******Code the movement to the safespot
+                            // int[] subordinateSquare = GetLocation(currentCommander, b);
+                            // outgoingAction[counter1].setAttack(false);
+                            // outgoingAction[counter1].setDestinationCord(safeSquare);
+                            // outgoingAction[counter1].setID(currentCommander.GetID());
+                            // outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                            // outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                            // outgoingAction[counter1].setIsAct(true);
+                            // outgoingAction[counter1].setCommandingPiece(currentCommander);
+                            // List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
+                            // outgoingAction[counter1].setPath(path);
+                            // act = true;
+                            //This will be a case where if the bishop can move without using its command authority, it wont.
+                            List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
+                            int[] subordinateSquare = GetLocation(currentCommander, b);
+                            if (path.Count == 1 && !free){
+                                outgoingAction[counter1].setAttack(false);
+                                outgoingAction[counter1].setDestinationCord(safeSquare);
+                                outgoingAction[counter1].setID(currentCommander.GetID());
+                                outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                outgoingAction[counter1].setIsAct(true);
+                                outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                outgoingAction[counter1].setPath(path);
+                                outgoingAction[counter1].setFreeAction(true);
+                                outgoingAction[counter1].setFreeAction(true);
+                                counter1++;
+                                free = true;
+                                if (commentsOn)
+                                    Console.WriteLine("Free Action1 was implemented");
+                            }
+                            else if (!free){
+                                outgoingAction[counter1].setAttack(false);
+                                outgoingAction[counter1].setDestinationCord(safeSquare);
+                                outgoingAction[counter1].setID(currentCommander.GetID());
+                                outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                outgoingAction[counter1].setPieceType(currentCommander.GetType());
+                                outgoingAction[counter1].setIsAct(true);
+                                outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                outgoingAction[counter1].setPath(path);
+                                act = true;
+                            }
+                        }
+                        //If there is no safeSpot for the bishop, it will have no choice but to hope for the king to
+                        //save it. In this case, we will let the bishop move as normally.
+                    }
+                }
+            }
+            return outgoingAction;
+        } 
 
+        public static Action[] BishopSubordinateThreatDetection(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers, bool commentsOn, bool act){
+            Action emptyAction0 = new Action();
+            Action emptyAction1 = new Action();
+            Action emptyAction2 = new Action();
+            Action[] outgoingAction = {emptyAction0, emptyAction1, emptyAction2};
+            bool danger = false, knightCheck = false;
+            Piece[] subordinatesInDanger = new Piece[8], attackingPieces = new Piece[16];
+            Piece subordinateWeAreDefending = null, attackingPiece = null;
+            int counter = 0, counter1 = 0;
+            //BishopSubordinateScan()
+            foreach(Piece p in subordinates)
+            {
+                foreach(Piece enemy in LiveEnemyPlayers)
+                {
+                    if (p != null && enemy != null)
+                    {
+                        if (p.GetType() != typeof(EmptySquare) && enemy.GetType() != typeof(EmptySquare))
+                        {
+                            //Check if the enemy player can attack each of the bishops subordinates
+                            danger = IndividualAttackCheck(p, enemy, b);
+                            if (danger)
+                            {
+                                if (commentsOn){
+                                    Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
                                 }
-                                //If the bishop cannot attack the threat, it will have to move.
-                                safeSquare = safeSpot(currentCommander, currentEnemyPlayer, LiveEnemyPlayers);
-                                if (safeSquare[0] != -1 && safeSquare[1] != -1) //If safeSquare != -1, then safespot found something
-                                {
-                                    if (commentsOn){
-                                        Console.WriteLine("Commander " + currentCommander.GetType().ToString() + currentCommander.GetID() + 
-                                        " will move.\nAction is being taken.");
-                                    }
-                                    //If there is a safe spot, we will move there.
-                                    //*******Code the movement to the safespot
-                                    int[] subordinateSquare = GetLocation(currentCommander, b);
-                                    outgoingAction.setAttack(false);
-                                    outgoingAction.setDestinationCord(safeSquare);
-                                    outgoingAction.setID(currentCommander.GetID());
-                                    outgoingAction.setOriginalCord(subordinateSquare);
-                                    outgoingAction.setPieceType(currentCommander.GetType());
-                                    outgoingAction.setIsAct(true);
-                                    outgoingAction.setCommandingPiece(currentCommander);
-                                    List<int[]> path = currentCommander.GetPath(safeSquare[0], safeSquare[1]);
-                                    outgoingAction.setPath(path);
-                                    act = true;
-                                }
-                                //If there is no safeSpot for the bishop, it will have no choice but to hope for the king to
-                                //save it. In this case, we will let the bishop move as normally.
+                                //add this subordinate to the list of subordinates in danger
+                                subordinatesInDanger[counter] = p;
+                                counter++;
+                                //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
+                            }
+                        }
+                    }
+                    
+                } //This is the end of the loop checking each enemy player
+            }//This is the end of the loop checking for each ally piece
+            if (counter != 0 && subordinatesInDanger[0] != null && subordinatesInDanger[0].GetType() != typeof(EmptySquare))
+            {
+                bool dangerPiece = false, dangerFound = false, canAttack = false, dangerPicked = false;
+                //This code was to prioritize knight protection, but this will be implemented later and we will just defend the first piece found
+                // //eventually we can prioritize attacking enemy pieces that could attack more than one piece at a time
+                // //but for now, it will just check if the piece is a knight and will move to defend that.
+                // foreach (Piece subordinate in subordinatesInDanger)
+                // {
+                //     if (subordinate != null && subordinate.GetType() == typeof(Knight)) //Here we check if any of the subordinatesInDanger are knights
+                //     {
+                //         subordinateWeAreDefending = subordinate;
+                //         knightCheck = true;
+                //     }
+                // }//This is the end of the for loop checking each subordinate in danger
+                //if there are no knights to defend, we will take the first pawn
+                subordinateWeAreDefending = subordinatesInDanger[0];
+
+                //Now that we have selected the piece we're protecting, we need to check exactly which enemy pieces are attacking
+                //for (int i = 0; i < sizeof(LiveEnemyPlayers); i++)
+                
+                foreach(Piece currentEnemyPlayer in LiveEnemyPlayers)
+                {
+                    if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare)){
+                        dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer, b);
+                        if (dangerPiece == true){
+                            //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
+                            if(OddsCheck(currentEnemyPlayer,subordinateWeAreDefending)){
+                                attackingPieces[counter1] = currentEnemyPlayer;
+                                counter1++;
+                            }
+                            dangerFound = true;
+                        }
+                    }
+                    
+                }
+            /*
+                //If there was at least one attacking enemy found but the odds weren't in our favor, this code will eventually pick 
+                //to move on that enemy. For now this will be commented out and saved for a future sprint.
+                if (dangerFound == true && dangerPicked == false)
+                {
+                    foreach (Piece currentEnemyPlayer1 in LiveEnemyPlayers){
+                        dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer1, b);
+                        if (dangerPiece == true){
+                            attackingPiece = currentEnemyPlayer1;
+                        }
+                    }
+                    }
+            */
+
+                //Now that we have an array of attacking pieces, for now we will just pick the first piece that we can attack back.
+                foreach(Piece attacker in attackingPieces){
+                    if (attacker != null && attacker.GetType() != typeof(EmptySquare))
+                    {
+                        int[] location = GetLocation(attacker,b);
+                        foreach(int[] move in subordinateWeAreDefending.GetLegalAttacks()){
+                            if (move[0] == location[0] && move[1] == location[1]){
+                                attackingPiece = attacker;
                             }
                         }
                     }
                 }
-				//This marks the end of the Bishop Immediate Threat Detection
+
+
+                if (dangerFound && attackingPiece != null && attackingPiece.GetType() != typeof(EmptySquare))
+                {
+                    //Now that we know which piece is attacking our subordinate, we use subordinate attack check to see who can attack it
+                    Piece attackingSubordinate = SubordinateAttackCheck(attackingPiece, subordinates, b);
+                    //If SubordinateAttackCheck returns and empty square, then there isn't a subordinate who can attack the threatening piece
+                    //This should be somewhat rare.
+                    if (attackingSubordinate.GetType() != typeof(EmptySquare)){
+                        //******Here we code the attackingSubordinate attacking the attackingPiece
+                        int[] subordinateSquare = GetLocation(attackingSubordinate, b);
+                        int[] enemySquare = GetLocation(attackingPiece, b);
+                        //Attack method
+                        //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
+                        outgoingAction[counter1].setAttack(true);
+                        outgoingAction[counter1].setDestinationCord(enemySquare);
+                        outgoingAction[counter1].setID(attackingSubordinate.GetID());
+                        outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                        outgoingAction[counter1].setPieceType(attackingSubordinate.GetType());
+                        outgoingAction[counter1].setIsAct(true);
+                        outgoingAction[counter1].setCommandingPiece(currentCommander);
+                        List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
+                        outgoingAction[counter1].setPath(path);
+                        act = true;
+
+
+                    }
+                }
+                /*If we couldn't find anyone to attack, then we need to move the subordinate. To do this safely,
+                we need to find a safe spot for it to move to*/
+                else
+                {
+                    int[] safeBlock = {-1, -1};
+                    safeBlock = safeSpot(subordinateWeAreDefending, attackingPiece, LiveEnemyPlayers);
+                    if (safeBlock[0] != -1 && safeBlock[1] != -1)
+                    {
+                        //**********Here we code moving the piece to the squares identified by safeBlock
+                        int[] subordinateSquare = GetLocation(subordinateWeAreDefending, b);
+                        outgoingAction[counter1].setAttack(false);
+                        outgoingAction[counter1].setDestinationCord(safeBlock);
+                        outgoingAction[counter1].setID(subordinateWeAreDefending.GetID());
+                        outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                        outgoingAction[counter1].setPieceType(subordinateWeAreDefending.GetType());
+                        outgoingAction[counter1].setIsAct(true);
+                        outgoingAction[counter1].setCommandingPiece(currentCommander);
+                        List<int[]> path = subordinateWeAreDefending.GetPath(safeBlock[0], safeBlock[1]);
+                        outgoingAction[counter1].setPath(path);
+                        act = true;
+                    }
+                    //But if there is no safe spot for it to move to, then we will have to keep moving.
+                }
+            } //If we do not have a subordinate to defend, we can move on to offensive play.
+            return outgoingAction;
+        }
+
+        public static Action[] BishopOffensivePlay(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers, bool commentsOn, bool act){
+            Action emptyAction0 = new Action();
+            Action emptyAction1 = new Action();
+            Action emptyAction2 = new Action();
+            Action[] outgoingAction = {emptyAction0, emptyAction1, emptyAction2};
+            bool offensiveSub = false;
+            Piece attackingPiece;
+            int counter1 = 0;
+            int[] moveToSquares = {-1, -1};
+            //First we will check if any subordinates can attack an enemy.
+            foreach (Piece sub in subordinates){
+                if(sub != null && sub.GetType() != typeof(EmptySquare) && sub.HasLegalAttack())
+                {
+                    foreach (int[] move in sub.GetLegalAttacks())
+                    {
+                        if (move != null && act == false){
+                            offensiveSub = true;
+                            attackingPiece = sub;
+                            //We may need to optimize this eventually to pick the best subordinate to attack, 
+                            //if there are multiple
+
+                            //If there was an offensive subordinate, we can attack. 
+                            //There is a separate if statement here just in case we eventualy have the AI pick which subordinate to choose from
+                            if (offensiveSub && OddsCheck(attackingPiece, sub))
+                            {
+                                foreach (int[] attack in sub.GetLegalAttacks()){
+                                    Console.WriteLine("CHECK by " + attackingPiece.GetType() + attackingPiece.GetID());
+                                    moveToSquares[0] = attack[0];
+                                    moveToSquares[1] = attack[1];
+                                    //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
+                                    int[] subordinateSquare = GetLocation(attackingPiece, b);
+                                    outgoingAction[counter1].setAttack(true);
+                                    outgoingAction[counter1].setDestinationCord(moveToSquares);
+                                    outgoingAction[counter1].setID(attackingPiece.GetID());
+                                    outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                    outgoingAction[counter1].setPieceType(attackingPiece.GetType());
+                                    outgoingAction[counter1].setIsAct(true);
+                                    outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                    List<int[]> path = attackingPiece.GetPath(moveToSquares[0], moveToSquares[1]);
+                                    outgoingAction[counter1].setPath(path);
+                                    act = true;
+                                    
+                                }
+                                //We use a foreach just to easily access the hashset.
+                            }
+
+                        }
+                    }
+                }
+                }             
+
+            Random randomNum = new Random();
+            int length = subordinates.Length, prob = 0, prob1 = 0, counter = 0;
+            bool hasMove = false, pieceFound = false, piecePicked = false;
+            //If after checking all the subordinates, there's nothing that can immediately attack, we need to move.
+            //First we need to check if even one subordinate can move. If even one can move, that's fine.
+            //If there's even one subordinate that can move, we will pick a random number per subordinate, if they can't move, we roll again.
+            //NEED TO ADD A CHECK TO MAKE SURE THAT SQUARE ISNT DANGEROUS
+            foreach (Piece p in subordinates){
+                if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
+                {
+                    pieceFound = true;
+                    prob = randomNum.Next(0,2);
+                    if (prob == 0 && act != true){
+                        prob1 = randomNum.Next(0, p.GetLegalMoves().Count);
+                        foreach (int[] moves in p.GetLegalMoves()){
+                            if (!act && counter == prob1)
+                            {
+                                moveToSquares[0] = moves[0];
+                                moveToSquares[1] = moves[1];
+                                int[] subordinateSquare = GetLocation(p, b);
+                                outgoingAction[counter1].setAttack(false);
+                                outgoingAction[counter1].setDestinationCord(moveToSquares);
+                                outgoingAction[counter1].setID(p.GetID());
+                                outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                outgoingAction[counter1].setPieceType(p.GetType());
+                                outgoingAction[counter1].setIsAct(true);
+                                outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
+                                outgoingAction[counter1].setPath(path);
+                                act = true;
+                            }
+                            else
+                            {
+                                counter++;
+                            }
+                        }
+                    }
+                }
+            }
+            //If there were some pieces that could move, but didn't then we'll just make the first move availible.
+            if (pieceFound && !act){
+                foreach (Piece p in subordinates){
+                    if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
+                    {
+                        pieceFound = true;
+                        if (act != true){
+                            foreach (int[] moves in p.GetLegalMoves()){
+                                if (!act)
+                                {
+                                    moveToSquares[0] = moves[0];
+                                    moveToSquares[1] = moves[1];
+                                    int[] subordinateSquare = GetLocation(p, b);
+                                    outgoingAction[counter1].setAttack(false);
+                                    outgoingAction[counter1].setDestinationCord(moveToSquares);
+                                    outgoingAction[counter1].setID(p.GetID());
+                                    outgoingAction[counter1].setOriginalCord(subordinateSquare);
+                                    outgoingAction[counter1].setPieceType(p.GetType());
+                                    outgoingAction[counter1].setIsAct(true);
+                                    outgoingAction[counter1].setCommandingPiece(currentCommander);
+                                    List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
+                                    outgoingAction[counter1].setPath(path);
+                                    act = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return outgoingAction;
+        }
+
+        public static Action[] BishopAI(Board b, Piece currentCommander, Piece[] subordinates, Piece[] LiveEnemyPlayers, bool kingOversightDefense)
+		{
+            //At first we will always use the left bishop.
+            //Declaration of variables we will need
+            bool act = false, BishopTurn = true, commentsOn = true, free = false;
+            Action emptyAction = new Action();
+            Action emptyAction1 = new Action();
+            Action emptyAction2 = new Action();
+            Action emptyAction3 = new Action();
+            Action emptyAction4 = new Action();
+            Action emptyAction5 = new Action();
+            Action[] midActions = {emptyAction3, emptyAction4, emptyAction5};
+            Action[] outgoingAction = {emptyAction, emptyAction1, emptyAction2};
+            int counter1 = 0, counter2 = 0;
+
+            //TestingFunctions1(b, currentCommander, subordinates, LiveEnemyPlayers);
+
+            if(kingOversightDefense){
+                midActions = BishopImmediateThreatDetection(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act, free);
+
+                if (!act){
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
+                            }
+                        }
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
+                            }
+                        }
+                    }
+                }
 
                 //This marks the beginning of Bishop Subordinate Threat Detection
                 //This will only go through if there is no action being taken from the Bishop immediate treat detection
                 if (!act)
                 {
-                    bool danger = false, knightCheck = false;
-                    Piece[] subordinatesInDanger = new Piece[8], attackingPieces = new Piece[16];
-                    Piece subordinateWeAreDefending = null, attackingPiece = null;
-                    int counter = 0, counter1 = 0;
-                    //BishopSubordinateScan()
-                    foreach(Piece p in subordinates)
-                    {
-                        foreach(Piece enemy in LiveEnemyPlayers)
-                        {
-                            if (p != null && enemy != null)
-                            {
-                                if (p.GetType() != typeof(EmptySquare) && enemy.GetType() != typeof(EmptySquare))
-                                {
-                                    //Check if the enemy player can attack each of the bishops subordinates
-                                    danger = IndividualAttackCheck(p, enemy, b);
-                                    if (danger)
-                                    {
-                                        if (commentsOn){
-                                            Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
-                                        }
-                                        //add this subordinate to the list of subordinates in danger
-                                        subordinatesInDanger[counter] = p;
-                                        counter++;
-                                        //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
-                                    }
-                                }
-                            }
-                            
-                        } //This is the end of the loop checking each enemy player
-                    }//This is the end of the loop checking for each ally piece
-                    if (counter != 0 && subordinatesInDanger[0] != null && subordinatesInDanger[0].GetType() != typeof(EmptySquare))
-                    {
-                        bool dangerPiece = false, dangerFound = false, canAttack = false, dangerPicked = false;
-                        //This code was to prioritize knight protection, but this will be implemented later and we will just defend the first piece found
-                        // //eventually we can prioritize attacking enemy pieces that could attack more than one piece at a time
-                        // //but for now, it will just check if the piece is a knight and will move to defend that.
-                        // foreach (Piece subordinate in subordinatesInDanger)
-                        // {
-                        //     if (subordinate != null && subordinate.GetType() == typeof(Knight)) //Here we check if any of the subordinatesInDanger are knights
-                        //     {
-                        //         subordinateWeAreDefending = subordinate;
-                        //         knightCheck = true;
-                        //     }
-                        // }//This is the end of the for loop checking each subordinate in danger
-                        //if there are no knights to defend, we will take the first pawn
-                        subordinateWeAreDefending = subordinatesInDanger[0];
-
-                        //Now that we have selected the piece we're protecting, we need to check exactly which enemy pieces are attacking
-                        //for (int i = 0; i < sizeof(LiveEnemyPlayers); i++)
-                        
-                        foreach(Piece currentEnemyPlayer in LiveEnemyPlayers)
-                        {
-                            if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare)){
-                                dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer, b);
-                                if (dangerPiece == true){
-                                    //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
-                                    if(OddsCheck(currentEnemyPlayer,subordinateWeAreDefending)){
-                                        attackingPieces[counter1] = currentEnemyPlayer;
-                                        counter1++;
-                                    }
-                                    dangerFound = true;
-                                }
-                            }
-                            
-                        }
-                    /*
-                        //If there was at least one attacking enemy found but the odds weren't in our favor, this code will eventually pick 
-                        //to move on that enemy. For now this will be commented out and saved for a future sprint.
-                        if (dangerFound == true && dangerPicked == false)
-                        {
-                            foreach (Piece currentEnemyPlayer1 in LiveEnemyPlayers){
-                                dangerPiece = IndividualAttackCheck(subordinateWeAreDefending, currentEnemyPlayer1, b);
-                                if (dangerPiece == true){
-                                    attackingPiece = currentEnemyPlayer1;
-                                }
-                            }
-                         }
-                    */
-
-                        //Now that we have an array of attacking pieces, for now we will just pick the first piece that we can attack back.
-                        foreach(Piece attacker in attackingPieces){
-                            if (attacker != null && attacker.GetType() != typeof(EmptySquare))
-                            {
-                                int[] location = GetLocation(attacker,b);
-                                foreach(int[] move in subordinateWeAreDefending.GetLegalAttacks()){
-                                    if (move[0] == location[0] && move[1] == location[1]){
-                                        attackingPiece = attacker;
-                                    }
-                                }
+                    midActions = BishopSubordinateThreatDetection(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act);
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
                             }
                         }
-
-
-                        if (dangerFound && attackingPiece != null && attackingPiece.GetType() != typeof(EmptySquare))
-                        {
-                            //Now that we know which piece is attacking our subordinate, we use subordinate attack check to see who can attack it
-                            Piece attackingSubordinate = SubordinateAttackCheck(attackingPiece, subordinates, b);
-                            //If SubordinateAttackCheck returns and empty square, then there isn't a subordinate who can attack the threatening piece
-                            //This should be somewhat rare.
-                            if (attackingSubordinate.GetType() != typeof(EmptySquare)){
-                                //******Here we code the attackingSubordinate attacking the attackingPiece
-                                int[] subordinateSquare = GetLocation(attackingSubordinate, b);
-                                int[] enemySquare = GetLocation(attackingPiece, b);
-                                //Attack method
-                                //b.Attack(subordinateSquare[0], subordinateSquare[1], enemySquare[0], enemySquare[1], )
-                                outgoingAction.setAttack(true);
-                                outgoingAction.setDestinationCord(enemySquare);
-                                outgoingAction.setID(attackingSubordinate.GetID());
-                                outgoingAction.setOriginalCord(subordinateSquare);
-                                outgoingAction.setPieceType(attackingSubordinate.GetType());
-                                outgoingAction.setIsAct(true);
-                                outgoingAction.setCommandingPiece(currentCommander);
-                                List<int[]> path = attackingSubordinate.GetPath(enemySquare[0], enemySquare[1]);
-                                outgoingAction.setPath(path);
-                                act = true;
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
                             }
                         }
-                        /*If we couldn't find anyone to attack, then we need to move the subordinate. To do this safely,
-                        we need to find a safe spot for it to move to*/
-                        else
-                        {
-                            int[] safeBlock = {-1, -1};
-                            safeBlock = safeSpot(subordinateWeAreDefending, attackingPiece, LiveEnemyPlayers);
-                            if (safeBlock[0] != -1 && safeBlock[1] != -1)
-                            {
-                                //**********Here we code moving the piece to the squares identified by safeBlock
-                                int[] subordinateSquare = GetLocation(subordinateWeAreDefending, b);
-                                outgoingAction.setAttack(false);
-                                outgoingAction.setDestinationCord(safeBlock);
-                                outgoingAction.setID(subordinateWeAreDefending.GetID());
-                                outgoingAction.setOriginalCord(subordinateSquare);
-                                outgoingAction.setPieceType(subordinateWeAreDefending.GetType());
-                                outgoingAction.setIsAct(true);
-                                outgoingAction.setCommandingPiece(currentCommander);
-                                List<int[]> path = subordinateWeAreDefending.GetPath(safeBlock[0], safeBlock[1]);
-                                outgoingAction.setPath(path);
-                                act = true;
-                            }
-                            //But if there is no safe spot for it to move to, then we will have to keep moving.
-                        }
-                    } //If we do not have a subordinate to defend, we can move on to offensive play.
-                } //End of Bishop Subordinate Threat Detection
+                    }
+                }
 
                 //This marks the beginning of Bishop Offensive Play Detection
                 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 if (!act)
                 {
-                    bool offensiveSub = false;
-                    Piece attackingPiece;
-                    int[] moveToSquares = {-1, -1};
-                    //First we will check if any subordinates can attack an enemy.
-                    foreach (Piece sub in subordinates){
-                        if(sub != null && sub.GetType() != typeof(EmptySquare) && sub.HasLegalAttack())
-                        {
-                            foreach (int[] move in sub.GetLegalAttacks())
-                            {
-                                if (move != null && act == false){
-                                    offensiveSub = true;
-                                    attackingPiece = sub;
-                                    //We may need to optimize this eventually to pick the best subordinate to attack, 
-                                    //if there are multiple
-
-                                    //If there was an offensive subordinate, we can attack. 
-                                    //There is a separate if statement here just in case we eventualy have the AI pick which subordinate to choose from
-                                    if (offensiveSub && OddsCheck(attackingPiece, sub))
-                                    {
-                                        foreach (int[] attack in sub.GetLegalAttacks()){
-                                            Console.WriteLine("CHECK");
-                                            moveToSquares[0] = attack[0];
-                                            moveToSquares[1] = attack[1];
-                                            //Now that we have a move that we want to do, we execute it here, IF that subordinate had a legal attack
-                                            int[] subordinateSquare = GetLocation(attackingPiece, b);
-                                            outgoingAction.setAttack(true);
-                                            outgoingAction.setDestinationCord(moveToSquares);
-                                            outgoingAction.setID(attackingPiece.GetID());
-                                            outgoingAction.setOriginalCord(subordinateSquare);
-                                            outgoingAction.setPieceType(attackingPiece.GetType());
-                                            outgoingAction.setIsAct(true);
-                                            outgoingAction.setCommandingPiece(currentCommander);
-                                            List<int[]> path = attackingPiece.GetPath(moveToSquares[0], moveToSquares[1]);
-                                            outgoingAction.setPath(path);
-                                            
-                                            act = true;
-                                            
-                                        }
-                                        //We use a foreach just to easily access the hashset.
-                                    }
-
-                                }
+                    midActions = BishopOffensivePlay(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act);
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
                             }
                         }
-                    }             
-
-                    Random randomNum = new Random();
-                    int length = subordinates.Length, prob = 0, prob1 = 0, counter = 0;
-                    bool hasMove = false, pieceFound = false, piecePicked = false;
-                    //If after checking all the subordinates, there's nothing that can immediately attack, we need to move.
-                    //First we need to check if even one subordinate can move. If even one can move, that's fine.
-                    //If there's even one subordinate that can move, we will pick a random number per subordinate, if they can't move, we roll again.
-                    //NEED TO ADD A CHECK TO MAKE SURE THAT SQUARE ISNT DANGEROUS
-                    foreach (Piece p in subordinates){
-                        if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
-                        {
-                            pieceFound = true;
-                            prob = randomNum.Next(0,2);
-                            if (prob == 0 && act != true){
-                                prob1 = randomNum.Next(0, p.GetLegalMoves().Count);
-                                foreach (int[] moves in p.GetLegalMoves()){
-                                    if (!act && counter == prob1)
-                                    {
-                                        moveToSquares[0] = moves[0];
-                                        moveToSquares[1] = moves[1];
-                                        int[] subordinateSquare = GetLocation(p, b);
-                                        outgoingAction.setAttack(false);
-                                        outgoingAction.setDestinationCord(moveToSquares);
-                                        outgoingAction.setID(p.GetID());
-                                        outgoingAction.setOriginalCord(subordinateSquare);
-                                        outgoingAction.setPieceType(p.GetType());
-                                        outgoingAction.setIsAct(true);
-                                        outgoingAction.setCommandingPiece(currentCommander);
-                                        List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
-                                        outgoingAction.setPath(path);
-                                        act = true;
-                                    }
-                                    else
-                                    {
-                                        counter++;
-                                    }
-                                }
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
                             }
                         }
                     }
-                    //If there were some pieces that could move, but didn't then we'll just make the first move availible.
-                    if (pieceFound && !act){
-                        foreach (Piece p in subordinates){
-                        if (p != null && p.GetType() != typeof(EmptySquare) && p.HasLegalMove())
-                        {
-                            pieceFound = true;
-                            if (act != true){
-                                foreach (int[] moves in p.GetLegalMoves()){
-                                    if (!act)
-                                    {
-                                        moveToSquares[0] = moves[0];
-                                        moveToSquares[1] = moves[1];
-                                        int[] subordinateSquare = GetLocation(p, b);
-                                        outgoingAction.setAttack(false);
-                                        outgoingAction.setDestinationCord(moveToSquares);
-                                        outgoingAction.setID(p.GetID());
-                                        outgoingAction.setOriginalCord(subordinateSquare);
-                                        outgoingAction.setPieceType(p.GetType());
-                                        outgoingAction.setIsAct(true);
-                                        outgoingAction.setCommandingPiece(currentCommander);
-                                        List<int[]> path = p.GetPath(moveToSquares[0], moveToSquares[1]);
-                                        outgoingAction.setPath(path);
-                                        act = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    }
-                    //If after all this, no move was found, then we move on anyways and the bishop doesn't move.
                 }
-                BishopTurn = false;
-                return outgoingAction;
-			}//End of Bishops turn
+            }
+            else{
+                midActions = BishopImmediateThreatDetection(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act, free);
+
+                //This is the bishop immediate threat detection
+                if (!act){
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
+                            }
+                        }
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
+                            }
+                        }
+                    }
+                }
+
+                //This marks the beginning of Bishop Offensive Play Detection
+                //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                if (!act)
+                {
+                    midActions = BishopOffensivePlay(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act);
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
+                            }
+                        }
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
+                            }
+                        }
+                    }
+                }
+
+                //This marks the beginning of Bishop Subordinate Threat Detection
+                if (!act)
+                {
+                    midActions = BishopSubordinateThreatDetection(b, currentCommander, subordinates, LiveEnemyPlayers, commentsOn, act);
+                    foreach (Action act1 in midActions){
+                        if (act1.getIsActing() && act1.getFreeAction()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " free action sent to outgoingAction:");
+                            }
+                        }
+                        else if (act1.getIsActing()){
+                            outgoingAction[counter2] = act1;
+                            counter2++;
+                            act = true;
+                            if(commentsOn){
+                                Console.WriteLine("Bishop " + currentCommander.GetID() + " action sent to outgoingAction:");
+                            }
+                        }
+                    }
+                }
+            }
+
             return outgoingAction;
-        }//End of Main
+        }
     }//End of class
 }//End of namespace
