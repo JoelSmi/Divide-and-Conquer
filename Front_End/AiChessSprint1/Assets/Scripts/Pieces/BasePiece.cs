@@ -445,8 +445,6 @@ public class BasePiece : EventTrigger
             // the cell the mouse is hovering over inside the list of mHighlightedCells is set to the target cell 
             foreach (Cell cell in mHighlightedCells)
             {
-                Debug.Log(pos);
-                Debug.Log(cell.mRectTransform.position);
                 // Added the main camera as a parameter, since movement is slightly changed
                 if (RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition, myCanvas.worldCamera))
                 {

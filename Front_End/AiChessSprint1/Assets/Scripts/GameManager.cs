@@ -254,7 +254,7 @@ public class GameManager : MonoBehaviour
     public void moveOrAttackBttn()
     {
         /* REMOVE */
-        rollTheDice(UnityEngine.Random.Range(1, 4));
+        rollTheDice(UnityEngine.Random.Range(1, 7));
         /* ENDREMOVE */
 
         if (mPieceManager.attacking)
