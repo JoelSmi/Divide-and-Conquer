@@ -26,6 +26,8 @@ namespace KingAI1
 		private bool completed = false;
 		private List<int[]> path;
 		private bool freeAction = false;
+		private int roll;
+		private bool attackAndMove = false;
 
 		public Action(){
 			pieceType = typeof(EmptySquare);
@@ -56,7 +58,7 @@ namespace KingAI1
 				Console.WriteLine("The outgoing action returned from " + commandingPiece.GetType() + commandingPiece.GetID() + " is:");
 				Console.WriteLine("The " + pieceType.ToString() + " with an id of " + id 
 				+ " will attack from " + GetNotation(originalCords[0], originalCords[1]) + " to " 
-				+ GetNotation(destinationCords[0], destinationCords[1]));
+				+ GetNotation(destinationCords[0], destinationCords[1]) + " \nWith a roll of " + roll);
 				Console.WriteLine("[" + getOriginalXCord() + "," + getOriginalYCord() 
 				+ "] to [" + getDestinationXCord() + "," + getDestinationYCord() + "]");
 				Console.Write("Path taken:");
@@ -209,7 +211,20 @@ namespace KingAI1
 
 		public bool getFreeAction(){
 			return this.freeAction;
+		}
 
+		public int getRoll(){
+			return this.roll;
+		}
+
+		public void setRoll(int newRoll){
+			this.roll = newRoll;
+		}
+		public bool getAttackAndMove(){
+			return this.attackAndMove;
+		}
+		public void setAttackAndMove(bool newone){
+			this.attackAndMove = newone;
 		}
 	}
 }

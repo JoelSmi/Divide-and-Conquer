@@ -123,8 +123,8 @@ namespace KingAI1{
 		/*Generete random number*/
 		public static int rollAttack()
         	{
-            		Random roll = new Random();
-            		int output = roll.Next(1, 7);
+				Random roll = new Random();
+				int output = roll.Next(1, 7);
            		return output;
         	}
 		
@@ -136,9 +136,12 @@ namespace KingAI1{
 			int minRoll = Piece.getMinimumRoll(board[attackerRow, attackerCol], board[defenderRow, defenderCol]);
 			if (roll >= minRoll) {
 				Piece capturedPiece = board[defenderRow, defenderCol];
-				board[defenderRow, defenderCol] = e;
+				Piece attackerPiece = board[attackerRow, attackerCol];
+				board[attackerRow, attackerCol] = e;
+				board[defenderRow, defenderCol] = attackerPiece;
+
 				Console.WriteLine("Attack succeeded - roll " + roll + " meets the minimum roll " + minRoll + 
-					" and " + board[attackerRow, attackerCol] + " captures " + capturedPiece);
+					" and " + attackerPiece + " captures " + capturedPiece);
 			} else {
 				Console.WriteLine("Attack failed - roll " + roll + " is lower than the required roll " + minRoll);
 			}
