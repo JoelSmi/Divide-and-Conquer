@@ -57,6 +57,8 @@ public class PieceManager : MonoBehaviour
     // for access to the entire board, used for moving to graveyards
     private BoardUI boardUI = null;
 
+    private GameManager gameManager;
+
     //assigns types to the strings inside previous matrix
     private Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>()
     {
@@ -69,9 +71,10 @@ public class PieceManager : MonoBehaviour
     };
 
     // creates the pieces inside on the boardUI
-    public void Setup (BoardUI newBoard)
+    public void Setup (BoardUI newBoard, GameManager newGameManager)
     {
         boardUI = newBoard;
+        gameManager = newGameManager;
         // creates the white pieces see CreatePieces below for more info
         numPieces = 0;
         mWhitePieces = CreatePieces(Color.white, new Color32(80, 124, 159, 255), boardUI);
@@ -118,7 +121,7 @@ public class PieceManager : MonoBehaviour
             newPieces.Add(newPiece);
 
             //calls to BasePiece class' Setup function
-            newPiece.Setup(teamColor, spriteColor, this);
+            newPiece.Setup(teamColor, spriteColor, this, gameManager);
             numPieces++;
         }
 
