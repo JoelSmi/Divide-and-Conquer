@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
                 TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
             }
 
+            TempLogBuff += ExecutionBoard.printGameBoard();
             PrintLog(TempLogBuff);
             TempLogBuff = "";
 
@@ -155,8 +156,8 @@ public class GameManager : MonoBehaviour
             }
 
             //Should be run for all movement steps in a function to
-            //update the UI for every processin the action being taken
-            if (this.AIMoveCount < this.AIMoveMax)
+            //update the UI for every processing the action being taken
+            if (this.AIMoveCount <= this.AIMoveMax)
             {
                 if (!uiUpdating)
                 {

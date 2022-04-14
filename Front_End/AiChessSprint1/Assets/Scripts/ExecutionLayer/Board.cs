@@ -429,8 +429,6 @@ namespace GameBoard
                 TempLogBuff += ("Error: Invalid Action\n");
             }
 
-            TempLogBuff += printGameBoard() + "\n";
-
             return TempLogBuff;
         }
         #endregion
