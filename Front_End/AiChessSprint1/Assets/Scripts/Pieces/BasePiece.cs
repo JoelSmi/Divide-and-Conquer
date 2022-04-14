@@ -55,7 +55,7 @@ public class BasePiece : EventTrigger
     // Piece movement
     Vector3 destination, start;
     protected bool isMoving = false;
-    protected float speed = 0.25f, t = 0;
+    protected float speed = 0.5f, t = 0;
 
     // Colors
     readonly float[,] CORPS_COLORS =
@@ -67,6 +67,9 @@ public class BasePiece : EventTrigger
         {0.2f, 0.8f, 0.2f, 1.0f}, // Green
         {0.2f, 0.8f, 0.8f, 1.0f} // Cyan
     };
+
+    // GameManager access
+    private GameManager gameManager;
 
     #endregion
 
@@ -81,7 +84,8 @@ public class BasePiece : EventTrigger
             transform.position = Vector3.Lerp(start, destination, t);
             if (t >= 1) // Reached destination
             {
-                isMoving = false;
+                isMoving = false; // No longer moving
+                gameManager.uiUpdating = false; // UI is free to continue updating
             }
         }
         if (mPieceManager.GetTurnCount() != 1)
@@ -96,13 +100,13 @@ public class BasePiece : EventTrigger
             mPieceManager.CommandAuthority = true;
             mPieceManager.CommanderMoved = false;
             mPieceManager.CMoveCount = 0;
-
-            
-            
         }
-
     }
     
+    IEnumerator Wait(float time)
+    {
+        yield return new WaitForSeconds(time);
+    }
 
     #endregion
 
@@ -154,9 +158,10 @@ public class BasePiece : EventTrigger
     #region Initialize
 
     // sets up the pieces team, sprite color, and connection to the PieceManager script
-    public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public virtual void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
         mPieceManager = newPieceManager;
+        gameManager = newGameManager;
         mColor = newTeamColor;
         TagSet();
         mRectTransform = GetComponent<RectTransform>();

@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class KingUI : BasePiece
 {
     //sets the kings movement variable based on the constraints
-    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
-        base.Setup(newTeamColor, newSpriteColor, newPieceManager);
+        base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         // changes king movent then loads sprie for the king
         mMovement = new Vector3Int(3, 3, 3);

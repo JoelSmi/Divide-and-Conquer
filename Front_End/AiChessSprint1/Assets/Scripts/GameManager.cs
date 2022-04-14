@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public Button nxtTrnBtn;
     public Button attckButton;
     public GameObject diceRoll;
-    
+
     //Execution Layer initialization 
 
     private GameBoard.Board ExecutionBoard;
@@ -45,10 +45,11 @@ public class GameManager : MonoBehaviour
     protected List<int> uiTargetCellX = new List<int>();
     protected List<int> uiTargetCellY = new List<int>();
     private int moveCount = 0;
+    public bool uiUpdating = false;
 
     //AI variables and control structrues
     private int AIMoveCount = 0;
-    private int AIMoveMax = 0; 
+    private int AIMoveMax = 0;
     private const int AIActionMax = 6;
     private int AIActionCount = 0;
     private bool isAttacking = false;
@@ -60,15 +61,15 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StreamWriter file = new (ActionLog, append: false);
+        StreamWriter file = new(ActionLog, append: false);
         file.Flush();
         file.Close();
         //initiates and creates the Game board
         mBoardUI.Create();
 
         // sets pieces onto the created
-        mPieceManager.Setup(mBoardUI);
-        
+        mPieceManager.Setup(mBoardUI, this);
+
         ExecutionBoard = new Board(WhitePieces, BlackPieces);
     }
 
@@ -76,7 +77,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         string TempLogBuff = "";
-        
+
 
         #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
             CellRelay();
             moveCount++;
             mPieceManager.actionTaken = false;
-                        
+
         }
 
         if (mPieceManager.GetTurnCount() == 4)
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
             
             EndTurn();
         }*/
-        
+
         //Updated AI update calls
         if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
         {
@@ -157,9 +158,12 @@ public class GameManager : MonoBehaviour
             //update the UI for every processin the action being taken
             if (this.AIMoveCount < this.AIMoveMax)
             {
-                //System.Threading.Thread.Sleep(50);
-                ApplyAIMove(this.AIMoveCount);
-                this.AIMoveCount++;
+                if (!uiUpdating)
+                {
+                    uiUpdating = true;
+                    ApplyAIMove(this.AIMoveCount);
+                    this.AIMoveCount++;
+                }
             }
 
             //Incrementing the global AIAction count and resetting variables for the next action from the AI
@@ -183,7 +187,7 @@ public class GameManager : MonoBehaviour
         #region ActionLog
         if (!TempLogBuff.Equals(""))
         {
-            PrintLog(TempLogBuff);            
+            PrintLog(TempLogBuff);
         }
         #endregion
 
@@ -193,7 +197,7 @@ public class GameManager : MonoBehaviour
         }
 
         #region UI Checks
-        
+
         int turnCount = mPieceManager.GetTurnCount();
         ShowCorps(turnCount);
 
@@ -229,8 +233,8 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
-    public void PrintLog(string TempLogBuff){
-        lock(this.WriteLock){
+    public void PrintLog(string TempLogBuff) {
+        lock (this.WriteLock) {
             StreamWriter file = new(ActionLog, append: true);
             file.WriteLine(TempLogBuff);
             file.Close();
@@ -238,19 +242,20 @@ public class GameManager : MonoBehaviour
     }
 
     #region Execution Layer > UI
+
     public void UpdateUI(int[] initial, int[] dest)
     {
         //Making sure there is indeed a piece to be moved, might be a redundant/useless check
-        if (mBoardUI.mAllCells[initial[1], 7- initial[0]].mCurrentPiece != null)
+        if (mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece != null)
         {
             PrintLog("Starting; \nRow: " + initial[0] + "; Col: " + initial[1]);
             PrintLog("Destination; \nRow: " + dest[0] + "; Col: " + dest[1]);
             BasePiece tempPiece = mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece;
-            tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 -  dest[0] ];
+            tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 - dest[0]];
             tempPiece.MoveAIPiece();
-            System.Threading.Thread.Sleep(250);
         }
     }
+
     #endregion
 
     //Helper function to gather the necessary information and set the variables for action traversal

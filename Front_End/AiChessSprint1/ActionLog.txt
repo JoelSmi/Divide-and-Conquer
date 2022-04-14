@@ -1,240 +1,52 @@
 User Moves:
-Initial: 6, 3
-Destination: 5, 4
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	P2	P3	P4	P5	P6	P7	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	p3	e	e	e	
-p0	p1	p2	e	p4	p5	p6	p7	
-r0	n0	b0	q0	k0	b1	n1	r1	
-
-Initial: 7, 4
-Destination: 6, 3
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	P2	P3	P4	P5	P6	P7	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	p3	e	e	e	
-p0	p1	p2	k0	p4	p5	p6	p7	
-r0	n0	b0	q0	e	b1	n1	r1	
-
-Initial: 6, 2
-Destination: 5, 1
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	P2	P3	P4	P5	P6	P7	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	e	e	
-p0	p1	e	k0	p4	p5	p6	p7	
-r0	n0	b0	q0	e	b1	n1	r1	
-
-Initial: 7, 2
-Destination: 6, 2
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	P2	P3	P4	P5	P6	P7	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	e	e	
-p0	p1	b0	k0	p4	p5	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-Initial: 6, 5
-Destination: 5, 6
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	P2	P3	P4	P5	P6	P7	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
 
 Starting; 
 Row: 1; Col: 3
 Destination; 
-Row: 2; Col: 2
+Row: 2; Col: 4
 
 AI Action #0:
 The outgoing action returned is:
-The KingAI1.Pawn with an id of 3 will move from D7 to C6
-[2,2]
+The KingAI1.Pawn with an id of 3 will move from D7 to E6
+[2,4]
 Action Count: 1
 Max Move Count: 1
 Move Count: 1
 
-Starting; 
-Row: 1; Col: 2
-Destination; 
-Row: 2; Col: 3
 
 AI Action #1:
 The outgoing action returned is:
-The KingAI1.Pawn with an id of 2 will move from C7 to D6
-[2,3]
+The KingAI1.Pawn with an id of 0 will move from A7 to A6
+[2,0]
+
+Starting; 
+Row: 1; Col: 0
+Destination; 
+Row: 2; Col: 0
 Action Count: 2
 Max Move Count: 1
 Move Count: 1
 
-Starting; 
-Row: 1; Col: 5
-Destination; 
-Row: 2; Col: 6
 
 AI Action #2:
 The outgoing action returned is:
 The KingAI1.Pawn with an id of 5 will move from F7 to G6
 [2,6]
-Action Count: 3
-Max Move Count: 1
-Move Count: 1
-
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-User Moves:
-Error: Invalid Action
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-Initial: 7, 4
-Destination: 6, 3
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-Error: Invalid Action
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-Initial: 7, 2
-Destination: 6, 2
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
-Initial: 6, 5
-Destination: 5, 6
-R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	P7	
-e	e	P3	P2	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
-
 
 Starting; 
-Row: 0; Col: 3
-Destination; 
-Row: 1; Col: 3
-
-AI Action #0:
-The outgoing action returned is:
-The KingAI1.Queen with an id of 0 will move from D8 to F5
-[1,3]
-[2,4]
-[3,5]
-
-Starting; 
-Row: 1; Col: 3
-Destination; 
-Row: 2; Col: 4
-Starting; 
-Row: 2; Col: 4
-Destination; 
-Row: 3; Col: 5
-Action Count: 1
-Max Move Count: 3
-Move Count: 3
-
-Starting; 
-Row: 0; Col: 1
-Destination; 
-Row: 1; Col: 2
-
-AI Action #1:
-The outgoing action returned is:
-The KingAI1.Knight with an id of 0 will attack from B8 to E3
-Path taken: [1,2]
-[2,1]
-[3,2]
-[4,3]
-[5,4]
-
-Starting; 
-Row: 1; Col: 2
-Destination; 
-Row: 2; Col: 1
-Starting; 
-Row: 2; Col: 1
-Destination; 
-Row: 3; Col: 2
-Starting; 
-Row: 3; Col: 2
-Destination; 
-Row: 4; Col: 3
-Starting; 
-Row: 4; Col: 3
-Destination; 
-Row: 5; Col: 4
-Action Count: 2
-Max Move Count: 5
-Move Count: 5
-
-Starting; 
-Row: 1; Col: 7
+Row: 1; Col: 5
 Destination; 
 Row: 2; Col: 6
-
-AI Action #2:
-The outgoing action returned is:
-The KingAI1.Pawn with an id of 7 will move from H7 to G6
-[2,6]
 Action Count: 3
 Max Move Count: 1
 Move Count: 1
 
-R0	N0	B0	e	K0	B1	N1	R1	
-P0	P1	e	e	P4	P5	P6	e	
-e	e	P3	P2	e	e	P7	e	
-e	e	e	e	e	Q0	e	e	
+R0	N0	B0	Q0	K0	B1	N1	R1	
+e	P1	P2	e	P4	P5	P6	P7	
+P0	e	e	e	P3	e	e	e	
 e	e	e	e	e	e	e	e	
-e	p2	e	e	p3	e	p5	e	
-p0	p1	b0	k0	p4	e	p6	p7	
-r0	n0	e	q0	e	b1	n1	r1	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+p0	p1	p2	p3	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
 

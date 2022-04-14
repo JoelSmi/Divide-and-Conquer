@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class PawnUI : BasePiece
 {    
     //overrides the base piece Setup to fit the Pawn's role
-    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
-        base.Setup(newTeamColor, newSpriteColor, newPieceManager);
+        base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         //checks whether or not the pawn is a black or white piecefor the direction it will go
         mMovement =  mColor == Color.white ?  new Vector3Int(0,1,1) : new Vector3Int(0,-1,-1);

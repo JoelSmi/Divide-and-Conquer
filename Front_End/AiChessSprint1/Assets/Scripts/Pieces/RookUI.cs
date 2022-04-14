@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class RookUI : BasePiece
 {
     //sets the Rookss movement variable based on the constraints
-    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
-        base.Setup(newTeamColor, newSpriteColor, newPieceManager);
+        base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         //// changes RookUI's movement then loads sprite for the RookUI
         mMovement = new Vector3Int(2, 2, 2);

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 public class BishopUI : BasePiece
 {
     //sets the Bishops's movement variable based on the constraints
-    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
-        base.Setup(newTeamColor, newSpriteColor, newPieceManager);
+        base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         // changes Bishop's movement then loads sprie for the BIshop
         mMovement = new Vector3Int(2, 2, 2);

@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class KnightUI : BasePiece
 {
     //sets the Knight's movement variable based on the constraints
-    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager)
+    public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
-        base.Setup(newTeamColor, newSpriteColor, newPieceManager);
+        base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         // changes Knight's movement then loads sprite for the Knight
         mMovement = new Vector3Int(4, 4, 4);
