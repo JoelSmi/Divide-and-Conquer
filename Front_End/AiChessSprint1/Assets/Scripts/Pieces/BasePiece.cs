@@ -69,7 +69,7 @@ public class BasePiece : EventTrigger
     };
 
     // GameManager access
-    private GameManager gameManager;
+    protected GameManager gameManager;
 
     #endregion
 
@@ -101,11 +101,6 @@ public class BasePiece : EventTrigger
             mPieceManager.CommanderMoved = false;
             mPieceManager.CMoveCount = 0;
         }
-    }
-    
-    IEnumerator Wait(float time)
-    {
-        yield return new WaitForSeconds(time);
     }
 
     #endregion
