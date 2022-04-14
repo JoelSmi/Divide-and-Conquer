@@ -576,8 +576,9 @@ public class BasePiece : EventTrigger
 
         t = 0;
 
-        //removes Pieece from the board at target cell
-        mTargetCell.RemovePiece();
+        //removes Piece from the board at target cell, if it is the enemy
+        if (mTargetCell.mCurrentPiece != null && mTargetCell.mCurrentPiece.mColor == Color.white)
+            mTargetCell.RemovePiece();
 
         // removes this piece from its current cell
         mCurrentCell.mCurrentPiece = null;

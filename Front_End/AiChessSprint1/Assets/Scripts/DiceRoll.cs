@@ -6,10 +6,12 @@ public class DiceRoll : MonoBehaviour
 {
     // Recursively reference the object?
     public GameObject diceRoll;
+    public GameManager gameManager;
 
     // Stop the animation when the animation is complete
     public void StopAnimation()
     {
+        //gameManager.uiUpdating = false;
         diceRoll.active = false;
     }
 }
