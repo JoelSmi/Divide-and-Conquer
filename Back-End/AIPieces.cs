@@ -176,10 +176,11 @@ namespace KingAI1 {
 			foreach (Direction dir in directionKeys) {
 				int[] square = directions[dir];
 				List<int[]> pathToDir = this.GetPath(square[0], square[1]); //Path to current directional square
-				int pathLength = pathToDir.Count; //Length of path to current directional square (0 if not found)
+				double pathLength = ComputePathLength(pathToDir); //Length of path to current directional square (0 if not found)
+				List<int[]> newPath = new List<int[]>(path);
+				newPath.Add(new int[] { square[0], square[1] });
 				if (!b.IsInBounds(square[0], square[1]) || b.GetBoard()[square[0], square[1]].GetColor() == color
-						|| (Board.SetContainsSquare(legalMoves, square) && pathLength > 0 
-						&& pathLength <= movement - remainingMov + 1)) {
+						|| (Board.SetContainsSquare(legalMoves, square) && ComputePathLength(newPath) >= pathLength)) {
 					//Out of bounds, occupied by ally piece, or already explored along an equal or shorter path
 					directions.Remove(dir);
 				} else if (b.GetBoard()[square[0], square[1]].GetColor() != Color.Empty) {
@@ -193,8 +194,6 @@ namespace KingAI1 {
 					//Remove the inefficient path already calculated to this square, if one exists
 					paths.Remove(pathToDir);
 					//Add the path to this square to the list of paths
-					List<int[]> newPath = new List<int[]>(path);
-					newPath.Add(new int[] { square[0], square[1] });
 					paths.Add(newPath);
 				}
 			}
@@ -205,6 +204,14 @@ namespace KingAI1 {
 					this.GetPath(square[0], square[1]), legalMoves, dir));
 			}
 			return legalMoves;
+		}
+		//Computes the distance traveled through a given path
+		private static double ComputePathLength(List<int[]> path) {
+			double length = 0;
+			for (int i = 0; i < path.Count - 1; i++) {
+				length += Math.Sqrt(Math.Pow(path[i + 1][0] - path[i][0], 2) + Math.Pow(path[i + 1][1] - path[i][1], 2));
+			}
+			return length;
 		}
 		public abstract override string ToString();
 	}
