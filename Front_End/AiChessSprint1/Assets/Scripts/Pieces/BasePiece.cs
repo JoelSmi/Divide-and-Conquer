@@ -55,7 +55,7 @@ public class BasePiece : EventTrigger
     // Piece movement
     Vector3 destination, start;
     protected bool isMoving = false;
-    protected float speed = 0.25f, t = 0;
+    protected float speed = 0.5f, t = 0;
 
     // Colors
     readonly float[,] CORPS_COLORS =

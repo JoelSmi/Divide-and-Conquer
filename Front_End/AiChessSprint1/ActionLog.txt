@@ -16,13 +16,13 @@ Move Count: 1
 
 AI Action #1:
 The outgoing action returned is:
-The KingAI1.Pawn with an id of 1 will move from B7 to C6
-[2,2]
+The KingAI1.Pawn with an id of 0 will move from A7 to A6
+[2,0]
 
 Starting; 
-Row: 1; Col: 1
+Row: 1; Col: 0
 Destination; 
-Row: 2; Col: 2
+Row: 2; Col: 0
 Action Count: 2
 Max Move Count: 1
 Move Count: 1
@@ -30,20 +30,20 @@ Move Count: 1
 
 AI Action #2:
 The outgoing action returned is:
-The KingAI1.Pawn with an id of 5 will move from F7 to F6
-[2,5]
+The KingAI1.Pawn with an id of 5 will move from F7 to G6
+[2,6]
 
 Starting; 
 Row: 1; Col: 5
 Destination; 
-Row: 2; Col: 5
+Row: 2; Col: 6
 Action Count: 3
 Max Move Count: 1
 Move Count: 1
 
 R0	N0	B0	Q0	K0	B1	N1	R1	
-P0	e	P2	e	P4	P5	P6	P7	
-e	e	P1	e	P3	e	e	e	
+e	P1	P2	e	P4	P5	P6	P7	
+P0	e	e	e	P3	e	e	e	
 e	e	e	e	e	e	e	e	
 e	e	e	e	e	e	e	e	
 e	e	e	e	e	e	e	e	
