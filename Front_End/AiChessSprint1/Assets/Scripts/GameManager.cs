@@ -461,6 +461,7 @@ public class GameManager : MonoBehaviour
     // Plays a dice roll animation based on a predetermined parameter
     public void rollTheDice(int number)
     {
+        //uiUpdating = true;
         diceRoll.active = true;
         diceRoll.GetComponent<Animator>().SetTrigger("" + number);
     }
