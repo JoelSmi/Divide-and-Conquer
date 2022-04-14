@@ -39,11 +39,19 @@ public class GameManager : MonoBehaviour
                     new Knight("N1",blackcol),new Rook("R1",blackcol)} };
     #endregion
 
+    //UI variables and control structures
     protected List<int> uiCurrentCellX = new List<int>();
     protected List<int> uiCurrentCellY = new List<int>();
     protected List<int> uiTargetCellX = new List<int>();
     protected List<int> uiTargetCellY = new List<int>();
     private int moveCount = 0;
+
+    //AI variables and control structrues
+    private int AIMoveCount = 0;
+    private int AIMoveMax = 0; 
+    private const int AIActionMax = 6;
+    private int AIActionCount = 0;
+    private bool isAttacking = false;
 
     //Action Log
     protected string ActionLog = "ActionLog.txt";
@@ -78,8 +86,10 @@ public class GameManager : MonoBehaviour
             mPieceManager.actionTaken = false;
                         
         }
+
         if (mPieceManager.GetTurnCount() == 4)
         {
+            TempLogBuff += "User Moves:\n";
             for (int i = 0; i < moveCount - 1; i++)
             {
                 int[] currPos = { (7 - uiCurrentCellY[i]), uiCurrentCellX[i] };
@@ -89,7 +99,8 @@ public class GameManager : MonoBehaviour
                 TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
             }
 
-
+            PrintLog(TempLogBuff);
+            TempLogBuff = "";
 
             mPieceManager.actionTaken = false;
             mPieceManager.SwitchSides(Color.black);
@@ -102,6 +113,8 @@ public class GameManager : MonoBehaviour
 
         #region EL > AI Call
         //update to the UI when the Execution Layer has been updated by the AI 
+        //Original handling of AI actions
+        /*
         if (!ExecutionBoard.isWhite &&  mPieceManager.mIsKingAlive)
         {
 
@@ -110,12 +123,60 @@ public class GameManager : MonoBehaviour
             TempLogBuff += ExecutionBoard.AIActions[0].stringAction();
             TempLogBuff += ExecutionBoard.AIActions[1].stringAction();
             TempLogBuff += ExecutionBoard.AIActions[2].stringAction();
-            ApplyAIActions();
+            getAIActionSet();
 
             TempLogBuff += "\n";
             TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
             
             EndTurn();
+        }*/
+        
+        //Updated AI update calls
+        if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
+        {
+            //Initial call to gather all action information from the AI
+            if (this.AIMoveMax == 0 && this.AIActionCount == 0)
+            {
+                ExecutionBoard.getAIAction();
+            }
+
+            if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
+            {
+                getAIActionSet(this.AIActionCount);
+
+                if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                {
+                    TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
+                    TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                }
+
+                this.AIActionCount++;
+            }
+
+            //Should be run for all movement steps in a function to
+            //update the UI for every processin the action being taken
+            if (this.AIMoveCount < this.AIMoveMax)
+            {
+                //System.Threading.Thread.Sleep(50);
+                ApplyAIMove(this.AIMoveCount);
+                this.AIMoveCount++;
+            }
+
+            //Incrementing the global AIAction count and resetting variables for the next action from the AI
+            if (ExecutionBoard.hasActed)
+            {
+                TempLogBuff += "Action Count: " + this.AIActionCount + "\n" + "Max Move Count: " + this.AIMoveMax + "\n" + "Move Count: " + this.AIMoveCount + "\n";
+                this.AIMoveMax = 0;
+                this.AIMoveCount = 0;
+                ExecutionBoard.hasActed = false;
+            }
+
+            //Once all actions have been processed, print the board and end the AI's turn
+            if (this.AIActionCount == AIActionMax)
+            {
+                endAIActions();
+                TempLogBuff += ExecutionBoard.printGameBoard();
+            }
         }
         #endregion
 
@@ -132,7 +193,7 @@ public class GameManager : MonoBehaviour
         }
 
         #region UI Checks
-
+        
         int turnCount = mPieceManager.GetTurnCount();
         ShowCorps(turnCount);
 
@@ -187,10 +248,68 @@ public class GameManager : MonoBehaviour
             BasePiece tempPiece = mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece;
             tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 -  dest[0] ];
             tempPiece.MoveAIPiece();
+            System.Threading.Thread.Sleep(250);
         }
     }
     #endregion
 
+    //Helper function to gather the necessary information and set the variables for action traversal
+    public void getAIActionSet(int idx)
+    {
+        //getting the AI Actions set in Execution Layer
+        if (ExecutionBoard.AIActions[idx].getIsActing() == false)
+            return;
+        ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
+        ExecutionBoard.actionInitial = ExecutionBoard.AIActions[idx].getOriginalCords();
+        ExecutionBoard.actionDest = ExecutionBoard.AIActions[idx].getDestinationCords();
+
+        if ((ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]].color.Equals("Black")))
+        {
+            if (ExecutionBoard.AIActions[idx].getIsAttack())
+            {
+                ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
+            }
+            else
+            {
+                ExecutionBoard.ActionCount += ExecutionBoard.takeAction('M', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
+            }
+        }
+
+        this.AIMoveMax = ExecutionBoard.actionPositions.Count;
+        this.AIMoveCount = 0;
+    }
+
+    public void ApplyAIMove(int count)
+    {
+        int[] tempPos = ExecutionBoard.actionInitial;
+        int[] destPos = ExecutionBoard.actionPositions[count];
+
+        if(count != 0)
+        {
+            tempPos = ExecutionBoard.actionPositions[count - 1];
+        }
+
+        UpdateUI(tempPos, destPos);
+
+        if (count == this.AIMoveMax-1)
+            ExecutionBoard.hasActed = true;
+    }
+
+    public void endAIActions()
+    {
+        this.AIMoveCount = 0;
+        this.AIMoveMax = 0;
+        this.AIActionCount = 0;
+
+        ExecutionBoard.actionPositions.Clear();
+        ExecutionBoard.resetCount();
+        ExecutionBoard.endTurn();
+
+        //GameManager end turn function
+        EndTurn();
+    }
+
+    //Original Apply AI Actions function
     public void ApplyAIActions()
     {
         //Applying Actions to Execution Layer
