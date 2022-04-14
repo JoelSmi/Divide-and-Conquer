@@ -9,6 +9,7 @@ namespace Actions
     {
         private static bool actionValid = false;
         static Piece[,] GameBoard;
+        static List<char> charSet = new List<char> { 'P', 'R', 'B', 'N', 'Q', 'K' };
 
         public static int rollAttack()
         {
@@ -126,7 +127,7 @@ namespace Actions
         #endregion
 
         #region Attack
-        public static int attackAction2(List<int[]> moveSet, Piece[,] GB, Piece currPiece)
+        public static int attackAction2(List<int[]> moveSet, Piece[,] GB, Piece currPiece, int AttackRoll)
         {
             //Counter is used to check whether to place the value from the 2d array into x or y,
             bool actionValid = true;
@@ -139,12 +140,16 @@ namespace Actions
             int[] dest = moveSet[moveSet.Count - 1];
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
             char enemyType = char.ToUpper(GameBoard[dest[0], dest[1]].id.ToCharArray()[0]);
-            int chanceAttack = rollAttack();
-                              
+            int chanceAttack = 7 - AttackRoll;
+
+            //Piece storage for the defending piece
+            Piece Defender = GameBoard[dest[0], dest[1]];
+            int idxAttacker = charSet.IndexOf(pieceType);
+
             //Checks to see if the position is empty
             if (!GameBoard[dest[0], dest[1]].id.Equals("e") && (!currPiece.color.Equals(GameBoard[dest[0], dest[1]].color)))
             {
-                if ((Math.Abs(dest[0] - initial[0]) < currPiece.attack) && (Math.Abs(dest[1] - initial[1]) < currPiece.attack))
+                if ((Math.Abs(dest[0] - initial[0]) <= currPiece.attack) && (Math.Abs(dest[1] - initial[1]) <= currPiece.attack))
                     actionValid = true;
                 else
                     actionValid = false;
@@ -154,7 +159,15 @@ namespace Actions
                 actionValid = false;
             }
 
-            switch (pieceType)
+            if(actionValid && chanceAttack <= Defender.defenseProb[idxAttacker])
+            {
+                if (pieceType == 'N')
+                    return 1;
+                else
+                    return 2;
+            }
+
+            /*switch (pieceType)
             {
                 case 'K':
                     if (actionValid == true)
@@ -193,15 +206,15 @@ namespace Actions
                 case 'Q':
                     if (actionValid == true)
                     {
-                        if (enemyType == 'K' && chanceAttack < 3)
+                        if (enemyType == 'K' && chanceAttack > 3)
                         {
                             return 2;
                         }
-                        if (enemyType == 'Q' && chanceAttack < 3)
+                        if (enemyType == 'Q' && chanceAttack > 3)
                         {
                             return 2;
                         }
-                        if (enemyType == 'N' && chanceAttack < 3)
+                        if (enemyType == 'N' && chanceAttack > 3)
                         {
                             return 2;
                         }
@@ -359,7 +372,7 @@ namespace Actions
                         return 0;
                     }
                     break;
-            }
+            }*/
             return -1;
         }
         #endregion

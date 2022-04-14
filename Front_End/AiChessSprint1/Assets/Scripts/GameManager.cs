@@ -162,6 +162,14 @@ public class GameManager : MonoBehaviour
                 {
                     uiUpdating = true;
                     ApplyAIMove(this.AIMoveCount);
+
+                    if (ExecutionBoard.waitBuff.isWaiting == true)
+                    {
+                        ExecutionBoard.waitBuff.isNotWaiting();
+                        rollTheDice(ExecutionBoard.waitBuff.Roll);
+                        ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
+                    }
+
                     this.AIMoveCount++;
                 }
             }
@@ -248,8 +256,8 @@ public class GameManager : MonoBehaviour
         //Making sure there is indeed a piece to be moved, might be a redundant/useless check
         if (mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece != null)
         {
-            PrintLog("Starting; \nRow: " + initial[0] + "; Col: " + initial[1]);
-            PrintLog("Destination; \nRow: " + dest[0] + "; Col: " + dest[1]);
+            //PrintLog("Starting; \nRow: " + initial[0] + "; Col: " + initial[1]);
+            //PrintLog("Destination; \nRow: " + dest[0] + "; Col: " + dest[1]);
             BasePiece tempPiece = mBoardUI.mAllCells[initial[1], 7 - initial[0]].mCurrentPiece;
             tempPiece.mTargetCell = mBoardUI.mAllCells[dest[1], 7 - dest[0]];
             tempPiece.MoveAIPiece();
@@ -267,11 +275,12 @@ public class GameManager : MonoBehaviour
         ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
         ExecutionBoard.actionInitial = ExecutionBoard.AIActions[idx].getOriginalCords();
         ExecutionBoard.actionDest = ExecutionBoard.AIActions[idx].getDestinationCords();
-
+        
         if ((ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]].color.Equals("Black")))
         {
             if (ExecutionBoard.AIActions[idx].getIsAttack())
             {
+                ExecutionBoard.AIActions[idx].getRoll();
                 ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
             }
             else
@@ -378,7 +387,7 @@ public class GameManager : MonoBehaviour
     public void moveOrAttackBttn()
     {
         /* REMOVE */
-        rollTheDice(UnityEngine.Random.Range(1, 7));
+        //rollTheDice(UnityEngine.Random.Range(1, 7));
         /* ENDREMOVE */
 
         if (mPieceManager.attacking)

@@ -6,6 +6,29 @@ using System.Collections.Generic;
 
 namespace GameBoard
 {
+    public struct waitingAction
+    {  
+        public Pieces.Piece waitingPiece;
+        public int[] currPos;
+        public int[] destPos;
+        public int Roll;
+        public bool isWaiting { get; set; }
+
+        public waitingAction(Pieces.Piece piece, int[] pos, int[] dest, int roll)
+        {
+            waitingPiece = piece;
+            currPos = pos;
+            destPos = dest;
+            Roll = roll;
+            isWaiting = true;
+        }
+
+        public void isNotWaiting()
+        {
+            isWaiting = false;
+        }
+    };
+
     public class Board
     {
         /*
@@ -35,12 +58,14 @@ namespace GameBoard
         public Pieces.King BlackKing { get; set; }
         public Pieces.Bishop[] BlackBishops { get; set; }
 
+        //Action particular variables
         public int[] actionInitial { get; set; } = new int[2];
         public int[] actionDest { get; set; } = new int[2];
         public List<int[]> actionPositions { get; set; }
         public KingAI1.Action[] AIActions { get; set; }
+        public int AttackRoll { get; set; }
 
-
+        public waitingAction waitBuff { get; set; }
 
         private const int MaxTeamActionCount = 6;
         public int ActionCount { get; set; } = 0;
@@ -250,17 +275,44 @@ namespace GameBoard
                         }
                         break;
                     case 'A':
-                        temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece);
+                        bool hasMoved = false;
+                        //Handling the Knight move and attack feature
+                        if (char.ToUpper(currPiece.id.ToCharArray()[0]) == 'N' && this.actionPositions.Count > 1) {
+
+                            List<int[]> moveSet = new List<int[]>();
+                            foreach (int[] pos in this.actionPositions)
+                                moveSet.Add(pos);
+                            moveSet.RemoveAt(this.actionPositions.Count - 1);
+                            temp = Actions.Action.moveAction2(moveSet, this.GameBoard, currPiece);
+                            if (temp > 0 && this.ActionCount + temp <= MaxTeamActionCount)
+                            {
+                                hasMoved = true;
+                                this.ActionCount += temp;
+                                int[] previous = currPiece.currPos;
+                                foreach (int[] dest in moveSet)
+                                {
+                                    if (previous[0] == dest[0] && previous[1] == dest[1])
+                                        continue;
+                                    updateBoard(currPiece, currPiece.currPos, dest);
+                                }
+                            }
+                        }
+
+                        int tempRoll = this.AttackRoll;
+                        if (hasMoved)
+                        {
+                            hasMoved = false;
+                            tempRoll++;
+                        }
+
+                        temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece, tempRoll);
                         if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
                         {
                             ActionCount += temp;
-                            int[] previous = this.actionPositions[0];
-                            foreach (int[] dest in this.actionPositions)
-                            {
-                                if (previous[0] == dest[0] && previous[1] == dest[1])
-                                    continue;
-                                updateBoard(currPiece, currPiece.currPos, dest);
-                            }
+                            int[] previous = currPiece.currPos;
+
+                            this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count - 1], tempRoll);
+                            //updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
                         }
                         break;
 
@@ -280,22 +332,28 @@ namespace GameBoard
                 }
 
                 switch (ActionType) {
-                        case 'M':
-                            temp = Actions.Action.moveAction2(this.actionPositions, this.GameBoard, currPiece);
-                            if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                            {
-                                ActionCount += temp;
-                                updateBoard(currPiece, currPiece.currPos, this.actionDest);
-                            }
-                            break;
-                        case 'A':
-                            temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece);
-                            if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                            {
-                                ActionCount += temp;
-                                updateBoard(currPiece, currPiece.currPos, this.actionDest);
-                            }
-                            break;
+                    case 'M':
+                        temp = Actions.Action.moveAction2(this.actionPositions, this.GameBoard, currPiece);
+                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            ActionCount += temp;
+                            updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                        }
+                        break;
+                    case 'A':
+                        this.AttackRoll = Actions.Action.rollAttack();
+                        int tempRoll = this.AttackRoll;
+
+
+                        temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece, tempRoll);
+                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
+                        {
+                            ActionCount += temp;
+
+                            this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionDest, tempRoll);
+                            //updateBoard(currPiece, currPiece.currPos, this.actionDest);
+                        }
+                        break;
                 }
                 this.actionPositions.Clear();
             }
