@@ -45,7 +45,10 @@ public class GameManager : MonoBehaviour
     protected List<int> uiTargetCellX = new List<int>();
     protected List<int> uiTargetCellY = new List<int>();
     private int moveCount = 0;
+    // Updates to animations, etc.
     public bool uiUpdating = false;
+    private const float UI_WAIT_TIME = 1.0f; // One second
+    public float scheduler = 0.0f;
 
     //AI variables and control structrues
     private int AIMoveCount = 0;
@@ -76,8 +79,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string TempLogBuff = "";
+        // Time difference between each update call incremented
+        scheduler += Time.deltaTime;
 
+        string TempLogBuff = "";
 
         #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
@@ -158,9 +163,11 @@ public class GameManager : MonoBehaviour
             //update the UI for every processin the action being taken
             if (this.AIMoveCount < this.AIMoveMax)
             {
-                if (!uiUpdating)
+                // UI is not already updating with an action and time between last UI update is greater than the wait time
+                if (!uiUpdating && scheduler > UI_WAIT_TIME)
                 {
                     uiUpdating = true;
+                    scheduler = 0.0f; // Reset wait timer
                     ApplyAIMove(this.AIMoveCount);
 
                     if (ExecutionBoard.waitBuff.isWaiting == true)
