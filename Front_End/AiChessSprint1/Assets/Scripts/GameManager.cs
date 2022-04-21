@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     // Updates to animations, etc.
     public bool uiUpdating = false;
     private const float UI_WAIT_TIME = 1.0f; // One second
-    public float scheduler = 0.0f;
+    public float uiScheduler = 0.0f;
 
     //AI variables and control structrues
     private int AIMoveCount = 0;
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Time difference between each update call incremented
-        scheduler += Time.deltaTime;
+        uiScheduler += Time.deltaTime;
 
         string TempLogBuff = "";
 
@@ -145,18 +145,23 @@ public class GameManager : MonoBehaviour
             {
                 ExecutionBoard.getAIAction();
             }
-
-            if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
+            // There will be a delay between each action instead of
+            // between each animation, as some actions consist of multiple
+            // animations (Knights/Royalty moving more than one space)
+            if (uiScheduler > UI_WAIT_TIME)
             {
-                getAIActionSet(this.AIActionCount);
-
-                if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
                 {
-                    TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
-                    TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
-                }
+                    getAIActionSet(this.AIActionCount);
 
-                this.AIActionCount++;
+                    if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                    {
+                        TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
+                        TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                    }
+
+                    this.AIActionCount++;
+                }
             }
 
             //Should be run for all movement steps in a function to
@@ -164,10 +169,9 @@ public class GameManager : MonoBehaviour
             if (this.AIMoveCount < this.AIMoveMax)
             {
                 // UI is not already updating with an action and time between last UI update is greater than the wait time
-                if (!uiUpdating && scheduler > UI_WAIT_TIME)
+                if (!uiUpdating)
                 {
                     uiUpdating = true;
-                    scheduler = 0.0f; // Reset wait timer
                     ApplyAIMove(this.AIMoveCount);
 
                     if (ExecutionBoard.waitBuff.isWaiting == true)
@@ -188,6 +192,7 @@ public class GameManager : MonoBehaviour
                 this.AIMoveMax = 0;
                 this.AIMoveCount = 0;
                 ExecutionBoard.hasActed = false;
+                uiScheduler = 0.0f; // Reset UI wait timer
             }
 
             //Once all actions have been processed, print the board and end the AI's turn
