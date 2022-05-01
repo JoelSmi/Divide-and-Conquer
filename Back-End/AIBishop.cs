@@ -898,5 +898,6 @@ namespace KingAI1
 
             return outgoingAction;
         }
+
     }//End of class
 }//End of namespace
