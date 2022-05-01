@@ -511,6 +511,7 @@ namespace KingAI1
                 //Now that we have selected the piece we're protecting, we need to check exactly which enemy pieces are attacking
                 //for (int i = 0; i < sizeof(LiveEnemyPlayers); i++)
                 
+                
                 foreach(Piece currentEnemyPlayer in LiveEnemyPlayers)
                 {
                     if (currentEnemyPlayer != null && currentEnemyPlayer.GetType() != typeof(EmptySquare)){
@@ -519,7 +520,7 @@ namespace KingAI1
                             //Here we may need to use canAttack to make sure that the attacking piece is one that can be attacked back.
                             if(OddsCheck(currentEnemyPlayer,subordinateWeAreDefending)){
                                 attackingPieces[counter1] = currentEnemyPlayer;
-                                counter1++;
+                                // counter1++;
                             }
                             dangerFound = true;
                         }
