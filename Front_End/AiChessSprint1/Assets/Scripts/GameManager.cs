@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using GameBoard;
 using Pieces;
@@ -79,6 +80,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!mPieceManager.mIsKingAlive)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         // Time difference between each update call incremented
         uiScheduler += Time.deltaTime;
 
@@ -424,6 +429,11 @@ public class GameManager : MonoBehaviour
         mPieceManager.IncreaseTurnCnt();
         
      }
+    public void ResetButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+    }
 
     #region UI Corps Display
 
