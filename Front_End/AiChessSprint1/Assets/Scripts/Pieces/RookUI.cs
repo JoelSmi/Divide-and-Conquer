@@ -11,6 +11,7 @@ public class RookUI : BasePiece
         base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
 
         //// changes RookUI's movement then loads sprite for the RookUI
+        isRook = true;
         mMovement = new Vector3Int(2, 2, 2);
         string spriteName = newTeamColor == Color.white ? "red" : "blue";
         GetComponent<Image>().sprite = Resources.Load<Sprite>("base_" + spriteName);

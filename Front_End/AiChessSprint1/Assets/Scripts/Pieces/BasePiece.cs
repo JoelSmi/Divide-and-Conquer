@@ -37,6 +37,7 @@ public class BasePiece : EventTrigger
     public int corps = 0;
 
     // If the piece is the leader of its corps
+    protected bool isRook= false;
     protected bool isCommander = false;
     protected bool IsCommander
     {
@@ -348,6 +349,7 @@ public class BasePiece : EventTrigger
     {
         // Initialize movement variables
         start = mCurrentCell.transform.position;
+        Cell startCell = mCurrentCell;
         destination = mTargetCell.transform.position;
         t = 0;
 
@@ -355,20 +357,31 @@ public class BasePiece : EventTrigger
         mTargetCell.RemovePiece();
 
         // removes this piece from its current cell
-        mCurrentCell.mCurrentPiece = null;
+        
 
         //sets the current cell = to the target cell
         //selects this piece as the current piece at the new current cell
-        mPieceManager.UIRelay(mCurrentCell.mBoardPosition.x, mCurrentCell.mBoardPosition.y, mTargetCell.mBoardPosition.x, mTargetCell.mBoardPosition.y);
+        mPieceManager.UIRelay(mCurrentCell.mBoardPosition.x, mCurrentCell.mBoardPosition.y, mTargetCell.mBoardPosition.x, mTargetCell.mBoardPosition.y);        
         mPieceManager.actionTaken = true;
+        if (isRook && mPieceManager.attacking)
+        {
+            transform.position = start;
+
+            if (beingKilled)
+                transform.position = mTargetCell.transform.position;
+            mTargetCell = null;
+            
+            return;
+        }
+        mCurrentCell.mCurrentPiece = null;
         mCurrentCell = mTargetCell;
         mCurrentCell.mCurrentPiece = this;
-
         // snaps the piece to the target cell thenn returns target cell to null
         //transform.position = mCurrentCell.transform.position;
 
         // 
         transform.position = start;
+
         if (!beingKilled)
             isMoving = true;
         else

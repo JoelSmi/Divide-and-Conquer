@@ -51,30 +51,33 @@ public class KingUI : BasePiece
     protected override void CheckPathing()
     {
         int movement = mMovement.x;
-        if (!mPieceManager.CommandAuthority )
-            mMovement.x = 1;
-        if (!mPieceManager.CommandAuthority && mPieceManager.CMoveCount > 0)
-            mMovement.x = 0;
-        if (mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
-            mMovement.x = movement - 1;
-        if (mPieceManager.CMoveCount < 2 || mPieceManager.CommandAuthority )//|| (mPieceManager.CommanderMoved && mPieceManager.CommandAuthority))
+        base.CheckPathing();
+        if (!mPieceManager.attacking)
         {
-            int currentX = mCurrentCell.mBoardPosition.x;
-            int currentY = mCurrentCell.mBoardPosition.y;
+            if (!mPieceManager.CommandAuthority)
+                mMovement.x = 1;
+            if (!mPieceManager.CommandAuthority && mPieceManager.CMoveCount > 0)
+                mMovement.x = 0;
+            if (mPieceManager.CommandAuthority && mPieceManager.CommanderMoved)
+                mMovement.x = movement - 1;
+            if (mPieceManager.CMoveCount < 2 || mPieceManager.CommandAuthority)//|| (mPieceManager.CommanderMoved && mPieceManager.CommandAuthority))
+            {
+                int currentX = mCurrentCell.mBoardPosition.x;
+                int currentY = mCurrentCell.mBoardPosition.y;
 
-            MatchesState(currentX, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX, currentY - 1, CellState.Free, 0);
+                MatchesState(currentX, currentY + 1, CellState.Free, 0);
+                MatchesState(currentX, currentY - 1, CellState.Free, 0);
 
-            MatchesState(currentX + 1, currentY, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY, CellState.Free, 0);
+                MatchesState(currentX + 1, currentY, CellState.Free, 0);
+                MatchesState(currentX - 1, currentY, CellState.Free, 0);
 
-            MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
-            MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
+                MatchesState(currentX + 1, currentY + 1, CellState.Free, 0);
+                MatchesState(currentX + 1, currentY - 1, CellState.Free, 0);
+                MatchesState(currentX - 1, currentY + 1, CellState.Free, 0);
+                MatchesState(currentX - 1, currentY - 1, CellState.Free, 0);
+            }
+            mMovement.x = movement;
         }
-        mMovement.x = movement;
-
     }
 
     //follows base Kill function and then set the mIsKingAlive object to false to reset the game
