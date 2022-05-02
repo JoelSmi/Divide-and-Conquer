@@ -137,8 +137,12 @@ namespace KingAI1{
 			if (roll >= minRoll) {
 				Piece capturedPiece = board[defenderRow, defenderCol];
 				Piece attackerPiece = board[attackerRow, attackerCol];
-				board[attackerRow, attackerCol] = e;
-				board[defenderRow, defenderCol] = attackerPiece;
+				if (attackerPiece.GetType() != typeof(Rook)) {
+					board[attackerRow, attackerCol] = e;
+					board[defenderRow, defenderCol] = attackerPiece;
+				} else {
+					board[defenderRow, defenderCol] = e;
+				}
 
 				Console.WriteLine("Attack succeeded - roll " + roll + " meets the minimum roll " + minRoll + 
 					" and " + attackerPiece + " captures " + capturedPiece);

@@ -49,7 +49,7 @@ public class KnightUI : BasePiece
 
     protected override void CheckPathing()
     {
-        //base.CheckPathing();
+        base.CheckPathing();
         if (!mPieceManager.attacking)
         {
             int currentX = mCurrentCell.mBoardPosition.x;

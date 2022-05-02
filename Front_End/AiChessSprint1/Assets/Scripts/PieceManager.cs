@@ -170,7 +170,7 @@ public class PieceManager : MonoBehaviour
     }
 
     //returns all pieces to their original state
-    private void ResetPieces()
+    public void ResetPieces()
     {
         foreach (BasePiece piece in mWhitePieces)
             piece.Reset(boardUI);

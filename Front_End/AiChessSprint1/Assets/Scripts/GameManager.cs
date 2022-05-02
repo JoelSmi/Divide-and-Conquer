@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using GameBoard;
 using Pieces;
@@ -45,7 +46,10 @@ public class GameManager : MonoBehaviour
     protected List<int> uiTargetCellX = new List<int>();
     protected List<int> uiTargetCellY = new List<int>();
     private int moveCount = 0;
+    // Updates to animations, etc.
     public bool uiUpdating = false;
+    private const float UI_WAIT_TIME = 1.0f; // One second
+    public float uiScheduler = 0.0f;
 
     //AI variables and control structrues
     private int AIMoveCount = 0;
@@ -76,8 +80,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string TempLogBuff = "";
+        if (!mPieceManager.mIsKingAlive)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        // Time difference between each update call incremented
+        uiScheduler += Time.deltaTime;
 
+        string TempLogBuff = "";
 
         #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
@@ -141,24 +151,30 @@ public class GameManager : MonoBehaviour
             {
                 ExecutionBoard.getAIAction();
             }
-
-            if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
+            // There will be a delay between each action instead of
+            // between each animation, as some actions consist of multiple
+            // animations (Knights/Royalty moving more than one space)
+            if (uiScheduler > UI_WAIT_TIME)
             {
-                getAIActionSet(this.AIActionCount);
-
-                if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
                 {
-                    TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
-                    TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
-                }
+                    getAIActionSet(this.AIActionCount);
 
-                this.AIActionCount++;
+                    if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                    {
+                        TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
+                        TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                    }
+
+                    this.AIActionCount++;
+                }
             }
 
             //Should be run for all movement steps in a function to
             //update the UI for every processing the action being taken
             if (this.AIMoveCount <= this.AIMoveMax)
             {
+                // UI is not already updating with an action and time between last UI update is greater than the wait time
                 if (!uiUpdating)
                 {
                     uiUpdating = true;
@@ -182,6 +198,7 @@ public class GameManager : MonoBehaviour
                 this.AIMoveMax = 0;
                 this.AIMoveCount = 0;
                 ExecutionBoard.hasActed = false;
+                uiScheduler = 0.0f; // Reset UI wait timer
             }
 
             //Once all actions have been processed, print the board and end the AI's turn
@@ -413,6 +430,11 @@ public class GameManager : MonoBehaviour
         mPieceManager.IncreaseTurnCnt();
         
      }
+    public void ResetButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+    }
 
     #region UI Corps Display
 
