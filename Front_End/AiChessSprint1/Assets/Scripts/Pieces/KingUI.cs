@@ -17,6 +17,7 @@ public class KingUI : BasePiece
 
         // Commander status
         isCommander = true;
+        king = true;
 
         CreateChildSprite("king_" + spriteName, 0);
         CreateChildSprite("corps", 1);

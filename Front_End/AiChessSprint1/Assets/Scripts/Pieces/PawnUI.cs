@@ -9,7 +9,7 @@ public class PawnUI : BasePiece
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
         base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
-
+        pawn = true;
         //checks whether or not the pawn is a black or white piecefor the direction it will go
         mMovement =  mColor == Color.white ?  new Vector3Int(0,1,1) : new Vector3Int(0,-1,-1);
 

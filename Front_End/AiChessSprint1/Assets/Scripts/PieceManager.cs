@@ -168,6 +168,10 @@ public class PieceManager : MonoBehaviour
         SetInteractive(mWhitePieces, !isBlackTurn);
         SetInteractive(mBlackPieces, true);
     }
+    public void freeze(bool val)
+    {
+        SetInteractive(mWhitePieces, val);
+    }
 
     //returns all pieces to their original state
     public void ResetPieces()
@@ -184,6 +188,11 @@ public class PieceManager : MonoBehaviour
         pmCurrentCellY = currentCellY;
         pmTargetCellX = targetCellX;
         pmTargetCellY = targetCellY;
+    }
+
+    public int rollAttack()
+    {
+        return gameManager.UIAttackRoll();
     }
     
     // three functions for manipulating the turncount variable

@@ -14,7 +14,7 @@ namespace Actions
         public static int rollAttack()
         {
             Random roll = new Random();
-            int output = roll.Next(1, 7);
+            int output = roll.Next(1, 6);
             return output;
 
         }
