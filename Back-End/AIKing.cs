@@ -40,17 +40,20 @@ namespace KingAI1
                 {"r0","n0","b0","q0","k0","b1","n1","r1"}
             }; 
             Board b = new Board(boardArray1a);
-            Piece[] bishop0Subordinates = {new Knight(Color.Black, 0), new Pawn(Color.Black, 0), 
+            Piece[] bishop0Subordinates1 = {new Knight(Color.Black, 0), new Pawn(Color.Black, 0), 
                 new Pawn(Color.Black, 1), new Pawn(Color.Black, 2)};
-            Piece[] kingSubordinates = {new Rook(Color.Black, 0), new Bishop(Color.Black, 0), new Queen(Color.Black),
+            Piece[] kingSubordinates1 = {new Rook(Color.Black, 0), new Bishop(Color.Black, 0), new Queen(Color.Black),
                 new Bishop(Color.Black, 1), new Rook(Color.Black, 1), new Pawn(Color.Black, 3), new Pawn(Color.Black, 4)};
 
-            Piece[] bishop1Subordinates = {new Knight(Color.Black, 1), new Pawn(Color.Black, 5), 
+            Piece[] bishop1Subordinates1 = {new Knight(Color.Black, 1), new Pawn(Color.Black, 5), 
                 new Pawn(Color.Black, 6), new Pawn(Color.Black, 7)};
-            Piece[] LiveEnemyPlayers = {new Pawn(Color.White, 0), new Pawn(Color.White, 1), new Pawn(Color.White, 2), new Pawn(Color.White, 3),
+            Piece[] LiveEnemyPlayers1 = {new Pawn(Color.White, 0), new Pawn(Color.White, 1), new Pawn(Color.White, 2), new Pawn(Color.White, 3),
 				new Pawn(Color.White, 4), new Pawn(Color.White, 5), new Pawn(Color.White,6 ), new Pawn(Color.White, 7),
 				new Rook(Color.White, 0), new Knight(Color.White, 0), new Bishop(Color.White, 0), new Queen(Color.White),
 				new King(Color.White), new Bishop(Color.White, 1), new Knight(Color.White, 1), new Rook(Color.White, 1)};
+            this.bishop0Subordinates = bishop0Subordinates1;
+            this.kingSubordinates = kingSubordinates1;
+            this.bishop1Subordinates = bishop1Subordinates1;
         }
 
         public AIKing(Board bo){
