@@ -362,17 +362,15 @@ public class BasePiece : EventTrigger
         int atckrol;
         if (mPieceManager.attacking) 
         {
-            atckrol = mPieceManager.rollAttack();
+            atckrol = gameManager.UIAttackRoll();
+            gameManager.rollTheDice(atckrol);
             if (!AttackCheck(atckrol))
             {
                 transform.position = mCurrentCell.gameObject.transform.position;
                 transform.position = start;
                 return;
             }
-            else
-            {
-                gameManager.rollTheDice(atckrol);
-            }
+            mTargetCell.RemovePiece();
         }
         
 
@@ -390,7 +388,7 @@ public class BasePiece : EventTrigger
         {
             transform.position = start;
 
-            if (!beingKilled)
+            if (beingKilled)
                 transform.position = mTargetCell.transform.position;
             mTargetCell = null;
             
@@ -430,9 +428,10 @@ public class BasePiece : EventTrigger
 
     }
 
-    public bool AttackCheck(int attackRoll)
+    public bool AttackCheck(int roll)
     {
-        if(mCurrentCell.mCurrentPiece.pawn && attackRoll >= 4)
+        int attackRoll = roll;
+        if(pawn && attackRoll >= 4)
         {
             if(mTargetCell.mCurrentPiece.pawn)
             {
@@ -445,7 +444,7 @@ public class BasePiece : EventTrigger
             if (attackRoll == 6)
                 return true;
         }
-        if(mCurrentCell.mCurrentPiece.isRook && attackRoll >= 4)
+        if(isRook && attackRoll >= 4)
         {
             if(mTargetCell.mCurrentPiece.king || mTargetCell.mCurrentPiece.queen || mTargetCell.mCurrentPiece.knight)
             {
@@ -456,7 +455,7 @@ public class BasePiece : EventTrigger
                 return true;
             }
         }
-        if(mCurrentCell.mCurrentPiece.bishop && attackRoll >= 3)
+        if(bishop && attackRoll >= 3)
         {
             if (mTargetCell.mCurrentPiece.pawn)
                 return true;
@@ -465,14 +464,14 @@ public class BasePiece : EventTrigger
             else if (attackRoll >= 5)
                 return true;
         }
-        if(mCurrentCell.mCurrentPiece.knight && attackRoll >= 2)
+        if(knight && attackRoll >= 2)
         {
             if (mTargetCell.mCurrentPiece.pawn)
                 return true;
             else if (attackRoll >= 5)
                 return true;
         }
-        if(mCurrentCell.mCurrentPiece.queen && attackRoll >= 2)
+        if(queen && attackRoll >= 2)
         {
             if (mTargetCell.mCurrentPiece.pawn)
                 return true;
@@ -481,7 +480,7 @@ public class BasePiece : EventTrigger
             else if (attackRoll >= 4)
                 return true;
         }
-        if (mCurrentCell.mCurrentPiece.king)
+        if (king)
         {
             if (mTargetCell.mCurrentPiece.pawn)
                 return true;

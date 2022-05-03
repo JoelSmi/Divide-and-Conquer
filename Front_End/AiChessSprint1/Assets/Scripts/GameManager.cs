@@ -407,6 +407,7 @@ public class GameManager : MonoBehaviour
     {
         if (ExecutionBoard.BlackKing.isCaptured == true || ExecutionBoard.WhiteKing.isCaptured == true)
         {
+            mPieceManager.freeze(true);
             mPieceManager.mIsKingAlive = false;
         }
     }
