@@ -1,0 +1,48 @@
+User Moves:
+Initial: 6, 3
+Destination: 5, 2
+Initial: 7, 4
+Destination: 6, 3
+Initial: 6, 2
+Destination: 5, 1
+Initial: 7, 2
+Destination: 6, 2
+Initial: 6, 5
+Destination: 5, 4
+R0	N0	B0	Q0	K0	B1	N1	R1	
+P0	P1	P2	P3	P4	P5	P6	P7	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	p2	p3	e	p5	e	e	e	
+p0	p1	b0	k0	p4	e	p6	p7	
+r0	n0	e	q0	e	b1	n1	r1	
+
+
+AI Action #0:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 0 will move from A7 to A6
+[2,0]
+Action Count: 1
+Max Move Count: 1
+Move Count: 1
+
+
+AI Action #1:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 0 will move from D7 to D6
+[2,3]
+Action Count: 2
+Max Move Count: 1
+Move Count: 1
+
+
+AI Action #2:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 0 will move from G7 to G6
+[2,6]
+
+Action Count: 3
+Max Move Count: 1
+Move Count: 1
+

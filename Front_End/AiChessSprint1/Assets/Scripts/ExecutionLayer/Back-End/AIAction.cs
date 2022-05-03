@@ -34,18 +34,28 @@ namespace KingAI1
 			printedReference = "null";
 		}
 
-		public Action(Type piece, int pieceId, String printRef, int[] original, int[] destination, bool attacking){
-			this.pieceType = piece;
-			this.id = pieceId;
-			this.originalCords = original;
-			originalXCord = this.originalCords[0];
-			originalYCord = this.originalCords[1];
-			this.destinationCords = destination;
-			destinationXCord = this.destinationCords[0];
-			destinationYCord = this.destinationCords[1];
-			this.isAttack = attacking;
-			this.printedReference = printRef;
+		public Action(int[] newDestCord, int[] newOrigCord, int newPieceID, Type newPieceType, Piece newCommanderPiece, List<int[]> newPath){
+			this.setDestinationCord(newDestCord);
+			this.setOriginalCord(newOrigCord);
+			this.id = newPieceID;
+			this.pieceType = newPieceType;
+			this.isActing = true;
+			this.commandingPiece = newCommanderPiece;
+			this.path = newPath;
 		}
+
+		// public Action(Type piece, int pieceId, String printRef, int[] original, int[] destination, bool attacking){
+		// 	this.pieceType = piece;
+		// 	this.id = pieceId;
+		// 	this.originalCords = original;
+		// 	originalXCord = this.originalCords[0];
+		// 	originalYCord = this.originalCords[1];
+		// 	this.destinationCords = destination;
+		// 	destinationXCord = this.destinationCords[0];
+		// 	destinationYCord = this.destinationCords[1];
+		// 	this.isAttack = attacking;
+		// 	this.printedReference = printRef;
+		// }
 
 		public static string GetNotation(int squareRow, int squareCol) {
 			string row = (8 - squareRow).ToString();
