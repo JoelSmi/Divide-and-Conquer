@@ -38,6 +38,13 @@ public class BasePiece : EventTrigger
 
     // If the piece is the leader of its corps
     protected bool isRook= false;
+    protected bool knight = false;
+    protected bool pawn = false;
+    protected bool bishop = false;
+    protected bool leftCommander = false;
+    protected bool rightCommander = false;
+    protected bool queen = false;
+    protected bool king = false;
     protected bool isCommander = false;
     protected bool IsCommander
     {
@@ -352,6 +359,22 @@ public class BasePiece : EventTrigger
         Cell startCell = mCurrentCell;
         destination = mTargetCell.transform.position;
         t = 0;
+        int atckrol;
+        if (mPieceManager.attacking) 
+        {
+            atckrol = mPieceManager.rollAttack();
+            if (!AttackCheck(atckrol))
+            {
+                transform.position = mCurrentCell.gameObject.transform.position;
+                transform.position = start;
+                return;
+            }
+            else
+            {
+                gameManager.rollTheDice(atckrol);
+            }
+        }
+        
 
         //removes Pieece from the board at target cell
         mTargetCell.RemovePiece();
@@ -367,7 +390,7 @@ public class BasePiece : EventTrigger
         {
             transform.position = start;
 
-            if (beingKilled)
+            if (!beingKilled)
                 transform.position = mTargetCell.transform.position;
             mTargetCell = null;
             
@@ -405,6 +428,69 @@ public class BasePiece : EventTrigger
         transform.position = mCurrentCell.transform.position;
         mTargetCell = null;
 
+    }
+
+    public bool AttackCheck(int attackRoll)
+    {
+        if(mCurrentCell.mCurrentPiece.pawn && attackRoll >= 4)
+        {
+            if(mTargetCell.mCurrentPiece.pawn)
+            {
+                return true;
+            }
+            else if(mTargetCell.mCurrentPiece.bishop && attackRoll >= 5)
+            {
+                return true;
+            }
+            if (attackRoll == 6)
+                return true;
+        }
+        if(mCurrentCell.mCurrentPiece.isRook && attackRoll >= 4)
+        {
+            if(mTargetCell.mCurrentPiece.king || mTargetCell.mCurrentPiece.queen || mTargetCell.mCurrentPiece.knight)
+            {
+                    return true;
+            }
+            else if(attackRoll >= 5)
+            {
+                return true;
+            }
+        }
+        if(mCurrentCell.mCurrentPiece.bishop && attackRoll >= 3)
+        {
+            if (mTargetCell.mCurrentPiece.pawn)
+                return true;
+            else if (mTargetCell.mCurrentPiece.bishop && attackRoll >= 4)
+                return true;
+            else if (attackRoll >= 5)
+                return true;
+        }
+        if(mCurrentCell.mCurrentPiece.knight && attackRoll >= 2)
+        {
+            if (mTargetCell.mCurrentPiece.pawn)
+                return true;
+            else if (attackRoll >= 5)
+                return true;
+        }
+        if(mCurrentCell.mCurrentPiece.queen && attackRoll >= 2)
+        {
+            if (mTargetCell.mCurrentPiece.pawn)
+                return true;
+            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+                return true;
+            else if (attackRoll >= 4)
+                return true;
+        }
+        if (mCurrentCell.mCurrentPiece.king)
+        {
+            if (mTargetCell.mCurrentPiece.pawn)
+                return true;
+            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+                return true;
+            else if (attackRoll >= 4)
+                return true;
+        }
+        return false;
     }
     #endregion
 
@@ -580,6 +666,8 @@ public class BasePiece : EventTrigger
      */
     public void MoveAIPiece()
     {
+
+        
         // Initialize movement variables
         start = mCurrentCell.transform.position;
         destination = mTargetCell.transform.position;
@@ -606,6 +694,7 @@ public class BasePiece : EventTrigger
         isMoving = true;
 
         mTargetCell = null;
+        
     }
     #endregion
 

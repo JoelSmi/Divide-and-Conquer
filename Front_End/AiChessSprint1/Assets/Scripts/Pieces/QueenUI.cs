@@ -9,7 +9,7 @@ public class QueenUI : BasePiece
     public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager, GameManager newGameManager)
     {
         base.Setup(newTeamColor, newSpriteColor, newPieceManager, newGameManager);
-
+        queen = true;
         // changes Queen's movement then loads sprie for the queen
         mMovement = new Vector3Int(3, 3, 3);
         string spriteName = newTeamColor == Color.white ? "red" : "blue";

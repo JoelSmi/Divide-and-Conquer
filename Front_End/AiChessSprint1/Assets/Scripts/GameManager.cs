@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using GameBoard;
+using Actions;
 using Pieces;
 
 public class GameManager : MonoBehaviour
@@ -101,6 +102,7 @@ public class GameManager : MonoBehaviour
 
         if (mPieceManager.GetTurnCount() == 4)
         {
+            
             TempLogBuff += "User Moves:\n";
             for (int i = 0; i < moveCount - 1; i++)
             {
@@ -113,11 +115,12 @@ public class GameManager : MonoBehaviour
 
             PrintLog(TempLogBuff);
             TempLogBuff = "";
-
+            
             mPieceManager.actionTaken = false;
             mPieceManager.SwitchSides(Color.black);
             mPieceManager.Delegation = false;
             mPieceManager.ResetTurnCount();
+            mPieceManager.freeze(false);
             ExecutionBoard.endTurn();
             EndTurn();
         }
@@ -338,7 +341,9 @@ public class GameManager : MonoBehaviour
         ExecutionBoard.endTurn();
 
         //GameManager end turn function
+        mPieceManager.freeze(true);
         EndTurn();
+        
     }
 
     //Original Apply AI Actions function
@@ -391,6 +396,10 @@ public class GameManager : MonoBehaviour
         uiTargetCellX.Add(mPieceManager.pmTargetCellX);
         uiTargetCellY.Add(mPieceManager.pmTargetCellY);
         
+    }
+    public int UIAttackRoll()
+    {
+        return Actions.Action.rollAttack();
     }
     
     public void EndTurn()
