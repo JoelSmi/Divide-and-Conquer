@@ -487,6 +487,7 @@ public class GameManager : MonoBehaviour
     {
         //uiUpdating = true;
         diceRoll.active = true;
+        marginTable.active = true;
         diceRoll.GetComponent<Animator>().SetTrigger("" + number);
     }
 

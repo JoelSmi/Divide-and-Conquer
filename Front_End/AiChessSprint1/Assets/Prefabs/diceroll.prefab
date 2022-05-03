@@ -121,6 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceRoll: {fileID: 3731245667590167611}
   gameManager: {fileID: 846789043724003051, guid: 594f1745deb7d3c4a925d97cf586ca67, type: 3}
+  marginTable: {fileID: 1638049908975971367, guid: 921adf77bc5fbf540a14453fc7fcdfcd, type: 3}
 --- !u!1 &4897395942886990089
 GameObject:
   m_ObjectHideFlags: 0
