@@ -227,7 +227,16 @@ namespace GameBoard
         public void updateBoard(Pieces.Piece currPiece, int[] currPos, int[] dest)
         {
             if (this.GameBoard[dest[0], dest[1]] != Blank)
-                this.GameBoard[dest[0], dest[1]].isCaptured = true;
+            {
+                if (char.ToUpper(currPiece.id.ToCharArray()[0]) == 'R')
+                {
+                    this.GameBoard[dest[0], dest[1]].isCaptured = true;
+                    this.GameBoard[dest[0], dest[1]] = this.Blank;
+                    return;
+                }
+                else
+                    this.GameBoard[dest[0], dest[1]].isCaptured = true;
+            }
             this.GameBoard[dest[0], dest[1]] = currPiece;
             this.GameBoard[currPos[0], currPos[1]] = this.Blank;
             currPiece.currPos = dest;
