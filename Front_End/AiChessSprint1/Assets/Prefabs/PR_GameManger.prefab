@@ -50,3 +50,6 @@ MonoBehaviour:
   nxtTrnBtn: {fileID: 0}
   attckButton: {fileID: 0}
   diceRoll: {fileID: 0}
+  marginTable: {fileID: 0}
+  uiUpdating: 0
+  uiScheduler: 0

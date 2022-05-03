@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Button nxtTrnBtn;
     public Button attckButton;
     public GameObject diceRoll;
+    public GameObject marginTable;
 
     //Execution Layer initialization 
 
@@ -411,11 +412,13 @@ public class GameManager : MonoBehaviour
         {
             txt.text = "Moving";
             mPieceManager.attacking = false;
+            marginTable.active = false;
         }
         else
         {
             txt.text = "Attacking";
             mPieceManager.attacking = true;
+            marginTable.active = true;
         }
     }
 
