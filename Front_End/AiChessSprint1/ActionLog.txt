@@ -21,8 +21,8 @@ Move Count: 1
 
 AI Action #2:
 The outgoing action returned is:
-The KingAI1.Pawn with an id of 5 will move from F7 to E6
-[2,4]
+The KingAI1.Pawn with an id of 5 will move from F7 to F6
+[2,5]
 Action Count: 3
 Max Move Count: 1
 Move Count: 1
@@ -35,4 +35,129 @@ e	e	e	e	e	e	e	e
 e	e	e	e	e	e	e	e	
 p0	p1	p2	p3	p4	p5	p6	p7	
 r0	n0	b0	q0	k0	b1	n1	r1	
+
+User Moves:
+Initial: 6, 3
+Destination: 5, 2
+R0	N0	B0	Q0	K0	B1	N1	R1	
+P0	e	P2	e	P4	P5	P6	P7	
+e	e	P1	P3	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	p3	e	e	e	e	e	
+p0	p1	p2	e	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+
+
+AI Action #0:
+The outgoing action returned is:
+The KingAI1.Rook with an id of 0 will move from A8 to B7
+[1,1]
+Action Count: 1
+Max Move Count: 1
+Move Count: 1
+
+
+AI Action #1:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 0 will move from A7 to A6
+[2,0]
+Action Count: 2
+Max Move Count: 1
+Move Count: 1
+
+
+AI Action #2:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 6 will move from G7 to H6
+[2,7]
+Action Count: 3
+Max Move Count: 1
+Move Count: 1
+
+e	N0	B0	Q0	K0	B1	N1	R1	
+e	R0	P2	e	P4	P5	P6	P7	
+P0	e	P1	P3	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	p3	e	e	e	e	e	
+p0	p1	p2	e	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+User Moves:
+Initial: 6, 3
+Destination: 5, 2
+e	N0	B0	Q0	K0	B1	N1	R1	
+e	R0	P2	e	P4	P5	P6	P7	
+P0	e	P1	P3	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	p3	e	e	e	e	e	
+p0	p1	p2	e	p4	p5	p6	p7	
+r0	n0	b0	q0	k0	b1	n1	r1	
+
+Initial: 7, 3
+Destination: 6, 3
+e	N0	B0	Q0	K0	B1	N1	R1	
+e	R0	P2	e	P4	P5	P6	P7	
+P0	e	P1	P3	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	p3	e	e	e	e	e	
+p0	p1	p2	q0	p4	p5	p6	p7	
+r0	n0	b0	e	k0	b1	n1	r1	
+
+Initial: 7, 4
+Destination: 7, 3
+e	N0	B0	Q0	K0	B1	N1	R1	
+e	R0	P2	e	P4	P5	P6	P7	
+P0	e	P1	P3	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	p3	e	e	e	e	e	
+p0	p1	p2	q0	p4	p5	p6	p7	
+r0	n0	b0	k0	e	b1	n1	r1	
+
+
+
+AI Action #0:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 4 will move from E7 to F6
+[2,5]
+Action Count: 1
+Max Move Count: 1
+Move Count: 1
+
+
+AI Action #1:
+The outgoing action returned is:
+The KingAI1.Knight with an id of 0 will attack from B8 to C3
+Path taken: [1,0]
+[2,1]
+[3,1]
+[4,1]
+[5,2]
+
+Action Count: 2
+Max Move Count: 5
+Move Count: 5
+
+
+AI Action #2:
+The outgoing action returned is:
+The KingAI1.Pawn with an id of 5 will move from F7 to G6
+[2,6]
+Action Count: 3
+Max Move Count: 1
+Move Count: 1
+
+e	e	B0	Q0	K0	B1	N1	R1	
+e	R0	P2	e	e	P5	P6	P7	
+P0	e	P1	P3	e	P4	e	e	
+e	e	e	e	e	e	e	e	
+e	e	e	e	e	e	e	e	
+e	e	N0	e	e	e	e	e	
+p0	p1	p2	q0	p4	p5	p6	p7	
+r0	n0	b0	k0	e	b1	n1	r1	
 
