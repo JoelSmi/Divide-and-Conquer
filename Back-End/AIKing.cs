@@ -6,7 +6,7 @@ namespace KingAI1
     
     
     //Because the king will always exist, we need to make it so that when the king is created, it creates a default board. At the beginning of each kingAI, we will need the actions that the user took from the execution layer
-    class AIKing{
+    public class AIKing{
         //Any 'global' variables
         private Board b;
         private Piece[] bishop0Subordinates;
@@ -29,7 +29,17 @@ namespace KingAI1
         // Creates the board, creates the list of subordinates and list of enemy pieces for AI to refer to.
         // Will also create the array of actions we will use as moves.
         public AIKing(){
-            Board b = new Board();
+            String[,] boardArray1a = new String [8,8] {
+                {"R0","N0","B0","Q0","K0","B1","N1","R1"},
+                {"P0","P1","P2","P3","P4","P5","P6","P7"},
+                {"e","e","e","e","e","e","e","e"},
+                {"e","e","e","e","e","e","e","e"},
+                {"e","e","e","e","e","e","e","e"},
+                {"e","e","e","e","e","e","e","e"},
+                {"p0","p1","p2","p3","p4","p5","p6","p7"},
+                {"r0","n0","b0","q0","k0","b1","n1","r1"}
+            }; 
+            Board b = new Board(boardArray1a);
             Piece[] bishop0Subordinates = {new Knight(Color.Black, 0), new Pawn(Color.Black, 0), 
                 new Pawn(Color.Black, 1), new Pawn(Color.Black, 2)};
             Piece[] kingSubordinates = {new Rook(Color.Black, 0), new Bishop(Color.Black, 0), new Queen(Color.Black),
@@ -65,36 +75,6 @@ namespace KingAI1
             LiveEnemyPlayers = b.GetEnemyPieces();
         }
 
-
-        // b = kingAI. according to execution layer?
-        public Action[] hCommand1(){
-            //This is the first testing heuristic, we want to move P0, P3, and P7.
-            //Here we make the commander piece
-            Piece hCommander1 = new Bishop(Color.Black, 0);
-            //Here we define all neccessary variables for action 1
-            int[] orig1 = {1,0};
-            int[] dest1 = {2,0};
-            List<int[]> path1 = new List<int[]>();
-            path1.Add(dest1);
-        
-            Piece hCommander2 = new King(Color.Black);
-            int[] orig2 = {1,3};
-            int[] dest2 = {2,3};
-            List<int[]> path2 = new List<int[]>();
-            path2.Add(dest2);
-            
-            Piece hCommander3 = new Bishop(Color.Black, 0);
-            int[] orig3 = {1,6};
-            int[] dest3 = {2,6};
-            List<int[]> path3 = new List<int[]>();
-            path3.Add(dest3);
-
-            Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
-            Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
-            Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic0 = {action1, action2, action3}; 
-            return heuristic0;
-        }
 
         //This will be the King Immediate Threat Detection  
         public static Action KingImmediateThreatDetection(
@@ -858,17 +838,15 @@ namespace KingAI1
                 foreach(Action act in kingAI.GetListOfActions())
                 {
                     if(act.getIsActing() && !act.getCompleted()){
-                        //This is if we dont attack and just move
                         b.Move(act.getOriginalXCord(), act.getOriginalYCord(), 
                         act.getDestinationXCord(), act.getDestinationYCord());
-                        //act.printAction();
                         act.printAction();
                         Console.WriteLine("New Board:");
                         b.Print(); 
                         act.setCompleted(true);                 
                     }
                 }
-		kingAI.addTurn();
+                kingAI.addTurn();
                 return kingAI.GetListOfActions();
             }
 
@@ -1106,6 +1084,17 @@ namespace KingAI1
                 {"r0","n0","b0","q0","k0","b1","n1","r1"}
             };
 
+            String[,] boardArray4a = new String[8,8] {
+                {"R0","e","B0","Q0","K0","B1","N1","R1"},   
+                {"P0","P1","e","e","e","P5","P6","P7"},  
+                {"e","e","P3","P2","e","P4","e","e"},  
+                {"e","e","e","e","e","e","e","e"},
+                {"e","p3","e","e","e","e","e","e"}, 
+                {"e","p1","k0","p2","N0","e","e","e"},  
+                {"p0","e","e","b0","p4","b1","p6","p7"},  
+                {"r0","n0","e","q0","e","e","n1","r1"} 
+            };
+
             Board board = new Board(boardArray1a);
 
             board.Print();
@@ -1126,7 +1115,7 @@ namespace KingAI1
 
             Console.WriteLine("This is the initial phase, now we manually input the next board as if the EL is sending us a board");
 
-            Board board1 = new Board(boardArray2c);
+            Board board1 = new Board(boardArray4a);
             board1.Print();
             KingBoardUpdate(board1, kingAI, commentsOn);
 
