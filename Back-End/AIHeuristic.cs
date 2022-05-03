@@ -4,8 +4,12 @@ using System.Collections.Generic;
 namespace KingAI1
 {
     public class Heuristic{
+        Action emptyAction1 = new Action();
+        Action emptyAction2 = new Action();
+        Action emptyAction3 = new Action();
+
         //MUST UPDATE THIS WITH THE TOTAL NUMBER OF HEURISTICS
-        public int totalHeuristics = 1;
+        public int totalHeuristics = 6;
 
         public Action[] chosenActions;
 
@@ -27,6 +31,25 @@ namespace KingAI1
             if (i == 0){
                 this.chosenActions = heuristic0();
             }
+            else if (i == 1){
+                this.chosenActions = heuristic1();
+            }
+            else if (i == 2){
+                this.chosenActions = heuristic2();
+            }
+            else if (i == 3){
+                this.chosenActions = heuristic3();
+            }
+            else if (i == 4){
+                this.chosenActions = heuristic4();
+            }
+            else if (i == 5){
+                this.chosenActions = heuristic5();
+            }
+            else if (i == 6){
+                this.chosenActions = heuristic6();
+            }
+
         }
 
         public Action[] heuristic0(){
@@ -54,9 +77,9 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action emptyAction1 = new Action();
-            Action emptyAction2 = new Action();
-            Action emptyAction3 = new Action();
+            // Action emptyAction1 = new Action();
+            // Action emptyAction2 = new Action();
+            // Action emptyAction3 = new Action();
             Action[] heuristic0 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic0;
         }
@@ -106,7 +129,7 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic1 = {action1, action2, action3}; 
+            Action[] heuristic1 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic1;
         } 
         
@@ -148,7 +171,7 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic2 = {action1, action2, action3}; 
+            Action[] heuristic2 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic2;
         } 
         
@@ -190,7 +213,7 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic3 = {action1, action2, action3}; 
+            Action[] heuristic3 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic3;
         } 
         
@@ -232,7 +255,7 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic4 = {action1, action2, action3}; 
+            Action[] heuristic4 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic4;
         } 
         
@@ -274,7 +297,7 @@ namespace KingAI1
             Action action1 = new Action(dest1, orig1, 0, typeof(Pawn), hCommander1, path1);
             Action action2 = new Action(dest2, orig2, 0, typeof(Pawn), hCommander2, path2);
             Action action3 = new Action(dest3, orig3, 0, typeof(Pawn), hCommander3, path3);
-            Action[] heuristic4 = {action1, action2, action3}; 
+            Action[] heuristic5 = {action1, action2, action3, emptyAction1, emptyAction2, emptyAction3}; 
             return heuristic5;
         }
         
