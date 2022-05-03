@@ -868,6 +868,7 @@ namespace KingAI1
                         act.setCompleted(true);                 
                     }
                 }
+		kingAI.addTurn();
                 return kingAI.GetListOfActions();
             }
 
