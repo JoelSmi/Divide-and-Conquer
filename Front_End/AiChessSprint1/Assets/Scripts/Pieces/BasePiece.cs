@@ -359,18 +359,19 @@ public class BasePiece : EventTrigger
         Cell startCell = mCurrentCell;
         destination = mTargetCell.transform.position;
         t = 0;
-        int atckrol;
-        if (mPieceManager.attacking) 
+        
+        if (mPieceManager.attacking && !mPieceManager.actionTaken) 
         {
-            atckrol = gameManager.UIAttackRoll();
+            int atckrol = gameManager.UIAttackRoll();
             gameManager.rollTheDice(atckrol);
-            if (!AttackCheck(atckrol))
+            if (!AttackCheck(atckrol, mTargetCell.mCurrentPiece))
             {
                 transform.position = mCurrentCell.gameObject.transform.position;
                 transform.position = start;
+                mTargetCell = null;
+                mPieceManager.attacking = false;
                 return;
             }
-            mTargetCell.RemovePiece();
         }
         
 
@@ -428,68 +429,87 @@ public class BasePiece : EventTrigger
 
     }
 
-    public bool AttackCheck(int roll)
+    public bool AttackCheck(int roll, BasePiece defender)
     {
-        int attackRoll = roll;
-        if(pawn && attackRoll >= 4)
+        
+        Debug.Log(roll);
+        Debug.Log(this.name);
+        if (this.name.Contains("BLUE"))
         {
-            if(mTargetCell.mCurrentPiece.pawn)
+            return false;
+        }
+        
+
+
+
+        if (this.pawn && roll >= 4)
+        {
+            if (defender.bishop && roll >= 5)
             {
                 return true;
             }
-            else if(mTargetCell.mCurrentPiece.bishop && attackRoll >= 5)
+            else if (roll == 6)
+                return true;
+            else if (defender.pawn)
             {
                 return true;
             }
-            if (attackRoll == 6)
-                return true;
+            else
+                return false;
         }
-        if(isRook && attackRoll >= 4)
+        else if (this.isRook && roll >= 4)
         {
-            if(mTargetCell.mCurrentPiece.king || mTargetCell.mCurrentPiece.queen || mTargetCell.mCurrentPiece.knight)
-            {
-                    return true;
-            }
-            else if(attackRoll >= 5)
+
+            if (defender.king || defender.queen || defender.knight)
             {
                 return true;
             }
+            else if (roll >= 5)
+            {
+                return true;
+            }
+            else { return false; }
         }
-        if(bishop && attackRoll >= 3)
+        else if (this.bishop && roll >= 3)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.bishop && attackRoll >= 4)
+            else if (defender.bishop && roll >= 4)
                 return true;
-            else if (attackRoll >= 5)
+            else if (roll >= 5)
                 return true;
+            else
+                return false;
         }
-        if(knight && attackRoll >= 2)
+        else if (this.knight && roll >= 2)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (attackRoll >= 5)
+            else if (roll >= 5)
                 return true;
+            else return false;
         }
-        if(queen && attackRoll >= 2)
+        else if (this.queen && roll >= 2)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+            else if (defender.isRook && roll >= 5)
                 return true;
-            else if (attackRoll >= 4)
+            else if ((defender.king || defender.queen || defender.bishop || defender.knight) && roll >= 4)
                 return true;
+            else { return false; }
         }
-        if (king)
+        else if (this.king)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+            else if (defender.isRook && roll >= 5)
                 return true;
-            else if (attackRoll >= 4)
+            else if (roll >= 4)
                 return true;
+            else { return false; }
         }
-        return false;
+        else { return false; }
     }
     #endregion
 
@@ -611,9 +631,8 @@ public class BasePiece : EventTrigger
             if (mPieceManager.CommandAuthority && (!mCurrentCell.mCurrentPiece.isCommander))
             {
                 mCurrentCell.mOutlineImage.enabled = false;
-                Move(false);
                 mPieceManager.CommandAuthority = false;
-                return;
+                
                 
             }
             if (mCurrentCell.mCurrentPiece.isCommander)
@@ -629,6 +648,7 @@ public class BasePiece : EventTrigger
                 }
 
             }
+
 
             //use the Move function
             mCurrentCell.mOutlineImage.enabled = false;
