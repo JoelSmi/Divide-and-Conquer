@@ -77,6 +77,9 @@ public class GameManager : MonoBehaviour
         mPieceManager.Setup(mBoardUI, this);
 
         ExecutionBoard = new Board(WhitePieces, BlackPieces);
+
+        KingAI1.Board b = new KingAI1.Board(ExecutionBoard.ConvertGameBoard());
+        ExecutionBoard.KingAI = new KingAI1.AIKing(b);
     }
 
     // Update is called once per frame
@@ -121,7 +124,7 @@ public class GameManager : MonoBehaviour
             mPieceManager.SwitchSides(Color.black);
             mPieceManager.Delegation = false;
             mPieceManager.ResetTurnCount();
-            mPieceManager.freeze(false);
+            //mPieceManager.freeze(false);
             ExecutionBoard.endTurn();
             EndTurn();
         }
@@ -342,7 +345,7 @@ public class GameManager : MonoBehaviour
         ExecutionBoard.endTurn();
 
         //GameManager end turn function
-        mPieceManager.freeze(true);
+        //mPieceManager.freeze(true);
         EndTurn();
         
     }
@@ -407,7 +410,7 @@ public class GameManager : MonoBehaviour
     {
         if (ExecutionBoard.BlackKing.isCaptured == true || ExecutionBoard.WhiteKing.isCaptured == true)
         {
-            mPieceManager.freeze(true);
+            //mPieceManager.freeze(true);
             mPieceManager.mIsKingAlive = false;
         }
     }

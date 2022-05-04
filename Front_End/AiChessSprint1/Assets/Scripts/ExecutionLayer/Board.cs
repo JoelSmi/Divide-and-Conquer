@@ -67,6 +67,7 @@ namespace GameBoard
 
         public waitingAction waitBuff { get; set; }
 
+        public KingAI1.AIKing KingAI { get; set; }
         private const int MaxTeamActionCount = 6;
         public int ActionCount { get; set; } = 0;
         //bool value to track turn control
@@ -449,10 +450,9 @@ namespace GameBoard
             
             KingAI1.Board b = new KingAI1.Board(ConvertGameBoard());
 
-            KingAI1.AIKing KingAI = new KingAI1.AIKing(b);
-            KingAI1.AIKing.KingBoardUpdate(b, KingAI, false);
+            KingAI1.AIKing.KingBoardUpdate(b, this.KingAI, false);
 
-            this.AIActions = KingAI1.AIKing.KingAIFunction(KingAI);
+            this.AIActions = KingAI1.AIKing.KingAIFunction(this.KingAI);
         }
         #endregion
 
