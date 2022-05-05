@@ -21,6 +21,18 @@ public class PieceManager : MonoBehaviour
         get { return delegation; }
         set { delegation = value; }
     }
+    private int leftTroops = 5;
+    public int LeftTroops
+    {
+        get { return leftTroops; }
+        set { leftTroops = value; }
+    }
+    private int rightTroops = 5;
+    public int RightTroops
+    {
+        get { return rightTroops; }
+        set { rightTroops = value; }
+    }
 
     private bool commandAuthority = true;
     public bool CommandAuthority

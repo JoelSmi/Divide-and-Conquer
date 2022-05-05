@@ -302,8 +302,10 @@ public class BasePiece : EventTrigger
         // selects the delegation tiles if the piece picked up can be delegated back to the king
         if (mCurrentCell.mCurrentPiece.originalcorps == 1 && !mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.Delegation && !mPieceManager.attacking)
         {
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
+            if(mPieceManager.LeftTroops <=6)
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
+            if(mPieceManager.RightTroops <= 6)
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
 
         }
     }
@@ -605,7 +607,7 @@ public class BasePiece : EventTrigger
 
             // changes the corp and corps sprite component based on what corp and cell the piece was placed in.
             #region Delegation
-            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
+            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "Right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
             {
                 mCurrentCell.mCurrentPiece.corps = 1;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
@@ -613,20 +615,22 @@ public class BasePiece : EventTrigger
                 mPieceManager.Delegation = true;
                 return;
             }
-            else if (mTargetCell.name == "Left Delegation")
+            else if (mTargetCell.name == "Left Delegation" && mPieceManager.LeftTroops <= 6)
             {
                 mCurrentCell.mCurrentPiece.corps = 2;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
+                mPieceManager.LeftTroops++;
                 return;
             }
-            else if(mTargetCell.name == "Right Delegation")
+            else if(mTargetCell.name == "Right Delegation" && mPieceManager.RightTroops <= 6)
             {
                 mCurrentCell.mCurrentPiece.corps = 3;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
+                mPieceManager.RightTroops++;
                 return;
             }
             #endregion
