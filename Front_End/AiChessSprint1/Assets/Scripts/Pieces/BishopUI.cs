@@ -25,4 +25,15 @@ public class BishopUI : BasePiece
         CreateChildSprite("corps", 1);
         CreateChildSprite("commander", 2);
     }
+    public override void Kill(BoardUI boardUI)
+    {
+        base.Kill(boardUI);
+        if(corps == 1)
+        {
+            mPieceManager.leftCommanderAlive = false;
+        }
+        if(corps == 3)
+            mPieceManager.rightCommanderAlive = false;
+
+    }
 }

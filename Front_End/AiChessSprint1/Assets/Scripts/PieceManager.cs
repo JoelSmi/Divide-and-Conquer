@@ -7,6 +7,8 @@ public class PieceManager : MonoBehaviour
     
     //checks if both kings are still alive
     public bool mIsKingAlive = true;
+    public bool leftCommanderAlive = true;
+    public bool rightCommanderAlive = true;
     public int numPieces;
     // sets up a game object to be used as the base prefab for the game pieces
     public GameObject mPiecePrefab;
@@ -198,6 +200,28 @@ public class PieceManager : MonoBehaviour
             piece.Reset(boardUI);
         foreach (BasePiece piece in mBlackPieces)
             piece.Reset(boardUI);
+    }
+    public void BishopDeath(int OldCorps)
+    {
+        foreach(BasePiece unit in mWhitePieces)
+        {
+            if(unit.corps == OldCorps || unit.originalcorps == OldCorps)
+            {
+                if(OldCorps == 1)
+                {
+                    unit.corps = 2;
+                    unit.originalcorps = 2;
+                }
+                if(OldCorps == 3)
+                {
+                    unit.corps = 2;
+                    unit.originalcorps = 2;
+
+                }
+            }
+
+        }
+
     }
 
     public void UIRelay(int currentCellX, int currentCellY, int targetCellX, int targetCellY)

@@ -109,6 +109,17 @@ public class BasePiece : EventTrigger
             mPieceManager.CommanderMoved = false;
             mPieceManager.CMoveCount = 0;
         }
+
+        if (!mPieceManager.leftCommanderAlive) 
+        {
+            mPieceManager.BishopDeath(1);
+            mPieceManager.leftCommanderAlive = true;
+        }
+        if (!mPieceManager.rightCommanderAlive)
+        {
+            mPieceManager.BishopDeath(3);
+            mPieceManager.rightCommanderAlive = true;
+        }
     }
 
     #endregion
