@@ -34,6 +34,12 @@ public class PieceManager : MonoBehaviour
         get { return commanderMoved; }
         set { commanderMoved = value; }
     }
+    private bool knightMoved = false;
+    public bool KnightMoved
+    {
+        get { return knightMoved; }
+        set { knightMoved = value; }
+    }
     private int cMoveCount = 0;
     public int CMoveCount
     {

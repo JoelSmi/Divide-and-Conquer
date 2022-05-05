@@ -102,7 +102,7 @@ public class BasePiece : EventTrigger
         }
         if (mPieceManager.CMoveCount >= 2)
             mPieceManager.CommandAuthority = false;
-        if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved)
+        if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved && !mPieceManager.KnightMoved)
         {
             mPieceManager.IncreaseTurnCnt();
             mPieceManager.CommandAuthority = true;
@@ -253,7 +253,7 @@ public class BasePiece : EventTrigger
     // creates the cell path to use for the highlighted cells
     protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
-        if (mPieceManager.CommandAuthority || (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved))
+        if (mPieceManager.CommandAuthority || (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved) ||(mCurrentCell.mCurrentPiece.knight && mPieceManager.KnightMoved))
         {
             if (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommandAuthority)
                 movement = 1;
@@ -362,6 +362,7 @@ public class BasePiece : EventTrigger
         
         if (mPieceManager.attacking && !mPieceManager.actionTaken) 
         {
+            mPieceManager.KnightMoved = false;
             int atckrol = gameManager.UIAttackRoll();
             gameManager.rollTheDice(atckrol);
             if (!AttackCheck(atckrol, mTargetCell.mCurrentPiece))
@@ -369,7 +370,7 @@ public class BasePiece : EventTrigger
                 transform.position = mCurrentCell.gameObject.transform.position;
                 transform.position = start;
                 mTargetCell = null;
-                mPieceManager.attacking = false;
+                gameManager.moveOrAttackBttn();
                 return;
             }
         }
@@ -528,6 +529,8 @@ public class BasePiece : EventTrigger
 
                 if (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority)
                     CheckPathing();
+                if (mCurrentCell.mCurrentPiece.knight && mPieceManager.KnightMoved && mPieceManager.attacking)
+                    CheckPathing();
             }
             if (!mPieceManager.Delegation && originalcorps == mPieceManager.GetTurnCount())
             {
@@ -647,6 +650,10 @@ public class BasePiece : EventTrigger
                     mPieceManager.CommanderMoved = true;
                 }
 
+            }
+            if (mCurrentCell.mCurrentPiece.knight)
+            {
+                mPieceManager.KnightMoved = true;
             }
 
 
