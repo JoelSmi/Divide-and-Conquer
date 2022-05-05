@@ -49,6 +49,7 @@ public class QueenUI : BasePiece
 
     protected override void CheckPathing()
     {
+        base.CheckPathing();
         
         if (!mPieceManager.attacking && mPieceManager.CommandAuthority)
         {

@@ -102,12 +102,23 @@ public class BasePiece : EventTrigger
         }
         if (mPieceManager.CMoveCount >= 2)
             mPieceManager.CommandAuthority = false;
-        if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved)
+        if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved && !mPieceManager.KnightMoved)
         {
             mPieceManager.IncreaseTurnCnt();
             mPieceManager.CommandAuthority = true;
             mPieceManager.CommanderMoved = false;
             mPieceManager.CMoveCount = 0;
+        }
+
+        if (!mPieceManager.leftCommanderAlive) 
+        {
+            mPieceManager.BishopDeath(1);
+            mPieceManager.leftCommanderAlive = true;
+        }
+        if (!mPieceManager.rightCommanderAlive)
+        {
+            mPieceManager.BishopDeath(3);
+            mPieceManager.rightCommanderAlive = true;
         }
     }
 
@@ -253,7 +264,7 @@ public class BasePiece : EventTrigger
     // creates the cell path to use for the highlighted cells
     protected virtual void CreateCellPath(int xDirection, int yDirection, int movement)
     {
-        if (mPieceManager.CommandAuthority || (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved))
+        if (mPieceManager.CommandAuthority || (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommanderMoved) ||(mCurrentCell.mCurrentPiece.knight && mPieceManager.KnightMoved))
         {
             if (mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.CommandAuthority)
                 movement = 1;
@@ -302,8 +313,10 @@ public class BasePiece : EventTrigger
         // selects the delegation tiles if the piece picked up can be delegated back to the king
         if (mCurrentCell.mCurrentPiece.originalcorps == 1 && !mCurrentCell.mCurrentPiece.isCommander && !mPieceManager.Delegation && !mPieceManager.attacking)
         {
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
-            mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
+            if(mPieceManager.LeftTroops <=6)
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[0, 12]);
+            if(mPieceManager.RightTroops <= 6)
+                mHighlightedCells.Add(mCurrentCell.mBoardUI.mAllCells[5, 12]);
 
         }
     }
@@ -359,18 +372,20 @@ public class BasePiece : EventTrigger
         Cell startCell = mCurrentCell;
         destination = mTargetCell.transform.position;
         t = 0;
-        int atckrol;
-        if (mPieceManager.attacking) 
+        
+        if (mPieceManager.attacking && !mPieceManager.actionTaken) 
         {
-            atckrol = gameManager.UIAttackRoll();
+            mPieceManager.KnightMoved = false;
+            int atckrol = gameManager.UIAttackRoll();
             gameManager.rollTheDice(atckrol);
-            if (!AttackCheck(atckrol))
+            if (!AttackCheck(atckrol, mTargetCell.mCurrentPiece))
             {
                 transform.position = mCurrentCell.gameObject.transform.position;
                 transform.position = start;
+                mTargetCell = null;
+                gameManager.moveOrAttackBttn();
                 return;
             }
-            mTargetCell.RemovePiece();
         }
         
 
@@ -428,68 +443,87 @@ public class BasePiece : EventTrigger
 
     }
 
-    public bool AttackCheck(int roll)
+    public bool AttackCheck(int roll, BasePiece defender)
     {
-        int attackRoll = roll;
-        if(pawn && attackRoll >= 4)
+        
+        Debug.Log(roll);
+        Debug.Log(this.name);
+        if (this.name.Contains("BLUE"))
         {
-            if(mTargetCell.mCurrentPiece.pawn)
+            return false;
+        }
+        
+
+
+
+        if (this.pawn && roll >= 4)
+        {
+            if (defender.bishop && roll >= 5)
             {
                 return true;
             }
-            else if(mTargetCell.mCurrentPiece.bishop && attackRoll >= 5)
+            else if (roll == 6)
+                return true;
+            else if (defender.pawn)
             {
                 return true;
             }
-            if (attackRoll == 6)
-                return true;
+            else
+                return false;
         }
-        if(isRook && attackRoll >= 4)
+        else if (this.isRook && roll >= 4)
         {
-            if(mTargetCell.mCurrentPiece.king || mTargetCell.mCurrentPiece.queen || mTargetCell.mCurrentPiece.knight)
-            {
-                    return true;
-            }
-            else if(attackRoll >= 5)
+
+            if (defender.king || defender.queen || defender.knight)
             {
                 return true;
             }
+            else if (roll >= 5)
+            {
+                return true;
+            }
+            else { return false; }
         }
-        if(bishop && attackRoll >= 3)
+        else if (this.bishop && roll >= 3)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.bishop && attackRoll >= 4)
+            else if (defender.bishop && roll >= 4)
                 return true;
-            else if (attackRoll >= 5)
+            else if (roll >= 5)
                 return true;
+            else
+                return false;
         }
-        if(knight && attackRoll >= 2)
+        else if (this.knight && roll >= 2)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (attackRoll >= 5)
+            else if (roll >= 5)
                 return true;
+            else return false;
         }
-        if(queen && attackRoll >= 2)
+        else if (this.queen && roll >= 2)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+            else if (defender.isRook && roll >= 5)
                 return true;
-            else if (attackRoll >= 4)
+            else if ((defender.king || defender.queen || defender.bishop || defender.knight) && roll >= 4)
                 return true;
+            else { return false; }
         }
-        if (king)
+        else if (this.king)
         {
-            if (mTargetCell.mCurrentPiece.pawn)
+            if (defender.pawn)
                 return true;
-            else if (mTargetCell.mCurrentPiece.isRook && attackRoll >= 5)
+            else if (defender.isRook && roll >= 5)
                 return true;
-            else if (attackRoll >= 4)
+            else if (roll >= 4)
                 return true;
+            else { return false; }
         }
-        return false;
+        else { return false; }
     }
     #endregion
 
@@ -507,6 +541,8 @@ public class BasePiece : EventTrigger
                     CheckPathing();
 
                 if (!mCurrentCell.mCurrentPiece.isCommander && mPieceManager.CommandAuthority)
+                    CheckPathing();
+                if (mCurrentCell.mCurrentPiece.knight && mPieceManager.KnightMoved && mPieceManager.attacking)
                     CheckPathing();
             }
             if (!mPieceManager.Delegation && originalcorps == mPieceManager.GetTurnCount())
@@ -582,7 +618,7 @@ public class BasePiece : EventTrigger
 
             // changes the corp and corps sprite component based on what corp and cell the piece was placed in.
             #region Delegation
-            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
+            if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "Right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
             {
                 mCurrentCell.mCurrentPiece.corps = 1;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
@@ -590,20 +626,22 @@ public class BasePiece : EventTrigger
                 mPieceManager.Delegation = true;
                 return;
             }
-            else if (mTargetCell.name == "Left Delegation")
+            else if (mTargetCell.name == "Left Delegation" && mPieceManager.LeftTroops <= 6)
             {
                 mCurrentCell.mCurrentPiece.corps = 2;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
+                mPieceManager.LeftTroops++;
                 return;
             }
-            else if(mTargetCell.name == "Right Delegation")
+            else if(mTargetCell.name == "Right Delegation" && mPieceManager.RightTroops <= 6)
             {
                 mCurrentCell.mCurrentPiece.corps = 3;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
                 mPieceManager.Delegation = true;
+                mPieceManager.RightTroops++;
                 return;
             }
             #endregion
@@ -611,9 +649,8 @@ public class BasePiece : EventTrigger
             if (mPieceManager.CommandAuthority && (!mCurrentCell.mCurrentPiece.isCommander))
             {
                 mCurrentCell.mOutlineImage.enabled = false;
-                Move(false);
                 mPieceManager.CommandAuthority = false;
-                return;
+                
                 
             }
             if (mCurrentCell.mCurrentPiece.isCommander)
@@ -629,6 +666,11 @@ public class BasePiece : EventTrigger
                 }
 
             }
+            if (mCurrentCell.mCurrentPiece.knight)
+            {
+                mPieceManager.KnightMoved = true;
+            }
+
 
             //use the Move function
             mCurrentCell.mOutlineImage.enabled = false;

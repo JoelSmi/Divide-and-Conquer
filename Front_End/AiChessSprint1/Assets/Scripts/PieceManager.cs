@@ -7,6 +7,8 @@ public class PieceManager : MonoBehaviour
     
     //checks if both kings are still alive
     public bool mIsKingAlive = true;
+    public bool leftCommanderAlive = true;
+    public bool rightCommanderAlive = true;
     public int numPieces;
     // sets up a game object to be used as the base prefab for the game pieces
     public GameObject mPiecePrefab;
@@ -21,6 +23,18 @@ public class PieceManager : MonoBehaviour
         get { return delegation; }
         set { delegation = value; }
     }
+    private int leftTroops = 5;
+    public int LeftTroops
+    {
+        get { return leftTroops; }
+        set { leftTroops = value; }
+    }
+    private int rightTroops = 5;
+    public int RightTroops
+    {
+        get { return rightTroops; }
+        set { rightTroops = value; }
+    }
 
     private bool commandAuthority = true;
     public bool CommandAuthority
@@ -33,6 +47,12 @@ public class PieceManager : MonoBehaviour
     {
         get { return commanderMoved; }
         set { commanderMoved = value; }
+    }
+    private bool knightMoved = false;
+    public bool KnightMoved
+    {
+        get { return knightMoved; }
+        set { knightMoved = value; }
     }
     private int cMoveCount = 0;
     public int CMoveCount
@@ -180,6 +200,28 @@ public class PieceManager : MonoBehaviour
             piece.Reset(boardUI);
         foreach (BasePiece piece in mBlackPieces)
             piece.Reset(boardUI);
+    }
+    public void BishopDeath(int OldCorps)
+    {
+        foreach(BasePiece unit in mWhitePieces)
+        {
+            if(unit.corps == OldCorps || unit.originalcorps == OldCorps)
+            {
+                if(OldCorps == 1)
+                {
+                    unit.corps = 2;
+                    unit.originalcorps = 2;
+                }
+                if(OldCorps == 3)
+                {
+                    unit.corps = 2;
+                    unit.originalcorps = 2;
+
+                }
+            }
+
+        }
+
     }
 
     public void UIRelay(int currentCellX, int currentCellY, int targetCellX, int targetCellY)
