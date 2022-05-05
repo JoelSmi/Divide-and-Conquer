@@ -92,8 +92,6 @@ public class GameManager : MonoBehaviour
         // Time difference between each update call incremented
         uiScheduler += Time.deltaTime;
 
-        string TempLogBuff = "";
-
         #region UI > EL Call
         if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
         {
@@ -102,6 +100,8 @@ public class GameManager : MonoBehaviour
             mPieceManager.actionTaken = false;
 
         }
+
+        string TempLogBuff = "";
 
         if (mPieceManager.GetTurnCount() == 4)
         {
@@ -131,25 +131,6 @@ public class GameManager : MonoBehaviour
         #endregion
 
         #region EL > AI Call
-        //update to the UI when the Execution Layer has been updated by the AI 
-        //Original handling of AI actions
-        /*
-        if (!ExecutionBoard.isWhite &&  mPieceManager.mIsKingAlive)
-        {
-
-            ExecutionBoard.getAIAction();
-            TempLogBuff += "AI Action:\n";
-            TempLogBuff += ExecutionBoard.AIActions[0].stringAction();
-            TempLogBuff += ExecutionBoard.AIActions[1].stringAction();
-            TempLogBuff += ExecutionBoard.AIActions[2].stringAction();
-            getAIActionSet();
-
-            TempLogBuff += "\n";
-            TempLogBuff += ExecutionBoard.printGameBoard() + "\n";
-            
-            EndTurn();
-        }*/
-
         //Updated AI update calls
         if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
         {
