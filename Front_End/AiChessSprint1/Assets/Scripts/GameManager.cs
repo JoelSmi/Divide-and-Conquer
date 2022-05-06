@@ -313,7 +313,7 @@ public class GameManager : MonoBehaviour
 
         if(count != 0)
         {
-            tempPos = ExecutionBoard.actionPositions[count - 1];
+            tempPos = ExecutionBoard.actionPositions[count-1];
         }
 
         UpdateUI(tempPos, destPos);
