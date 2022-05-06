@@ -351,7 +351,7 @@ namespace GameBoard
 
                             this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count - 1], tempRoll);
                             this.waitBuff.setSucess(true);
-                            //updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
+                            updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
                         }
                         break;
 

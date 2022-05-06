@@ -158,6 +158,8 @@ public class GameManager : MonoBehaviour
                             {
                                 TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
                                 TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                                if (ExecutionBoard.AIActions[this.AIActionCount].getIsAttack())
+                                    PrintLog("Roll for Attack: " + ExecutionBoard.AIActions[this.AIActionCount].getRoll());
                             }
 
                             this.AIActionCount++;
@@ -466,6 +468,7 @@ public class GameManager : MonoBehaviour
         }
         else if(ExecutionBoard.waitBuff.isWaiting && !ExecutionBoard.waitBuff.isSuccess)
         {
+            ExecutionBoard.waitBuff.isNotWaiting();
             if (ExecutionBoard.waitBuff.newPath != null)
                 ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
             PrintLog("Attack Failed -- roll: " + ExecutionBoard.AttackRoll);
