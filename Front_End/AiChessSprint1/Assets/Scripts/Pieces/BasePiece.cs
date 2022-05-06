@@ -107,16 +107,7 @@ public class BasePiece : EventTrigger
             mPieceManager.CMoveCount = 0;
         }
 
-        if (!mPieceManager.leftCommanderAlive) 
-        {
-            mPieceManager.BishopDeath(1);
-            mPieceManager.leftCommanderAlive = true;
-        }
-        if (!mPieceManager.rightCommanderAlive)
-        {
-            mPieceManager.BishopDeath(3);
-            mPieceManager.rightCommanderAlive = true;
-        }
+        
     }
 
     #endregion
@@ -162,6 +153,26 @@ public class BasePiece : EventTrigger
             }
         }
         //gameObject.SetActive(false); // disable the gameobject when not using the graveyard
+    }
+    public void SwitchCorps()
+    {
+        Debug.Log(this.corps);
+        Transform child = this.transform.Find("corps");
+        Image image = child.GetComponent<Image>();
+        if (this.corps == 1)
+        {
+            this.corps = 2;
+            this.originalcorps = 2;
+        }
+        if (this.corps == 3)
+        {
+            this.corps = 2;
+            this.originalcorps = 2;
+
+        }
+        image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
+        transform.position = mCurrentCell.gameObject.transform.position;
+
     }
 
     #endregion
@@ -370,21 +381,24 @@ public class BasePiece : EventTrigger
         destination = mTargetCell.transform.position;
         t = 0;
         
-        if (mPieceManager.attacking && !mPieceManager.actionTaken) 
+        if (mPieceManager.attacking && mTargetCell!=null) 
         {
-            mPieceManager.KnightMoved = false;
+            
             int atckrol = gameManager.UIAttackRoll();
-            gameManager.rollTheDice(atckrol);
+            
             if (!AttackCheck(atckrol, mTargetCell.mCurrentPiece))
             {
                 transform.position = mCurrentCell.gameObject.transform.position;
                 transform.position = start;
                 mTargetCell = null;
                 gameManager.moveOrAttackBttn();
+                mPieceManager.KnightMoved = false;
                 return;
             }
+            mPieceManager.KnightMoved = false;
         }
         
+
 
         //removes Pieece from the board at target cell
         mTargetCell.RemovePiece();
@@ -443,12 +457,14 @@ public class BasePiece : EventTrigger
     public bool AttackCheck(int roll, BasePiece defender)
     {
 
-        Debug.Log("test");
+        
         if (this.name.Contains("BLUE"))
         {
             return false;
         }
-        
+        Debug.Log(roll);
+        gameManager.rollTheDice(roll);
+
 
 
 
@@ -496,9 +512,10 @@ public class BasePiece : EventTrigger
             if (mPieceManager.KnightMoved)
             {
                 roll++;
+                Debug.Log(roll);
             }
 
-            if (defender.pawn & mPieceManager.KnightMoved)
+            if (defender.pawn & roll>=2 )
                 return true;
             else if (roll >= 5)
                 return true;
@@ -621,6 +638,10 @@ public class BasePiece : EventTrigger
             #region Delegation
             if ((mTargetCell.name == "Left Delegation" || mTargetCell.name == "Right Delegation") && mCurrentCell.mCurrentPiece.corps != mCurrentCell.mCurrentPiece.originalcorps && !mPieceManager.Delegation)
             {
+                if (mCurrentCell.mCurrentPiece.corps == 1)
+                    mPieceManager.LeftTroops--;
+                if (mCurrentCell.mCurrentPiece.corps == 3)
+                    mPieceManager.RightTroops--;
                 mCurrentCell.mCurrentPiece.corps = 1;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
@@ -629,10 +650,7 @@ public class BasePiece : EventTrigger
             }
             else if (mTargetCell.name == "Left Delegation" && mPieceManager.LeftTroops <= 6)
             {
-                if (mCurrentCell.mCurrentPiece.corps == 1)
-                    mPieceManager.LeftTroops--;
-                if (mCurrentCell.mCurrentPiece.corps == 3)
-                    mPieceManager.RightTroops--;
+                
                 mCurrentCell.mCurrentPiece.corps = 2;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
@@ -681,9 +699,11 @@ public class BasePiece : EventTrigger
             }
             if (mCurrentCell.mCurrentPiece.knight)
             {
-                mCurrentCell.mOutlineImage.enabled = false;
-                Move(false);
+                
                 mPieceManager.KnightMoved = true;
+                mCurrentCell.mOutlineImage.enabled = false;
+                
+                Move(false);
                 return;
             }
 

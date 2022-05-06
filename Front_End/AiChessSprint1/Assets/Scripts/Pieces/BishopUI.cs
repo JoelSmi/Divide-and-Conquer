@@ -31,9 +31,14 @@ public class BishopUI : BasePiece
         if(corps == 1)
         {
             mPieceManager.leftCommanderAlive = false;
+            mPieceManager.BishopDeath(1);
         }
-        if(corps == 3)
+        if (corps == 3)
+        {
             mPieceManager.rightCommanderAlive = false;
+            mPieceManager.BishopDeath(3);
+        }
+
 
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PieceManager : MonoBehaviour
 {
     
@@ -16,6 +17,7 @@ public class PieceManager : MonoBehaviour
     public int pmCurrentCellX, pmCurrentCellY, pmTargetCellX, pmTargetCellY;
     public bool actionTaken = false;
     public bool attacking = false;
+    public bool fullCorpsSwitch = false;
     // delegation variable and get set functions will let the basepiece class know if its allowed to delegate again
     private bool delegation = false;
     public bool Delegation
@@ -205,19 +207,10 @@ public class PieceManager : MonoBehaviour
     {
         foreach(BasePiece unit in mWhitePieces)
         {
-            if(unit.corps == OldCorps || unit.originalcorps == OldCorps)
-            {
-                if(OldCorps == 1)
-                {
-                    unit.corps = 2;
-                    unit.originalcorps = 2;
-                }
-                if(OldCorps == 3)
-                {
-                    unit.corps = 2;
-                    unit.originalcorps = 2;
 
-                }
+            if (unit.corps == OldCorps || unit.originalcorps == OldCorps)
+            {
+                unit.SwitchCorps();
             }
 
         }
