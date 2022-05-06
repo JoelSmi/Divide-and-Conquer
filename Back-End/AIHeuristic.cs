@@ -14,9 +14,9 @@ namespace KingAI1
         public Action[] chosenActions;
 
         public Heuristic(){
-            //Random rand = new Random();
-            //HeuristicChoice(rand.Next(0,totalHeuristics));
-            this.chosenActions = heuristic0();
+            Random rand = new Random();
+            HeuristicChoice(rand.Next(0,totalHeuristics));
+            //this.chosenActions = heuristic0();
         }
 
         public Heuristic(int i){
