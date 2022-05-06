@@ -124,8 +124,6 @@ public class GameManager : MonoBehaviour
             mPieceManager.SwitchSides(Color.black);
             mPieceManager.Delegation = false;
             mPieceManager.IncreaseTurnCnt();
-            //mPieceManager.ResetTurnCount();
-            //mPieceManager.freeze(false);
             ExecutionBoard.endTurn();
             EndTurn();
         }
@@ -333,7 +331,6 @@ public class GameManager : MonoBehaviour
         ExecutionBoard.endTurn();
 
         //GameManager end turn function
-        //mPieceManager.freeze(true);
         EndTurn();
     }
 
