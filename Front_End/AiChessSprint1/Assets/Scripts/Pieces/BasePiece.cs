@@ -367,7 +367,6 @@ public class BasePiece : EventTrigger
     // removes the enemy piece on the target cell and moves the piece
     protected virtual void Move(bool beingKilled)
     {
-        Debug.Log("test");
         // Initialize movement variables
         start = mCurrentCell.transform.position;
         Cell startCell = mCurrentCell;
