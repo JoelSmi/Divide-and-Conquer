@@ -454,6 +454,10 @@ public class GameManager : MonoBehaviour
     public void rollTheDice(int number)
     {
         //uiUpdating = true;
+        if (number > 6) // Standardizing knight buffs
+            number = 6;
+        else if (number < 1) // Should never occur
+            number = 1;
         diceRoll.active = true;
         marginTable.active = true;
         diceRoll.GetComponent<Animator>().SetTrigger("" + number);
