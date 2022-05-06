@@ -171,7 +171,7 @@ public class GameManager : MonoBehaviour
                         ApplyAIMove(this.AIMoveCount);
 
 
-                        if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount].getIsAttack())
+                        if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount-1].getIsAttack())
                         {
                             rollTheDice(ExecutionBoard.AttackRoll);
 
@@ -182,7 +182,11 @@ public class GameManager : MonoBehaviour
                                 PrintLog("Attack Successful");
                             }
                             else
+                            {   
+                                if(ExecutionBoard.waitBuff.newPath != null)
+                                    ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
                                 PrintLog("Attack Failed");
+                            }
                         }
                         
                         this.AIMoveCount++;

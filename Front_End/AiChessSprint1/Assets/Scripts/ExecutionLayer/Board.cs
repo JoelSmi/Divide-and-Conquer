@@ -14,6 +14,7 @@ namespace GameBoard
         public int Roll;
         public bool isWaiting { get; set; }
         public bool isSuccess { get; set; }
+        public List<int []> newPath { get; set; }
 
         public waitingAction(Pieces.Piece piece, int[] pos, int[] dest, int roll)
         {
@@ -23,6 +24,7 @@ namespace GameBoard
             Roll = roll;
             isWaiting = true;
             isSuccess = true;
+            newPath = null;
         }
 
         public void isNotWaiting()
@@ -32,6 +34,11 @@ namespace GameBoard
         public void setFail()
         {
             isSuccess = false;
+        }
+
+        public void setPath(List<int []> path)
+        {
+            newPath = path;
         }
     };
 
@@ -343,6 +350,8 @@ namespace GameBoard
                                 hasFailed = false;
                                 this.waitBuff.setFail();
                                 this.actionPositions.RemoveAt(this.actionPositions.Count - 1);
+                                if(this.actionPositions != null)
+                                    this.waitBuff.setPath(this.actionPositions);
                             }
                             //updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
                         }
