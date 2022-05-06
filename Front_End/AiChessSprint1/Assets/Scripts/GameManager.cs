@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
                             if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount - 1].getIsAttack())
                             {
                                 rollTheDice(ExecutionBoard.AttackRoll);
-                                dieIsRolling = true;
+
                             }
 
                             if (!dieIsRolling)
@@ -458,17 +458,17 @@ public class GameManager : MonoBehaviour
 
     public void keepGoing()
     {
-        if (ExecutionBoard.waitBuff.isWaiting == true && ExecutionBoard.waitBuff.isSuccess == true)
+        if (ExecutionBoard.waitBuff.isWaiting && ExecutionBoard.waitBuff.isSuccess)
         {
             ExecutionBoard.waitBuff.isNotWaiting();
             ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
-            PrintLog("Attack Successful");
+            PrintLog("Attack Successful -- roll: " + ExecutionBoard.AttackRoll);
         }
-        else
+        else if(ExecutionBoard.waitBuff.isWaiting && !ExecutionBoard.waitBuff.isSuccess)
         {
             if (ExecutionBoard.waitBuff.newPath != null)
                 ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
-            PrintLog("Attack Failed");
+            PrintLog("Attack Failed -- roll: " + ExecutionBoard.AttackRoll);
         }
 
         this.AIMoveCount++;

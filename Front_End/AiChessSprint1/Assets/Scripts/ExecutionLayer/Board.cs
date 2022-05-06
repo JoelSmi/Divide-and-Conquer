@@ -345,9 +345,7 @@ namespace GameBoard
                                     this.waitBuff.setPath(this.actionPositions);
                             break;
                         }
-
-                        if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
-                        {
+                        else if (temp > 0 && ActionCount + temp <= MaxTeamActionCount){
                             ActionCount += temp;
                             int[] previous = currPiece.currPos;
 
