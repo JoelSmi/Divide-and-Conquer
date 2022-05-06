@@ -96,10 +96,7 @@ public class BasePiece : EventTrigger
                 gameManager.uiUpdating = false; // UI is free to continue updating
             }
         }
-        if (mPieceManager.GetTurnCount() != 1)
-        {
-            mPieceManager.Delegation= true;
-        }
+        
         if (mPieceManager.CMoveCount >= 2)
             mPieceManager.CommandAuthority = false;
         if (!mPieceManager.CommandAuthority && mPieceManager.Delegation && mPieceManager.CommanderMoved && !mPieceManager.KnightMoved)
@@ -445,9 +442,8 @@ public class BasePiece : EventTrigger
 
     public bool AttackCheck(int roll, BasePiece defender)
     {
-        
-        Debug.Log(roll);
-        Debug.Log(this.name);
+
+        Debug.Log("test");
         if (this.name.Contains("BLUE"))
         {
             return false;
@@ -495,9 +491,14 @@ public class BasePiece : EventTrigger
             else
                 return false;
         }
-        else if (this.knight && roll >= 2)
+        else if (this.knight)
         {
-            if (defender.pawn)
+            if (mPieceManager.KnightMoved)
+            {
+                roll++;
+            }
+
+            if (defender.pawn & mPieceManager.KnightMoved)
                 return true;
             else if (roll >= 5)
                 return true;
@@ -534,6 +535,7 @@ public class BasePiece : EventTrigger
     {
         if (isPlayable && mColor == Color.white)
         {
+            
             base.OnBeginDrag(eventData);
             if (mPieceManager.GetTurnCount() == corps && mPieceManager.CMoveCount<2)
             {
@@ -627,6 +629,10 @@ public class BasePiece : EventTrigger
             }
             else if (mTargetCell.name == "Left Delegation" && mPieceManager.LeftTroops <= 6)
             {
+                if (mCurrentCell.mCurrentPiece.corps == 1)
+                    mPieceManager.LeftTroops--;
+                if (mCurrentCell.mCurrentPiece.corps == 3)
+                    mPieceManager.RightTroops--;
                 mCurrentCell.mCurrentPiece.corps = 2;
                 image.color = new Color(CORPS_COLORS[corps - 1, 0], CORPS_COLORS[corps - 1, 1], CORPS_COLORS[corps - 1, 2], CORPS_COLORS[corps - 1, 3]);
                 transform.position = mCurrentCell.gameObject.transform.position;
@@ -675,7 +681,10 @@ public class BasePiece : EventTrigger
             }
             if (mCurrentCell.mCurrentPiece.knight)
             {
+                mCurrentCell.mOutlineImage.enabled = false;
+                Move(false);
                 mPieceManager.KnightMoved = true;
+                return;
             }
 
 

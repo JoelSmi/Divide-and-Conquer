@@ -133,6 +133,7 @@ public class GameManager : MonoBehaviour
         if(mPieceManager.GetTurnCount() == 5) {
             #region EL > AI Call
             //Updated AI update calls
+            nxtTrnBtn.enabled = false;
             if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
             {
                 //Initial call to gather all action information from the AI
@@ -196,6 +197,7 @@ public class GameManager : MonoBehaviour
                 {
                     endAIActions();
                     mPieceManager.ResetTurnCount();
+                    nxtTrnBtn.enabled = true;
                     TempLogBuff += ExecutionBoard.printGameBoard();
                 }
             }
