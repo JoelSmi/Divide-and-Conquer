@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         {
 
             TempLogBuff += "User Moves:\n";
-            for (int i = 0; i < moveCount - 1; i++)
+            for (int i = 0; i <= moveCount - 1; i++)
             {
                 int[] currPos = { (7 - uiCurrentCellY[i]), uiCurrentCellX[i] };
                 int[] dest = { (7 - uiTargetCellY[i]), uiTargetCellX[i] };
@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour
             EndTurn();
         }
         #endregion
+
         if(mPieceManager.GetTurnCount() == 5) {
             #region EL > AI Call
             //Updated AI update calls

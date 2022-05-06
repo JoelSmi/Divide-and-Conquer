@@ -238,6 +238,7 @@ namespace GameBoard
                 else
                     this.GameBoard[dest[0], dest[1]].isCaptured = true;
             }
+
             this.GameBoard[dest[0], dest[1]] = currPiece;
             this.GameBoard[currPos[0], currPos[1]] = this.Blank;
             currPiece.currPos = dest;
