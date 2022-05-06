@@ -482,8 +482,10 @@ namespace KingAI1
                                     Console.WriteLine("Piece " + p.GetType().ToString() + p.GetID() + " is in danger");
                                 }
                                 //add this subordinate to the list of subordinates in danger
-                                subordinatesInDanger[counter] = p;
-                                counter++;
+				if (counter <= 7){
+					subordinatesInDanger[counter] = p;
+					counter++;
+				}
                                 //~~~~~~~~~~~~Need to make sure we don't add the same piece over and over
                             }
                         }
