@@ -117,6 +117,11 @@ namespace KingAI1 {
 							&& b.GetBoard()[square[0], square[1]].GetColor() != color
 							&& !Board.SetContainsSquare(legalAttacks, square)) {
 						legalAttacks.Add(square);
+						List<int[]> attackPath = new List<int[]>();
+						attackPath.Add(square);
+						if (!paths.Contains(attackPath)) {
+							paths.Add(attackPath);
+						}
 					}
 				}
 				//Allow knight to also attack any piece adjacent to one of its legal squares
