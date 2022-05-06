@@ -170,13 +170,21 @@ public class GameManager : MonoBehaviour
                         uiUpdating = true;
                         ApplyAIMove(this.AIMoveCount);
 
-                        if (ExecutionBoard.waitBuff.isWaiting == true)
-                        {
-                            ExecutionBoard.waitBuff.isNotWaiting();
-                            rollTheDice(ExecutionBoard.waitBuff.Roll);
-                            ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
-                        }
 
+                        if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount].getIsAttack())
+                        {
+                            rollTheDice(ExecutionBoard.AttackRoll);
+
+                            if (ExecutionBoard.waitBuff.isWaiting == true && ExecutionBoard.waitBuff.isSuccess == true)
+                            {
+                                ExecutionBoard.waitBuff.isNotWaiting();
+                                ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
+                                PrintLog("Attack Successful");
+                            }
+                            else
+                                PrintLog("Attack Failed");
+                        }
+                        
                         this.AIMoveCount++;
                     }
                 }
@@ -291,7 +299,7 @@ public class GameManager : MonoBehaviour
         {
             if (ExecutionBoard.AIActions[idx].getIsAttack())
             {
-                ExecutionBoard.AIActions[idx].getRoll();
+                ExecutionBoard.AttackRoll = ExecutionBoard.AIActions[idx].getRoll();
                 ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
             }
             else
@@ -314,10 +322,11 @@ public class GameManager : MonoBehaviour
             tempPos = ExecutionBoard.actionPositions[count-1];
         }
 
-        UpdateUI(tempPos, destPos);
-
-        if (count == this.AIMoveMax-1)
+        if (count == this.AIMoveMax - 1) {
             ExecutionBoard.hasActed = true;
+        }
+
+        UpdateUI(tempPos, destPos);
     }
 
     public void endAIActions()
@@ -332,49 +341,6 @@ public class GameManager : MonoBehaviour
 
         //GameManager end turn function
         EndTurn();
-    }
-
-    //Original Apply AI Actions function
-    public void ApplyAIActions()
-    {
-        //Applying Actions to Execution Layer
-        for (int idx = 0; idx < ExecutionBoard.AIActions.Length; idx++)
-        {
-            if (ExecutionBoard.AIActions[idx].getIsActing() == false)
-                continue;
-            ExecutionBoard.actionPositions = ExecutionBoard.AIActions[idx].getPath();
-            ExecutionBoard.actionInitial = ExecutionBoard.AIActions[idx].getOriginalCords();
-            ExecutionBoard.actionDest = ExecutionBoard.AIActions[idx].getDestinationCords();
-
-            if (ExecutionBoard.AIActions[idx].getIsActing() && (ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]].color.Equals("Black")))
-            {
-                if (ExecutionBoard.AIActions[idx].getIsAttack()){
-                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('A', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
-                }
-                else{
-                    ExecutionBoard.ActionCount += ExecutionBoard.takeAction('M', ExecutionBoard.GameBoard[ExecutionBoard.actionInitial[0], ExecutionBoard.actionInitial[1]], true);
-                }
-            }
-
-            int[] tempPos = ExecutionBoard.actionInitial;
-            if (ExecutionBoard.ActionCount > -1)
-            {
-                foreach (int[] dest in ExecutionBoard.actionPositions)
-                {
-                    if ((tempPos[0] == dest[0]) && (tempPos[1] == dest[1]))
-                        continue;
-                    UpdateUI(tempPos, dest);
-                    tempPos = dest;
-                }
-            }
-            ExecutionBoard.hasActed = true;
-        }
-
-        ExecutionBoard.actionPositions.Clear();
-        ExecutionBoard.resetCount();
-        ExecutionBoard.endTurn();
-
-        ExecutionBoard.hasActed = false;
     }
 
     public void CellRelay()

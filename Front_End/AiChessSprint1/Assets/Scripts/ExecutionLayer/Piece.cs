@@ -75,7 +75,7 @@ namespace Pieces
         {
             this.movement = 1;
             this.movementType = 'F';
-            this.defenseProb = new short[] { 3, 2, 4, 5, 5, 6 };
+            this.defenseProb = new short[] { 4, 5, 3, 2, 2, 1 };
 
             this.attack = 1;
             this.attackType = 'F';
@@ -93,7 +93,7 @@ namespace Pieces
         {
             this.movement = 2;
             this.movementType = 'L';
-            this.defenseProb = new short[] { 1, 2, 2, 2, 2, 2 };
+            this.defenseProb = new short[] { 6, 5, 5, 5, 5, 5 };
 
             this.attack = 3;
             this.attackType = 'R';
@@ -111,7 +111,7 @@ namespace Pieces
         {
             this.movement = 4;
             this.movementType = 'S';
-            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
+            this.defenseProb = new short[] { 6, 4, 5, 5, 4, 4 };
 
             this.attack = 1;
             this.attackType = 'S';
@@ -127,7 +127,7 @@ namespace Pieces
         {
             this.movement = 3;
             this.movementType = 'S';
-            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
+            this.defenseProb = new short[] { 6, 4, 5, 5, 4, 4 };
 
             this.attack = 1;
             this.attackType = 'S';
@@ -149,7 +149,7 @@ namespace Pieces
             this.movement = 2;
             this.movementType = 'L';
 
-            this.defenseProb = new short[] { 2, 2, 3, 2, 2, 3 };
+            this.defenseProb = new short[] { 5, 5, 4, 5, 4, 4 };
 
             this.attack = 1;
             this.attackType = 'S';
@@ -173,7 +173,7 @@ namespace Pieces
             this.actionCount = 2;
             this.movement = 4;
             this.movementType = 'S';
-            this.defenseProb = new short[] { 1, 3, 2, 2, 3, 3 };
+            this.defenseProb = new short[] { 6, 4, 5, 5, 4, 4 };
 
             this.attack = 1;
             this.attackType = 'S';

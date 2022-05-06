@@ -140,7 +140,7 @@ namespace Actions
             int[] dest = moveSet[moveSet.Count - 1];
             char pieceType = char.ToUpper(currPiece.id.ToCharArray()[0]);
             char enemyType = char.ToUpper(GameBoard[dest[0], dest[1]].id.ToCharArray()[0]);
-            int chanceAttack = 7 - AttackRoll;
+            int chanceAttack = AttackRoll;
 
             //Piece storage for the defending piece
             Piece Defender = GameBoard[dest[0], dest[1]];
@@ -159,12 +159,20 @@ namespace Actions
                 actionValid = false;
             }
 
-            if(actionValid && chanceAttack <= Defender.defenseProb[idxAttacker])
+            if(actionValid)
             {
-                if (pieceType == 'N')
-                    return 1;
+                if (chanceAttack >= Defender.defenseProb[idxAttacker])
+                {
+                    if (pieceType == 'N')
+                        return 1;
+                    else
+                        return 2;
+                }
                 else
-                    return 2;
+                {
+                    return 100;
+                }
+                
             }
 
             /*switch (pieceType)

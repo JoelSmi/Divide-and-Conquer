@@ -13,6 +13,7 @@ namespace GameBoard
         public int[] destPos;
         public int Roll;
         public bool isWaiting { get; set; }
+        public bool isSuccess { get; set; }
 
         public waitingAction(Pieces.Piece piece, int[] pos, int[] dest, int roll)
         {
@@ -21,11 +22,16 @@ namespace GameBoard
             destPos = dest;
             Roll = roll;
             isWaiting = true;
+            isSuccess = true;
         }
 
         public void isNotWaiting()
         {
             isWaiting = false;
+        }
+        public void setFail()
+        {
+            isSuccess = false;
         }
     };
 
@@ -309,20 +315,35 @@ namespace GameBoard
                             }
                         }
 
-                        int tempRoll = this.AttackRoll;
+                        
                         if (hasMoved)
                         {
                             hasMoved = false;
-                            tempRoll++;
+                            this.AttackRoll++;
                         }
 
+                        int tempRoll = this.AttackRoll;
+                        bool hasFailed = false;
+
                         temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece, tempRoll);
+                        if(temp == 100)
+                        {
+                            hasFailed = true;
+                            temp = 1;
+                        }
+
                         if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
                         {
                             ActionCount += temp;
                             int[] previous = currPiece.currPos;
 
                             this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count - 1], tempRoll);
+                            if (hasFailed)
+                            {
+                                hasFailed = false;
+                                this.waitBuff.setFail();
+                                this.actionPositions.RemoveAt(this.actionPositions.Count - 1);
+                            }
                             //updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
                         }
                         break;
