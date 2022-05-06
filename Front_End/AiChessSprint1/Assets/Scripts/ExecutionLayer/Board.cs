@@ -68,7 +68,7 @@ namespace GameBoard
         public waitingAction waitBuff { get; set; }
 
         public KingAI1.AIKing KingAI { get; set; }
-        private const int MaxTeamActionCount = 6;
+        private const int MaxTeamActionCount = 20;
         public int ActionCount { get; set; } = 0;
         //bool value to track turn control
         public bool isWhite { get; protected set; } = true;
