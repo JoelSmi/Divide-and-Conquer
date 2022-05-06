@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
 
         if (mPieceManager.GetTurnCount() == 4)
         {
-            
+
             TempLogBuff += "User Moves:\n";
             for (int i = 0; i < moveCount - 1; i++)
             {
@@ -119,84 +119,88 @@ public class GameManager : MonoBehaviour
             TempLogBuff += ExecutionBoard.printGameBoard();
             PrintLog(TempLogBuff);
             TempLogBuff = "";
-            
+
             mPieceManager.actionTaken = false;
             mPieceManager.SwitchSides(Color.black);
             mPieceManager.Delegation = false;
-            mPieceManager.ResetTurnCount();
+            mPieceManager.IncreaseTurnCnt();
+            //mPieceManager.ResetTurnCount();
             //mPieceManager.freeze(false);
             ExecutionBoard.endTurn();
             EndTurn();
         }
         #endregion
-
-        #region EL > AI Call
-        //Updated AI update calls
-        if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
-        {
-            //Initial call to gather all action information from the AI
-            if (this.AIMoveMax == 0 && this.AIActionCount == 0)
+        if(mPieceManager.GetTurnCount() == 5) {
+            #region EL > AI Call
+            //Updated AI update calls
+            if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
             {
-                ExecutionBoard.getAIAction();
-            }
-            // There will be a delay between each action instead of
-            // between each animation, as some actions consist of multiple
-            // animations (Knights/Royalty moving more than one space)
-            if (uiScheduler > UI_WAIT_TIME)
-            {
-                if (this.AIActionCount <= AIActionMax && this.AIMoveMax == 0)
+                //Initial call to gather all action information from the AI
+                if (this.AIMoveMax == 0 && this.AIActionCount == 0)
                 {
-                    getAIActionSet(this.AIActionCount);
+                    ExecutionBoard.getAIAction();
+                }
 
-                    if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                // There will be a delay between each action instead of
+                // between each animation, as some actions consist of multiple
+                // animations (Knights/Royalty moving more than one space)
+                if (uiScheduler > UI_WAIT_TIME)
+                {
+                    if (this.AIActionCount < AIActionMax && this.AIMoveMax == 0)
                     {
-                        TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
-                        TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
-                    }
+                        getAIActionSet(this.AIActionCount);
 
-                    this.AIActionCount++;
+                        if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                        {
+                            TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
+                            TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                        }
+
+                        this.AIActionCount++;
+                    }
+                }
+
+                //Should be run for all movement steps in a function to
+                //update the UI for every processing the action being taken
+                if (this.AIMoveCount < this.AIMoveMax)
+                {
+                    // UI is not already updating with an action and time between last UI update is greater than the wait time
+                    if (!uiUpdating)
+                    {
+                        uiUpdating = true;
+                        ApplyAIMove(this.AIMoveCount);
+
+                        if (ExecutionBoard.waitBuff.isWaiting == true)
+                        {
+                            ExecutionBoard.waitBuff.isNotWaiting();
+                            rollTheDice(ExecutionBoard.waitBuff.Roll);
+                            ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
+                        }
+
+                        this.AIMoveCount++;
+                    }
+                }
+
+                //Incrementing the global AIAction count and resetting variables for the next action from the AI
+                if (ExecutionBoard.hasActed)
+                {
+                    TempLogBuff += "Action Count: " + this.AIActionCount + "\n" + "Max Move Count: " + this.AIMoveMax + "\n" + "Move Count: " + this.AIMoveCount + "\n";
+                    this.AIMoveMax = 0;
+                    this.AIMoveCount = 0;
+                    ExecutionBoard.hasActed = false;
+                    uiScheduler = 0.0f; // Reset UI wait timer
+                }
+
+                //Once all actions have been processed, print the board and end the AI's turn
+                if (this.AIActionCount == AIActionMax)
+                {
+                    endAIActions();
+                    mPieceManager.ResetTurnCount();
+                    TempLogBuff += ExecutionBoard.printGameBoard();
                 }
             }
-
-            //Should be run for all movement steps in a function to
-            //update the UI for every processing the action being taken
-            if (this.AIMoveCount <= this.AIMoveMax)
-            {
-                // UI is not already updating with an action and time between last UI update is greater than the wait time
-                if (!uiUpdating)
-                {
-                    uiUpdating = true;
-                    ApplyAIMove(this.AIMoveCount);
-
-                    if (ExecutionBoard.waitBuff.isWaiting == true)
-                    {
-                        ExecutionBoard.waitBuff.isNotWaiting();
-                        rollTheDice(ExecutionBoard.waitBuff.Roll);
-                        ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
-                    }
-
-                    this.AIMoveCount++;
-                }
-            }
-
-            //Incrementing the global AIAction count and resetting variables for the next action from the AI
-            if (ExecutionBoard.hasActed)
-            {
-                TempLogBuff += "Action Count: " + this.AIActionCount + "\n" + "Max Move Count: " + this.AIMoveMax + "\n" + "Move Count: " + this.AIMoveCount + "\n";
-                this.AIMoveMax = 0;
-                this.AIMoveCount = 0;
-                ExecutionBoard.hasActed = false;
-                uiScheduler = 0.0f; // Reset UI wait timer
-            }
-
-            //Once all actions have been processed, print the board and end the AI's turn
-            if (this.AIActionCount == AIActionMax)
-            {
-                endAIActions();
-                TempLogBuff += ExecutionBoard.printGameBoard();
-            }
+            #endregion
         }
-        #endregion
 
         #region ActionLog
         if (!TempLogBuff.Equals(""))
@@ -328,7 +332,6 @@ public class GameManager : MonoBehaviour
         //GameManager end turn function
         //mPieceManager.freeze(true);
         EndTurn();
-        
     }
 
     //Original Apply AI Actions function
