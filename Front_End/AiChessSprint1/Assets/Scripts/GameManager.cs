@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
     public bool uiUpdating = false;
     private const float UI_WAIT_TIME = 1.0f; // One second
     public float uiScheduler = 0.0f;
+    public bool dieIsRolling = false;
 
     //AI variables and control structrues
     private int AIMoveCount = 0;
@@ -85,183 +86,175 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!mPieceManager.mIsKingAlive)
+        if (!dieIsRolling)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        // Time difference between each update call incremented
-        uiScheduler += Time.deltaTime;
-
-        #region UI > EL Call
-        if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
-        {
-            CellRelay();
-            moveCount++;
-            mPieceManager.actionTaken = false;
-
-        }
-
-        string TempLogBuff = "";
-
-        if (mPieceManager.GetTurnCount() == 4)
-        {
-
-            TempLogBuff += "User Moves:\n";
-            for (int i = 0; i <= moveCount - 1; i++)
+            if (!mPieceManager.mIsKingAlive)
             {
-                int[] currPos = { (7 - uiCurrentCellY[i]), uiCurrentCellX[i] };
-                int[] dest = { (7 - uiTargetCellY[i]), uiTargetCellX[i] };
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            // Time difference between each update call incremented
+            uiScheduler += Time.deltaTime;
 
+            #region UI > EL Call
+            if (mPieceManager.actionTaken && mPieceManager.mIsKingAlive)
+            {
+                CellRelay();
+                moveCount++;
+                mPieceManager.actionTaken = false;
 
-                TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
             }
 
-            TempLogBuff += ExecutionBoard.printGameBoard();
-            PrintLog(TempLogBuff);
-            TempLogBuff = "";
+            string TempLogBuff = "";
 
-            mPieceManager.actionTaken = false;
-            mPieceManager.SwitchSides(Color.black);
-            mPieceManager.Delegation = false;
-            mPieceManager.IncreaseTurnCnt();
-            ExecutionBoard.endTurn();
-            EndTurn();
-        }
-        #endregion
-
-        if(mPieceManager.GetTurnCount() == 5) {
-            #region EL > AI Call
-            //Updated AI update calls
-            nxtTrnBtn.enabled = false;
-            if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
+            if (mPieceManager.GetTurnCount() == 4)
             {
-                //Initial call to gather all action information from the AI
-                if (this.AIMoveMax == 0 && this.AIActionCount == 0)
+
+                TempLogBuff += "User Moves:\n";
+                for (int i = 0; i <= moveCount - 1; i++)
                 {
-                    ExecutionBoard.getAIAction();
+                    int[] currPos = { (7 - uiCurrentCellY[i]), uiCurrentCellX[i] };
+                    int[] dest = { (7 - uiTargetCellY[i]), uiTargetCellX[i] };
+
+
+                    TempLogBuff += ExecutionBoard.UIAction(currPos, dest);
                 }
 
-                // There will be a delay between each action instead of
-                // between each animation, as some actions consist of multiple
-                // animations (Knights/Royalty moving more than one space)
-                if (uiScheduler > UI_WAIT_TIME)
-                {
-                    if (this.AIActionCount < AIActionMax && this.AIMoveMax == 0)
-                    {
-                        getAIActionSet(this.AIActionCount);
+                TempLogBuff += ExecutionBoard.printGameBoard();
+                PrintLog(TempLogBuff);
+                TempLogBuff = "";
 
-                        if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
-                        {
-                            TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
-                            TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
-                        }
-
-                        this.AIActionCount++;
-                    }
-                }
-
-                //Should be run for all movement steps in a function to
-                //update the UI for every processing the action being taken
-                if (this.AIMoveCount < this.AIMoveMax)
-                {
-                    // UI is not already updating with an action and time between last UI update is greater than the wait time
-                    if (!uiUpdating)
-                    {
-                        uiUpdating = true;
-                        ApplyAIMove(this.AIMoveCount);
-
-
-                        if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount-1].getIsAttack())
-                        {
-                            rollTheDice(ExecutionBoard.AttackRoll);
-
-                            if (ExecutionBoard.waitBuff.isWaiting == true && ExecutionBoard.waitBuff.isSuccess == true)
-                            {
-                                ExecutionBoard.waitBuff.isNotWaiting();
-                                ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
-                                PrintLog("Attack Successful");
-                            }
-                            else
-                            {   
-                                if(ExecutionBoard.waitBuff.newPath != null)
-                                    ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
-                                PrintLog("Attack Failed");
-                            }
-                        }
-                        
-                        this.AIMoveCount++;
-                    }
-                }
-
-                //Incrementing the global AIAction count and resetting variables for the next action from the AI
-                if (ExecutionBoard.hasActed)
-                {
-                    TempLogBuff += "Action Count: " + this.AIActionCount + "\n" + "Max Move Count: " + this.AIMoveMax + "\n" + "Move Count: " + this.AIMoveCount + "\n";
-                    this.AIMoveMax = 0;
-                    this.AIMoveCount = 0;
-                    ExecutionBoard.hasActed = false;
-                    uiScheduler = 0.0f; // Reset UI wait timer
-                }
-
-                //Once all actions have been processed, print the board and end the AI's turn
-                if (this.AIActionCount == AIActionMax)
-                {
-                    endAIActions();
-                    mPieceManager.ResetTurnCount();
-                    nxtTrnBtn.enabled = true;
-                    TempLogBuff += ExecutionBoard.printGameBoard();
-                }
+                mPieceManager.actionTaken = false;
+                mPieceManager.SwitchSides(Color.black);
+                mPieceManager.Delegation = false;
+                mPieceManager.IncreaseTurnCnt();
+                ExecutionBoard.endTurn();
+                EndTurn();
             }
             #endregion
-        }
 
-        #region ActionLog
-        if (!TempLogBuff.Equals(""))
-        {
-            PrintLog(TempLogBuff);
-        }
-        #endregion
+            if (mPieceManager.GetTurnCount() == 5)
+            {
+                #region EL > AI Call
+                //Updated AI update calls
+                nxtTrnBtn.enabled = false;
+                if (!ExecutionBoard.isWhite && mPieceManager.mIsKingAlive)
+                {
+                    //Initial call to gather all action information from the AI
+                    if (this.AIMoveMax == 0 && this.AIActionCount == 0)
+                    {
+                        ExecutionBoard.getAIAction();
+                    }
 
-        if (!mPieceManager.mIsKingAlive)
-        {
-            ExecutionBoard = new Board(WhitePieces, BlackPieces);
-        }
+                    // There will be a delay between each action instead of
+                    // between each animation, as some actions consist of multiple
+                    // animations (Knights/Royalty moving more than one space)
+                    if (uiScheduler > UI_WAIT_TIME)
+                    {
+                        if (this.AIActionCount < AIActionMax && this.AIMoveMax == 0)
+                        {
+                            getAIActionSet(this.AIActionCount);
 
-        #region UI Checks
+                            if (ExecutionBoard.AIActions[this.AIActionCount].getIsActing())
+                            {
+                                TempLogBuff += "\nAI Action #" + this.AIActionCount + ":\n";
+                                TempLogBuff += ExecutionBoard.AIActions[this.AIActionCount].stringAction();
+                            }
 
-        int turnCount = mPieceManager.GetTurnCount();
-        ShowCorps(turnCount);
+                            this.AIActionCount++;
+                        }
+                    }
 
-        if (turnCount == 1)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+                    //Should be run for all movement steps in a function to
+                    //update the UI for every processing the action being taken
+                    if (this.AIMoveCount < this.AIMoveMax && !dieIsRolling)
+                    {
+                        // UI is not already updating with an action and time between last UI update is greater than the wait time
+                        if (!uiUpdating)
+                        {
+                            uiUpdating = true;
+                            ApplyAIMove(this.AIMoveCount);
+
+                            if (this.AIMoveCount == this.AIMoveMax - 1 && ExecutionBoard.AIActions[this.AIActionCount - 1].getIsAttack())
+                            {
+                                rollTheDice(ExecutionBoard.AttackRoll);
+                                dieIsRolling = true;
+                            }
+
+                            if (!dieIsRolling)
+                                this.AIMoveCount++;
+                        }
+                    }
+
+                    //Incrementing the global AIAction count and resetting variables for the next action from the AI
+                    if (ExecutionBoard.hasActed)
+                    {
+                        TempLogBuff += "Action Count: " + this.AIActionCount + "\n" + "Max Move Count: " + this.AIMoveMax + "\n" + "Move Count: " + this.AIMoveCount + "\n";
+                        this.AIMoveMax = 0;
+                        this.AIMoveCount = 0;
+                        ExecutionBoard.hasActed = false;
+                        uiScheduler = 0.0f; // Reset UI wait timer
+                    }
+
+                    //Once all actions have been processed, print the board and end the AI's turn
+                    if (this.AIActionCount == AIActionMax)
+                    {
+                        endAIActions();
+                        mPieceManager.ResetTurnCount();
+                        nxtTrnBtn.enabled = true;
+                        TempLogBuff += ExecutionBoard.printGameBoard();
+                    }
+                }
+                #endregion
+            }
+
+            #region ActionLog
+            if (!TempLogBuff.Equals(""))
+            {
+                PrintLog(TempLogBuff);
+            }
+            #endregion
+
+            if (!mPieceManager.mIsKingAlive)
+            {
+                ExecutionBoard = new Board(WhitePieces, BlackPieces);
+            }
+
+            #region UI Checks
+
+            int turnCount = mPieceManager.GetTurnCount();
             ShowCorps(turnCount);
-        }
-        else if (turnCount == 2)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
-            ShowCorps(turnCount);
-        }
-        else if (turnCount == 3)
-        {
-            nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
-            ShowCorps(turnCount);
-        }
-        else
-        {
-            nxtTrnBtn.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
-        }
 
-        if (mPieceManager.attacking)
-        {
-            attckButton.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
-        }
-        else
-        {
-            attckButton.GetComponent<Image>().color = new Color(1f, 1f, 1.0f);
-        }
+            if (turnCount == 1)
+            {
+                nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+                ShowCorps(turnCount);
+            }
+            else if (turnCount == 2)
+            {
+                nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+                ShowCorps(turnCount);
+            }
+            else if (turnCount == 3)
+            {
+                nxtTrnBtn.GetComponent<Image>().color = CorpsColor(turnCount);
+                ShowCorps(turnCount);
+            }
+            else
+            {
+                nxtTrnBtn.GetComponent<Image>().color = new Color(1f, 1f, 1.0f);
+            }
 
-        #endregion
+            if (mPieceManager.attacking)
+            {
+                attckButton.GetComponent<Image>().color = new Color(0.85f, 0.20f, 0.20f);
+            }
+            else
+            {
+                attckButton.GetComponent<Image>().color = new Color(1f, 1f, 1.0f);
+            }
+
+            #endregion
+        }
     }
 
     public void PrintLog(string TempLogBuff) {
@@ -461,6 +454,25 @@ public class GameManager : MonoBehaviour
         diceRoll.active = true;
         marginTable.active = true;
         diceRoll.GetComponent<Animator>().SetTrigger("" + number);
+    }
+
+    public void keepGoing()
+    {
+        if (ExecutionBoard.waitBuff.isWaiting == true && ExecutionBoard.waitBuff.isSuccess == true)
+        {
+            ExecutionBoard.waitBuff.isNotWaiting();
+            ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
+            PrintLog("Attack Successful");
+        }
+        else
+        {
+            if (ExecutionBoard.waitBuff.newPath != null)
+                ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
+            PrintLog("Attack Failed");
+        }
+
+        this.AIMoveCount++;
+        dieIsRolling = false;
     }
 
     #endregion
