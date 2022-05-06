@@ -367,6 +367,7 @@ public class BasePiece : EventTrigger
     // removes the enemy piece on the target cell and moves the piece
     protected virtual void Move(bool beingKilled)
     {
+        Debug.Log("test");
         // Initialize movement variables
         start = mCurrentCell.transform.position;
         Cell startCell = mCurrentCell;
@@ -598,7 +599,6 @@ public class BasePiece : EventTrigger
         if (isPlayable && mColor == Color.white)
         {
             base.OnEndDrag(eventData);
-
             // removes the mHighlightedCells 
             ClearCells();
 
@@ -653,17 +653,25 @@ public class BasePiece : EventTrigger
                 
                 
             }
+            
             if (mCurrentCell.mCurrentPiece.isCommander)
             {
                 mPieceManager.CMoveCount++;
-                if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) < 2) && (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) <= 1))
+                mCurrentCell.mOutlineImage.enabled = false;
+                Cell target = mTargetCell;
+                Move(false);
+                if ((Math.Abs(mCurrentCell.mBoardPosition.x - target.mBoardPosition.x) < 2) && (Math.Abs(mCurrentCell.mBoardPosition.y - target.mBoardPosition.y) <= 1))
+                {
+                    
                     mPieceManager.CommanderMoved = true;
+                }
                 
-                if ((Math.Abs(mCurrentCell.mBoardPosition.x - mTargetCell.mBoardPosition.x) > 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - mTargetCell.mBoardPosition.y) > 1))
+                if ((Math.Abs(mCurrentCell.mBoardPosition.x - target.mBoardPosition.x) > 1) || (Math.Abs(mCurrentCell.mBoardPosition.y - target.mBoardPosition.y) > 1))
                 {
                     mPieceManager.CommandAuthority = false;
                     mPieceManager.CommanderMoved = true;
                 }
+                return;
 
             }
             if (mCurrentCell.mCurrentPiece.knight)
@@ -675,6 +683,7 @@ public class BasePiece : EventTrigger
             //use the Move function
             mCurrentCell.mOutlineImage.enabled = false;
             Move(false);
+
         }
     }
 
