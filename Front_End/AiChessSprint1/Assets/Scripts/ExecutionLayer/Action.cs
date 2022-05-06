@@ -170,7 +170,7 @@ namespace Actions
                 }
                 else
                 {
-                    return 100;
+                    return 0;
                 }
                 
             }

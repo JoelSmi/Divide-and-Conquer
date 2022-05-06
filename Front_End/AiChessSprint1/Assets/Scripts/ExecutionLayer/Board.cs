@@ -23,7 +23,7 @@ namespace GameBoard
             destPos = dest;
             Roll = roll;
             isWaiting = true;
-            isSuccess = true;
+            isSuccess = false;
             newPath = null;
         }
 
@@ -31,9 +31,9 @@ namespace GameBoard
         {
             isWaiting = false;
         }
-        public void setFail()
+        public void setSucess(bool val)
         {
-            isSuccess = false;
+            isSuccess = val;
         }
 
         public void setPath(List<int []> path)
@@ -330,13 +330,20 @@ namespace GameBoard
                         }
 
                         int tempRoll = this.AttackRoll;
-                        bool hasFailed = false;
 
                         temp = Actions.Action.attackAction2(this.actionPositions, this.GameBoard, currPiece, tempRoll);
-                        if(temp == 100)
+                        if(temp == 0)
                         {
-                            hasFailed = true;
-                            temp = 1;
+                            this.actionPositions.RemoveAt(this.actionPositions.Count - 1);
+
+                            ActionCount += temp;
+                            int[] previous = currPiece.currPos;
+
+                            this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count - 1], tempRoll);
+                            this.waitBuff.setSucess(false);
+                            if(this.actionPositions != null)
+                                    this.waitBuff.setPath(this.actionPositions);
+                            break;
                         }
 
                         if (temp > 0 && ActionCount + temp <= MaxTeamActionCount)
@@ -345,14 +352,7 @@ namespace GameBoard
                             int[] previous = currPiece.currPos;
 
                             this.waitBuff = new waitingAction(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count - 1], tempRoll);
-                            if (hasFailed)
-                            {
-                                hasFailed = false;
-                                this.waitBuff.setFail();
-                                this.actionPositions.RemoveAt(this.actionPositions.Count - 1);
-                                if(this.actionPositions != null)
-                                    this.waitBuff.setPath(this.actionPositions);
-                            }
+                            this.waitBuff.setSucess(true);
                             //updateBoard(currPiece, currPiece.currPos, this.actionPositions[this.actionPositions.Count-1]);
                         }
                         break;

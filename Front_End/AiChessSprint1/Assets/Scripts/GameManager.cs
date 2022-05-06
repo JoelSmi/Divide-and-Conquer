@@ -179,13 +179,13 @@ public class GameManager : MonoBehaviour
                             {
                                 ExecutionBoard.waitBuff.isNotWaiting();
                                 ExecutionBoard.updateBoard(ExecutionBoard.waitBuff.waitingPiece, ExecutionBoard.waitBuff.currPos, ExecutionBoard.waitBuff.destPos);
-                                PrintLog("Attack Successful");
+                                PrintLog("Attack Successful -- roll: " + ExecutionBoard.AttackRoll);
                             }
                             else
                             {   
                                 if(ExecutionBoard.waitBuff.newPath != null)
-                                    ExecutionBoard.AIActions[AIMoveCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
-                                PrintLog("Attack Failed");
+                                    ExecutionBoard.AIActions[AIActionCount - 1].setPath(ExecutionBoard.waitBuff.newPath);
+                                PrintLog("Attack Failed -- roll: " + ExecutionBoard.AttackRoll);
                             }
                         }
                         
