@@ -15,5 +15,6 @@ public class DiceRoll : MonoBehaviour
         //gameManager.uiUpdating = false;
         diceRoll.active = false;
         marginTable.active = gameManager.mPieceManager.attacking;
+        gameManager.keepGoing();
     }
 }
